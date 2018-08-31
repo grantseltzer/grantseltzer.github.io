@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GrantSeltzer</title>
+    <link>https://grantseltzer.github.io/</link>
+    <description>Recent content on GrantSeltzer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Fri, 31 Aug 2018 03:32:37 +0000</lastBuildDate>
+    
+	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>First post</title>
+      <link>https://grantseltzer.github.io/disecting/</link>
+      <pubDate>Fri, 31 Aug 2018 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/disecting/</guid>
+      <description>Test test one two one two microphone check</description>
+    </item>
+    
+  </channel>
+</rss>
