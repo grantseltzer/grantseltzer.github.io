@@ -9,33 +9,33 @@
 <link rel="stylesheet" href="/css/normalize.css">
 <link rel="stylesheet" href="/css/skeleton.css">
 <link rel="stylesheet" href="/css/custom.css">
-<title>GrantSeltzer</title>
+<title>Put Meta Title</title>
 </head>
 <body>
 
 <div class="container">
 
 	<header role="banner">
-		<h1><b>grant</b><i>seltzer</i></h1>
+	<h1>Put Website Title</h1>
 	</header>
-	
-	<main role="main">
-{{ range (where .Data.Pages ".Params.hidefromhome" "!=" "true") }}
+<main role="main">
 
-			<h2 class="entry-title" itemprop="headline"><a href="{{ .RelPermalink }}">{{ .Title }}</a></h2>
-			<span class="entry-meta"><time itemprop="datePublished" datetime="{{ .Date.Format "2006-01-02" }}">{{ .Date.Format "January 02, 2006" }}</time></span>
 
-{{ end }}
-	</main>
 
-	<footer role="contentinfo">
+  <h1>Tag: {{ .Title }}</h1>
+  {{ .Content }}
+  <ul class="list-pages">
+    {{ range .Data.Pages }}
+      <li class="lh-copy"><a href="{{ .Permalink | relURL }}" class="link f5">{{ .Title }}</a> - <time>{{ .Date.Format "January 02, 2006" }}</time></li>
+    {{ end }}
+  </ul>
+</main>
+
+    	<footer role="contentinfo">
 		<div class="hr"></div>
 		<div class="footer-link">
-			<a href="mailto:grantseltzer -AT- gmail" target="_blank">Email</a>
-			- 
-			<a href="https://github.com/grantseltzer" target="_blank">Github</a> 
+			<a href="mailto:test@test.com" target="_blank">Email</a> / <a href="https://salcangasfasfeloso.com">Site</a>
 		</div>
-		<div></div>
 		<div class="copyright">Copyright &copy; 2018</div>
 	</footer>
 
