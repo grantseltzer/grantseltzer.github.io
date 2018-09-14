@@ -6,7 +6,7 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 31 Aug 2018 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Sep 2018 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,7 +14,7 @@
     <item>
       <title>Dissecting Go Binaries</title>
       <link>https://grantseltzer.github.io/dissectinggobinaries/</link>
-      <pubDate>Fri, 31 Aug 2018 03:32:37 +0000</pubDate>
+      <pubDate>Fri, 14 Sep 2018 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/dissectinggobinaries/</guid>
       <description>Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.
