@@ -49,14 +49,7 @@
 
 <p>Thankfully all of the heavy lifting has been done for us by the authors and maintainers of <a href="http://www.capstone-engine.org/">Capstone</a>, a disassembly framework. Capstone is widely accepted as the standard to use for writing disassembly tools and there&rsquo;s not much to be gained by reimplementing it. Using Capstone in Go is as simple as importing its cleverly named Go bindings, <a href="https://github.com/bnagy/gapstone">gapstone</a>:</p>
 
-<pre><code class="language-go">engine, err := gapstone.New(
-	gapstone.CS_ARCH_X86,
-	gapstone.CS_MODE_64,
-)
-if err != nil {
-	log.Fatal(err)
-}
-</code></pre>
+<script src="https://gist.github.com/grantseltzer/85452bdb369315a79beb619c5544e2a9.js"></script>
 
 <p>For example, you can plug the the following raw bytes (displayed in hex) through Capstone and it will translate them into the corresponding x86_64 instruction:</p>
 
