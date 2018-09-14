@@ -13,11 +13,12 @@
     
     <item>
       <title>Dissecting Go Binaries</title>
-      <link>https://grantseltzer.github.io/disecting/</link>
+      <link>https://grantseltzer.github.io/dissectinggobinaries/</link>
       <pubDate>Fri, 31 Aug 2018 03:32:37 +0000</pubDate>
       
-      <guid>https://grantseltzer.github.io/disecting/</guid>
-      <description>WIP</description>
+      <guid>https://grantseltzer.github.io/dissectinggobinaries/</guid>
+      <description>Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.
+If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t worry, most of us aren&amp;rsquo;t.</description>
     </item>
     
   </channel>
