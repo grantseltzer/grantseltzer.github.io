@@ -93,11 +93,13 @@
 
 <p>Let&rsquo;s calculate the starting and ending indicies of the symbol within the <code>.text</code> section&rsquo;s array of bytes. For each symbol we want to subtract its <code>Value</code> from the text section&rsquo;s starting address; this will give us the starting index. To calculate the ending index we just add the symbol&rsquo;s size to the starting index. From there we can collect the bytes and feed them through Capstone.</p>
 
+<p><center><img src="/SymbolTableToTextSection.png" alt="SymTableToTextSection" /></center></p>
+
 <p>We&rsquo;re essentially finished now. We&rsquo;re going to open up the <code>.text</code> section to get the starting address and raw data, do the address calculation for each symbol, run the data through Capstone, and print out the resulting instructions:</p>
 
 <script src="https://gist.github.com/grantseltzer/6dfd8ed453e6836ad8dfb4b63cf1dbe6.js"></script>
 
-<p>And that&rsquo;s it! The full program can be found <a href="https://gist.github.com/grantseltzer/3efa8ecc5de1fb566e8091533050d608">here</a>. By leveraging some very powerful tools in the Go ecosystem we were able to build a fully function disassembler in under 75 lines of code! Thank you for reading and feel free to reach out via email for any questions or comments!</p>
+<p>And that&rsquo;s it! The full program can be found <a href="https://gist.github.com/grantseltzer/3efa8ecc5de1fb566e8091533050d608">here</a>. By leveraging some very powerful tools in the Go ecosystem we were able to build a fully functioning disassembler in under 75 lines of code! Thank you for reading and feel free to reach out via email for any questions or comments!</p>
 
 <p>Recording of our disassembler in action:</p>
 
