@@ -23,7 +23,11 @@
   <main role="main">
   <div>
         <article id="content">
-           <!-- Intro -->
+           <p><span style="color:grey;font-style: italic;font-size: 14px">
+This post will introduce you to the basic concepts of disassembly and walk through writing a simple disassembler in Go. The goal is to make the whole concept of diassembly as accesible as possible and hopefully give you, the reader, a takeaway or two about how compiled Go binaries work.
+</span></p>
+
+<!-- Intro -->
 
 <p>Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.</p>
 
@@ -35,7 +39,7 @@
 
 <p><center><img src="/CompilerDiagram.png" alt="Compilation" /></center></p>
 
-<p>The assembly code is an intermedediate form. The compiler will first turn the source code into architecture specific assembly code before &lsquo;assembling&rsquo; it into the executable binary. As the name alludes to, disassembly is doing this process in reverse:</p>
+<p>The assembly code is an intermedediate form. The compiler will first turn the source code into OS/architecture specific assembly code before &lsquo;assembling&rsquo; it into the binary file. As the name alludes to, disassembly is doing this process in reverse:</p>
 
 <p><center><img src="/DisassemblerDiagram.png" alt="Disassembly" /></center></p>
 
@@ -47,7 +51,7 @@
 
 <p>First of all, in order to build a disassembler we need to know what all of the binary machine code translates to in assembly instructions. To do this we must have a reference for all assembly instructions for the architecture of the compiled binary. If you&rsquo;re not familiar with this task you wouldn&rsquo;t think it&rsquo;d be so difficult. However, there are multiple micro-architectures, assembly syntaxes, sparsley-documented instructions, and encoding schemes that change over time. If you want more analysis on why this is difficult I enjoy <a href="https://stefanheule.com/blog/how-many-x86-64-instructions-are-there-anyway/">this article</a>.</p>
 
-<p>Thankfully all of the heavy lifting has been done for us by the authors and maintainers of <a href="http://www.capstone-engine.org/">Capstone</a>, a disassembly framework. Capstone is widely accepted as the standard to use for writing disassembly tools and there&rsquo;s not much to be gained by reimplementing it. Using Capstone in Go is as simple as importing its cleverly named Go bindings, <a href="https://github.com/bnagy/gapstone">gapstone</a>:</p>
+<p>Thankfully all of the heavy lifting has been done for us by the authors and maintainers of <a href="http://www.capstone-engine.org/">Capstone</a>, a disassembly framework. Capstone is widely accepted as the standard to use for writing disassembly tools. Reimplementing it would be quite a daunting, albeit educational, task so we won&rsquo;t be doing that as part of this post. Using Capstone in Go is as simple as importing its cleverly named Go bindings, <a href="https://github.com/bnagy/gapstone">gapstone</a>:</p>
 
 <script src="https://gist.github.com/grantseltzer/85452bdb369315a79beb619c5544e2a9.js"></script>
 
@@ -77,7 +81,7 @@
 
 <!-- ELF's -->
 
-<p>When you compile a Go program on your laptop the outputted binary will probably default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
+<p>When you compile a Go program on your laptop the outputted binary will default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
 
 <p><center><img src="/ELF_64.png" alt="ELF64" /></center></p>
 
