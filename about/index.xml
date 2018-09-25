@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Abouts on GrantSeltzer</title>
+    <link>https://grantseltzer.github.io/about/</link>
+    <description>Recent content in Abouts on GrantSeltzer</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    
+	<atom:link href="https://grantseltzer.github.io/about/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>About</title>
+      <link>https://grantseltzer.github.io/about/about/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/about/about/</guid>
+      <description>I am a software engineer working for Capsule8 in Brooklyn, New York. My interests include systems programming, video games, hiking, watching baseball, and reading. I mostly will be writing about systems programming and sabermetrics, thank you for reading!
+Here&amp;rsquo;s a picture of me:</description>
+    </item>
+    
+  </channel>
+</rss>
