@@ -6,10 +6,20 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 14 Sep 2018 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 20 Nov 2018 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Understanding cgroups</title>
+      <link>https://grantseltzer.github.io/blog/understanding-cgroups/</link>
+      <pubDate>Tue, 20 Nov 2018 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/understanding-cgroups/</guid>
+      <description>This post will introduce you to cgroups. The goal is to give a comprehensive enough explanation of cgroups and subsystems to broadly understand what they accomplish and how. The major focus will be on the CPU and memory cgroups. The second section 
+Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&amp;rsquo;t want a google chrome process (or it&amp;rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that.</description>
+    </item>
     
     <item>
       <title>Dissecting Go Binaries</title>

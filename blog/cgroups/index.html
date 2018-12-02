@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.48" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<title>Understanding cgroups</title>
+</head>
+<body>
+
+<div class="container"> 
+  <header role="banner">
+  <h1 id="title">Understanding cgroups</h1>
+  </header>
+  <section>
+  
+   
+  <i><span class="entry-meta"><time itemprop="datePublished" datetime="2018-11-20">November 20, 2018 </time></span></section></i>
+  
+
+  </section>
+  <main role="main">
+  <div>
+        <article id="content">
+           <p><span style="color:grey;font-style: italic;font-size: 14px">
+This post will introduce you to cgroups. The goal is to give a comprehensive enough explanation of cgroups and subsystems to broadly understand what they accomplish and how. The major focus will be on the CPU and memory cgroups. Specifics of implementation are not the main focus, so this is isn&rsquo;t meant as a reference.<br />
+</span></p>
+
+<p>Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&rsquo;t want a google chrome process (or it&rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that. They are an extremely powerful tool by which you can guarentee limits on performance, but understanding how they work and how to use them can be a little daunting.</p>
+
+<p>There are 12 different types of cgroups available in Linux. Each of them corresponds to a resource that proccesses use, such as the <span style="color:red">memory</span> cgroup. There&rsquo;s also cgroups such as <span style="color:red">freezer</span> which allows you to suspend groups of proccesses.</p>
+
+<p>Before we actually dive into cgroups, there&rsquo;s a few bases we should cover. Cgroups specifically deal with processes which are a fundamental piece of any operating system. A process is just a running instance of a program.  When you want to run a program the Linux kernel loads the executable into memory, asigns a process ID to it, allocates various resources&rsquo; for it, and begins to run it. Throughout the lifetime of a process the kernel keeps track of its various state and resource usage information.</p>
+
+<p>You can see all the procceses running on your system and some of their resource statistics with the <span style="color:red">top</span> command (I prefer <a href="https://hisham.hm/htop/">htop</a>).</p>
+
+<p><center>
+<img src="/htop.png" alt="htop" />
+<i>an htop screenshot</i>
+</center></p>
+
+<p>So what do I actually mean that a process needs resources? To give some examples: In order to store and use data, a process needs to have access to memory. In order to execute it&rsquo;s instructions, a process needs to have available time to run on the CPU. A process may also need access to devices, such as saving files to disk or taking in keyboard input. These resource are abstracted and provided by the Linux kernel. These abstractions are called &lsquo;subsystems&rsquo;.</p>
+
+<p>One example of a subsystem is the virtual memory management system. This is essentially the layer between the memory management unit (hardware) and the rest of the OS. When the running program allocates memory for a new data structure (through something like <a href="https://linux.die.net/man/3/malloc">malloc</a>) there is functionality in the kernel to resize the proccess&rsquo; heap. All proccesses on a system share a single pool of memory that can be allocated for each of their use. In the screenshot above take a look at the <span style="color:red">MEM%</span> column. That reflects the usage of total shared memory that the process is using.</p>
+
+<p>CPU time is similarly a shared resource. We&rsquo;re going to be using the CPU cgroup and it&rsquo;s associated subsystem, the scheduler, as an example to show how cgroups work.</p>
+
+<p>As fast as processors are, there is a limit to how much work they can do. For each core that your CPU has, only one process can be running at a time. However, try entering the command <span style="color:red">ps -e | wc -l</span>. The printed number is the amount of living procceses on your system. Since that number is likely in the hundreds, how can they all run considering your CPU may only have four cores?</p>
+
+<p>This is accomplished with a scheduler. On a typical system every process alternates between being run and being paused. This continues for the lifetime of every process. The scheduler is the piece of the Linux kernel that decides what process to run or to pause and when.</p>
+
+<p>The simple but important thing to note here is that the <span style="color:red">CPU%</span> that you see in a program like htop refers to the percentage of time that the process is running on the CPU as oppossed to paused. In other words, the more a process is scheduled to run, the higher it&rsquo;s utilization of CPU, and therefore the less utilization of CPU that other proccesses can have.</p>
+
+<p>That hopefully makes enough sense but you may be wondering how the scheduler decides what procceses to schedule on and off. The default scheduler in most Linux distros is called the <a href="https://www.kernel.org/doc/Documentation/scheduler/sched-design-CFS.txt">Completely Fair Scheduler</a>. If the name is any indication, every process gets an equal amount of time to run on the CPU. This is generally true!* However, there are a few words missing. In truth, every process <i>within the same cgroup</i> gets an equal amount of time to run on the CPU.</p>
+
+<p>As the name cgroup implies, we&rsquo;re controlling <i>groups</i> of procceses. Every process within a CPU cgroup enjoys equal time of the CPU. It is that group that the proccesses are in that defines the amount of available processor time.</p>
+
+<p>Try taking a look at <span style="color:red">/proc/[pid]/cgroup</span> file for any process to see what cgroups it&rsquo;s in. For example I wanted to see what cgroups my running shell (pid <span style="color:red">6115</span>) belongs to, so I read <span style="color:red">/proc/6115/cgroup</span>:</p>
+
+<p><center>
+<img src="/cat_for_cgroup.png" alt="cat_for_cgroup" />
+<i>example of listing what cgroups a process belongs to</i>
+</center></p>
+
+<p>Each line refers to a different cgroup that the process belongs to. Just looking at <span style="color:red">cpu,cpuacct</span> (combined as just <span style="color:red">cpu</span>) we can see that it&rsquo;s in the <span style="color:red">/</span> or &ldquo;root&rdquo; cgroup. This just means that it&rsquo;s in the system wide cgroup that all proccesses belong to. Cgroups are organized in a hierarchy, so cgroups can have child cgroups. For this reason cgroups are named by their parent to child hierarchical path. For example, <span style="color:red">/cgroupA/cgroupB</span> means there&rsquo;s a cgroup called <span style="color:red">cgroupB</span> which is a child of <span style="color:red">cgroupA</span> which is a child of the root cgroup. The limits of parent cgroup&rsquo;s apply to their children all the way down.</p>
+
+<p>The semantics for setting these limits is pretty intuative. There are two values that must be set: A period and a quota. Each of these values are in units of microseconds. The period defines an amount of time before the pool of available CPU ticks refreshes. The quota refers to the number of CPU ticks available in that pool. This is best explained by example:</p>
+
+<p><center>
+<img src="/cgroup_example.png" alt="cgroup_example" />
+<i>A CPU cgroup &ldquo;FOOBAR&rdquo;, a child of the root CPU cgroup </i>
+</center></p>
+
+<p>In the diagram above we see that there are three proccesses in a cgroup called <span style="color:red">/Foobar</span>. There are also many proccesses in the <span style="color:red">/</span> cgroup. As we see in that root cgroup, a quota of -1 is a special value to indicate there is an unlimited quota. In other words, no limit.</p>
+
+<p>Now let&rsquo;s think about the  <span style="color:red">/Foobar</span> cgroup. A period of 1000000 microseconds (or one second) has been specified. The quota of 500000 microseconds (or a half second) has also been set. Everytime a process in the cgroup spends a microsecond of time running on the CPU, the quota is decremented. Every process in the cgroup shares this quota. As an example let&rsquo;s say all three proccesses run at the same time (each on their own core) starting at the begining of a period. After around .17 of a second the procceses in the cgroup will have spent their entire quota. At that point the scheduler will opt to keep all three of those proccesess paused until the period is over. At that point the quota is refreshed.</p>
+
+<p>The analogy I use to explain this is to picture the CPU as if it&rsquo;s an amusement park carousel. A group of proccesses have pooled their tickets together so they can ride on it together. They each get a daily allowance for tickets in the morning so once they run out for the day they have to wait until tomorrow. The scheduler is the person collecting tickets and cgroup is the person giving them the ticket allowance in the morning.</p>
+
+<p>Here&rsquo;s a really dorky graphic:</p>
+
+<p><center>
+<img src="/tasks_sched.png" alt="tasks_sched" />
+<i>a really dorky graphic</i>
+</center></p>
+
+<p>The whole point of explaining how the CPU cgroup works is to show the nature of what cgroups are. They are not the mechanism by which resources are limited but rather just a glorified way of collecting arguments for those resource limits. It&rsquo;s up to the individual subsystems to read those arguments and take them into consideration.</p>
+
+<p>*<i>There is a concept of priority in the scheduler, which is used, but isn&rsquo;t as cool as cgroups</i></p>
+
+        </article>
+  </div>
+<aside id="meta">
+    <div>
+    
+     
+    </div>
+
+</aside>
+</main>
+
+
+	<footer role="contentinfo">
+		<div class="hr"></div>
+		<div class="footer-link">
+      <a href="/">Home</a> 
+      -
+      
+      <a href="/about/about">About</a>
+      -
+      
+      <a href="mailto:grantseltzer -AT- gmail" target="_blank">Email</a>
+			- 
+			<a href="https://github.com/grantseltzer" target="_blank">Github</a> 
+			-
+			<a href="https://www.linkedin.com/in/grantseltzerrichman/" target="_blank">LinkedIn</a>
+		</div>
+		<div class="copyright">Copyright &copy; 2018</div>
+	</footer>
+
+  </div>
+
+</body>
+</html>
