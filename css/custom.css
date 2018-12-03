@@ -37,8 +37,8 @@ main {
 
 img.tarantula {
 	margin-top: 100px;
-	height: 85%;
-	width: 85%;
+	height: 85% auto;
+	width: 85% auto;
 }
 
 img.name-text {
