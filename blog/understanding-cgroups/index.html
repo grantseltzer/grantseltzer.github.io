@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.48" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <link rel="stylesheet" href="/css/normalize.css">
@@ -12,9 +13,14 @@
 <title>Understanding cgroups</title>
 </head>
 
-<body>
-<a href="/"><img src="/name-text.png" alt="full" class="name-text"></a>
-<div class="container"> 
+<body> 
+
+ 	<div class="topbar">
+			<a id="homebutton" href="/">GSR</a>
+			<a id="about" href="/about/about">about</a>
+	</div>
+
+  <div class="container"> 
   <header role="banner">
   <h1 id="title">Understanding cgroups</h1>
   </header>
@@ -43,7 +49,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>You can see all the processes running on your system and some of their resource statistics with the <span style="color:red">top</span> command (I prefer <a href="https://hisham.hm/htop/">htop</a>).</p>
 
 <p><center>
-<img src="/htop.png" alt="htop" />
+<img src="/cgroups/htop.png" alt="htop" />
 <i>an htop screenshot</i>
 </center></p>
 
@@ -68,7 +74,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>Try taking a look at <span style="color:red">/proc/[pid]/cgroup</span> file for any process to see what cgroups it&rsquo;s in. For example I wanted to see what cgroups my running shell (pid <span style="color:red">6115</span>) belongs to, so I read <span style="color:red">/proc/6115/cgroup</span>:</p>
 
 <p><center>
-<img src="/cat_for_cgroup.png" alt="cat_for_cgroup" />
+<img src="/cgroups/cat_for_cgroup.png" alt="cat_for_cgroup" />
 <i>example of listing what cgroups a process belongs to</i>
 </center></p>
 
@@ -77,7 +83,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>The semantics for setting these limits is pretty intuitive. There are two values that must be set: A period and a quota. Each of these values are in units of microseconds. The period defines an amount of time before the pool of available CPU ticks refreshes. The quota refers to the number of CPU ticks available in that pool. This is best explained by example:</p>
 
 <p><center>
-<img src="/cgroup_example.png" alt="cgroup_example" />
+<img src="/cgroups/cgroup_example.png" alt="cgroup_example" />
 <i>A CPU cgroup &ldquo;FOOBAR&rdquo;, a child of the root CPU cgroup </i>
 </center></p>
 
@@ -89,7 +95,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 
 <p>Here&rsquo;s a really dorky graphic:
 <center>
-<img src="/tasks_sched.png" alt="tasks_sched" />
+<img src="/cgroups/tasks_sched.png" alt="tasks_sched" />
 <i>a really dorky graphic</i>
 </center></p>
 
@@ -100,21 +106,21 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>All cgroup functionality is accessed through the cgroup filesystem. This is a virtual filesystem with special files that act as the interface for creating, removing, or altering cgroups. You can find where the various cgroupfs&rsquo; (one for each cgroup type) on your system is mounted using <span style="color:red">mount | grep cgroup</span>. They&rsquo;re typically in <span style="color:red">/sys/fs/cgroup</span>.</p>
 
 <p><center>
-<img src="/ls-cgroup.png" alt="ls-cgroup" />
+<img src="/cgroups/ls-cgroup.png" alt="ls-cgroup" />
 <i>A cgroupfs directory for each cgroup type</i>
 </center></p>
 
 <p>Continuing to use the CPU cgroup as an example, let&rsquo;s take a look at the hierarchy and constraints for the CPU cgroup. Within the CPU directory there are a bunch of files that are used for configuring the constraints of processes in the cgroup. Since cgroups exist in hierarchies, you can also find directories that correspond to child cgroups. Making a new child cgroup is as simple as using <span style="color:red">mkdir</span>. All the constraint files will be created for you!</p>
 
 <p><center>
-<img src="/make-cgroup.gif" alt="make-cgroup" />
+<img src="/cgroups/make-cgroup.gif" alt="make-cgroup" />
 <i>Creating a child cpu cgroup using mkdir and writing a process to the tasks file</i>
 </center></p>
 
 <p>When you&rsquo;re in a child CPU cgroup there&rsquo;s three main files that are of interest: <span style="color:red">tasks</span>, <span style="color:red">cpu.cfs_period_us</span>, and <span style="color:red">cpu.cfs_quota_us</span>.</p>
 
 <p><center>
-<img src="/ls-cgroup-cpu.png" alt="ls-cgroup-cpu" />
+<img src="/cgroups/ls-cgroup-cpu.png" alt="ls-cgroup-cpu" />
 </center></p>
 
 <p><span style="color:red">tasks</span> - list of PID&rsquo;s that are part of the cgroup. Appending a PID to this file will add that process (all threads in the process) to the cgroup. When you start a process it will automatically be added to the root CPU cgroup.</p>
@@ -126,7 +132,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>Setting the above constraint files are also as easy as writing values to the files:</p>
 
 <p><center>
-<img src="/setting-period-and-quota.gif" alt="setting-period-and-quota" />
+<img src="/cgroups/setting-period-and-quota.gif" alt="setting-period-and-quota" />
 <i>Setting the period and quota of a cgroup by writing to the period and quota files</i>
 </center></p>
 
@@ -139,7 +145,7 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
 <p>If you use docker you can set cgroup constraints as flags when running containers. For example <span style="color:red">docker run &ndash;cpu-period=100000 &ndash;cpu-quota=12345 -it fedora bash</span>. This will handle setting up the cgroup, but interestingly all it&rsquo;s doing is writing to the files for you.</p>
 
 <p><center>
-<img src="/docker-constraints.gif" alt="docker-constraints" />
+<img src="/cgroups/docker-constraints.gif" alt="docker-constraints" />
 <i>Setting the period and quota of a cgroup by passing flags for a docker container</i>
 </center></p>
 
@@ -161,9 +167,12 @@ This post will introduce you to cgroups. The goal is to give a comprehensive eno
     <div class="hr"></div>
     
 		<div>
-			<a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/github.png"/></a>
-			<a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/twitter.png"/></a>
-			<a class="sociallink" href="http://www.linkedin.com/grantseltzerrichman"><img class="socialimg" src="/linkedin.png"/></a>
+        <a class="sociallink" href="mailto:grantseltzer-AT-gmail.com"><img class="socialimg" src="/social/email.png"/></a>
+        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
+        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
+        <a class="sociallink" href="http://www.linkedin.com/grantseltzerrichman"><img class="socialimg" src="/social/linkedin.png"/></a>
+        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
+        <a class="sociallink" href="/photos/photos"><img class="socialimg" src="/social/camera.png"></a>
 
 		</div>
 		<div class="copyright">Copyright &copy; 2018</div>

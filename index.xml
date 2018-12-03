@@ -37,8 +37,26 @@ Assembly code cannot lie. By reading assembly we become as close as possible to 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/about/about/</guid>
-      <description>I am a software engineer working for Capsule8 in Brooklyn, New York. My interests include systems programming, video games, hiking, watching baseball, and reading. I mostly will be writing about systems programming and sabermetrics, thank you for reading!
-Here&amp;rsquo;s a picture of me:</description>
+      <description>My name is Grant Seltzer Richman. I am a software engineer working for Capsule8 in Brooklyn, New York. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about systems, security, and sabermetrics and posting photos from good hiking trips.
+Feel free to reach out if you want to say hi! Also here&amp;rsquo;s a picture of me:</description>
+    </item>
+    
+    <item>
+      <title>Acadia</title>
+      <link>https://grantseltzer.github.io/photos/acadia/acadia/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/photos/acadia/acadia/</guid>
+      <description>Acadia National Park with friends 5/02/18 - 5/06/18</description>
+    </item>
+    
+    <item>
+      <title>photos</title>
+      <link>https://grantseltzer.github.io/photos/photos/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/photos/photos/</guid>
+      <description>Acadia</description>
     </item>
     
   </channel>

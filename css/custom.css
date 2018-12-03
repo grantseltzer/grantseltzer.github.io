@@ -35,15 +35,51 @@ main {
 	box-shadow: inset 0 -4px 0 #FAFF63;
 }
 
-img.tarantula {
-	margin-top: 100px;
-	height: 85%;
-	width: 85%;
+div.container {	
+	padding-top: 100px;
 }
 
-img.name-text {
-	height: 30%;
-  width: 30%;
+img.tarantula {
+	height: auto;
+	width: auto;
+}
+
+div.topbar {
+	z-index: 5;
+	position: fixed;
+	border-bottom: solid;
+	border-bottom-width: 2px;
+	border-bottom-style: ridge;
+	width: 100%;
+	opacity: 0.9;
+	background-color: rgb(255, 255, 255);
+}
+
+div.topbar #homebutton {
+	text-decoration: none;
+	letter-spacing: 3px;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: bold;
+	font-size: 25px;
+	color: #000000;
+}
+
+div.topbar #homebutton:hover {
+	color: #383838;
+}
+
+div.topbar #about {
+	text-decoration: none;
+	letter-spacing: 3px;
+	font-family: 'Montserrat', sans-serif;
+	font-weight: bold;
+	font-size: 25px;
+	color: #000000;
+	float: right;
+}
+
+div.topbar #about:hover {
+	color: #383838;
 }
 
 .container a.sociallink {

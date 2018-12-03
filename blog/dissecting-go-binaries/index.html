@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="generator" content="Hugo 0.48" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Montserrat" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
 <link rel="stylesheet" href="/css/normalize.css">
@@ -12,9 +13,14 @@
 <title>Dissecting Go Binaries</title>
 </head>
 
-<body>
-<a href="/"><img src="/name-text.png" alt="full" class="name-text"></a>
-<div class="container"> 
+<body> 
+
+ 	<div class="topbar">
+			<a id="homebutton" href="/">GSR</a>
+			<a id="about" href="/about/about">about</a>
+	</div>
+
+  <div class="container"> 
   <header role="banner">
   <h1 id="title">Dissecting Go Binaries</h1>
   </header>
@@ -42,11 +48,11 @@ This post will introduce you to the basic concepts of disassembly and walk throu
 
 <p>Disassembly is the process of converting a compiled binary file back into assembly code. To clarify let’s first go in the direction we’re used to, from source code to a compiled binary:</p>
 
-<p><center><img src="/CompilerDiagram.png" alt="Compilation" /></center></p>
+<p><center><img src="/dissecting/CompilerDiagram.png" alt="Compilation" /></center></p>
 
 <p>The assembly code is an intermediate form. The compiler will first turn the source code into OS/architecture specific assembly code before &lsquo;assembling&rsquo; it into the binary file. As the name alludes to, disassembly is doing this process in reverse:</p>
 
-<p><center><img src="/DisassemblerDiagram.png" alt="Disassembly" /></center></p>
+<p><center><img src="/dissecting/DisassemblerDiagram.png" alt="Disassembly" /></center></p>
 
 <p>Thankfully Go has a fantastic standard toolchain that lets you play with this process. You can see the assembly code before it gets turned into 1’s and 0’s by compiling your program with the following command: <span style="color:red"><code>go build -gcflags -S program.go</code>.</span> If you already have a compiled program and want to see the assembly code you can disassemble it with <span style="color:red"><code>go tool objdump binaryFile</code></span>.</p>
 
@@ -67,7 +73,7 @@ This post will introduce you to the basic concepts of disassembly and walk throu
  <code>0x64 0x48 0x8B 0xC 0x25 0xF8 0xFF 0xFF 0xFF</code>
 </span></p>
 
-<p><img src="/arrow.png" alt="arrow" /></p>
+<p><img src="/dissecting/arrow.png" alt="arrow" /></p>
 
 <p><span style="color:blue">
 <code>mov rcx, qword ptr fs:[0xfffffffffffffff8]</code>
@@ -88,7 +94,7 @@ This post will introduce you to the basic concepts of disassembly and walk throu
 
 <p>When you compile a Go program on your laptop the outputted binary will default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
 
-<p><center><img src="/ELF_64.png" alt="ELF64" /></center></p>
+<p><center><img src="/dissecting/ELF_64.png" alt="ELF64" /></center></p>
 
 <p>First let&rsquo;s define the term <strong>symbol</strong>. This is any name identifiable object in our code. Variables, functions, types, and constants are all symbols. The Go compiler compiles each symbol and stores reference information about it in the <strong>symbol table</strong>. We can see in the <code>debug/elf</code> package&rsquo;s definition of <code>Symbol</code> that each entry in the symbol table contains the symbol&rsquo;s name, size, memory offset, and type:</p>
 
@@ -102,7 +108,7 @@ This post will introduce you to the basic concepts of disassembly and walk throu
 
 <p>Let&rsquo;s calculate the starting and ending indices of the symbol within the <code>.text</code> section&rsquo;s array of bytes. For each symbol we want to subtract its <code>Value</code> from the text section&rsquo;s starting address; this will give us the starting index. To calculate the ending index we just add the symbol&rsquo;s size to the starting index. From there we can collect the bytes and feed them through Capstone.</p>
 
-<p><center><img src="/SymbolTableToTextSection.png" alt="SymTableToTextSection" /></center></p>
+<p><center><img src="/dissecting/SymbolTableToTextSection.png" alt="SymTableToTextSection" /></center></p>
 
 <p>We&rsquo;re essentially finished now. We&rsquo;re going to open up the <code>.text</code> section to get the starting address and raw data, do the address calculation for each symbol, run the data through Capstone, and print out the resulting instructions:</p>
 
@@ -130,9 +136,12 @@ This post will introduce you to the basic concepts of disassembly and walk throu
     <div class="hr"></div>
     
 		<div>
-			<a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/github.png"/></a>
-			<a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/twitter.png"/></a>
-			<a class="sociallink" href="http://www.linkedin.com/grantseltzerrichman"><img class="socialimg" src="/linkedin.png"/></a>
+        <a class="sociallink" href="mailto:grantseltzer-AT-gmail.com"><img class="socialimg" src="/social/email.png"/></a>
+        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
+        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
+        <a class="sociallink" href="http://www.linkedin.com/grantseltzerrichman"><img class="socialimg" src="/social/linkedin.png"/></a>
+        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
+        <a class="sociallink" href="/photos/photos"><img class="socialimg" src="/social/camera.png"></a>
 
 		</div>
 		<div class="copyright">Copyright &copy; 2018</div>
