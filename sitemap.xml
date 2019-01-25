@@ -22,7 +22,7 @@
   </url>
   
   <url>
-    <loc>https://grantseltzer.github.io/photos/acadia/acadia/</loc>
+    <loc>https://grantseltzer.github.io/photos/acadia/</loc>
   </url>
   
   <url>
@@ -48,12 +48,16 @@
   </url>
   
   <url>
+    <loc>https://grantseltzer.github.io/photos/photos/</loc>
+  </url>
+  
+  <url>
     <loc>https://grantseltzer.github.io/tags/</loc>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>https://grantseltzer.github.io/photos/photos/</loc>
+    <loc>https://grantseltzer.github.io/photos/utah/</loc>
   </url>
   
 </urlset>

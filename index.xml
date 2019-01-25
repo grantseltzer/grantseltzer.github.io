@@ -37,26 +37,52 @@ Assembly code cannot lie. By reading assembly we become as close as possible to 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/about/about/</guid>
-      <description>My name is Grant Seltzer Richman. I am a software engineer working for Capsule8 in Brooklyn, New York. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about systems, security, and sabermetrics and posting photos from good hiking trips.
+      <description>My name is Grant Seltzer Richman. I am a Security Engineer at Oscar Health. Previously I worked as a software engineer for Capsule8. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about systems, security, and sabermetrics and posting photos from good hiking trips.
 Feel free to reach out if you want to say hi! Also here&amp;rsquo;s a picture of me:</description>
     </item>
     
     <item>
-      <title>Acadia</title>
-      <link>https://grantseltzer.github.io/photos/acadia/acadia/</link>
+      <title>Acadia NP</title>
+      <link>https://grantseltzer.github.io/photos/acadia/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>https://grantseltzer.github.io/photos/acadia/acadia/</guid>
-      <description>Acadia National Park with friends 5/02/18 - 5/06/18</description>
+      <guid>https://grantseltzer.github.io/photos/acadia/</guid>
+      <description>5/02/18 - 5/06/18   0th
+      A
+      B
+      C
+      D
+      E
+      F
+      G
+      H
+      I
+      J</description>
     </item>
     
     <item>
-      <title>photos</title>
+      <title>Photos</title>
       <link>https://grantseltzer.github.io/photos/photos/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/photos/photos/</guid>
-      <description>Acadia</description>
+      <description>Zion - Bryce Canyon - Valley of Fire - Jan 2019
+Acadia - May 2018</description>
+    </item>
+    
+    <item>
+      <title>Zion NP, Bryce Canyon NP, and Valley of Fire SP</title>
+      <link>https://grantseltzer.github.io/photos/utah/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/photos/utah/</guid>
+      <description>1/15/19 - 1/22/19   I m g 20190116 122257
+      I m g 20190116 133336
+      I m g 20190116 135148
+      I m g 20190116 145647
+      I m g 20190117 123558
+      I m g 20190117 124434
+      I m g 20190117 124538</description>
     </item>
     
   </channel>
