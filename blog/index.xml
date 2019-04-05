@@ -19,7 +19,7 @@
       <guid>https://grantseltzer.github.io/blog/the-beauty-of-io-writer/</guid>
       <description>In this post we explore best practices of defining interfaces in Go. We use io.Writer to break down patterns and antipatterns. 
 A perfect example of a properly designed Go interface is io.Writer:
-type Writer interface { Write(p []byte) (n int, err error) }  It is short, simple, and powerful. The Write method takes a very generic slice of bytes and write&amp;rsquo;s it to something.
+type Writer interface { Write(p []byte) (n int, err error) }  It is short, simple, and powerful. The Write method takes a very generic slice of bytes and writes it to something.
 In Rob Pike&amp;rsquo;s Go Proverbs talk he talks about how in Go, interfaces are not declared to be satisfied, they&amp;rsquo;re satisfied implicitly.</description>
     </item>
     
