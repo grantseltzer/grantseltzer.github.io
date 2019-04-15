@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131587033-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-131587033-1');
+</script>
+
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.54.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<title>Using dynamic libraries in static Go binaries</title>
+</head>
+
+<body> 
+
+ 	<div class="topbar">
+			<a id="homebutton" href="/">GSR</a>
+			<a id="about" href="/about/about">about</a>
+	</div>
+
+  <div class="container"> 
+  <header role="banner">
+  <h1 id="title">Using dynamic libraries in static Go binaries</h1>
+  </header>
+  <section>
+  
+   
+  <i><span class="entry-meta"><time itemprop="datePublished" datetime="2019-04-09">April 09, 2019 </time></span></section></i>
+  
+
+  </section>
+  <main role="main">
+  <div>
+        <article id="content">
+           <p><span style="color:grey;font-style: italic;font-size: 14px">
+This post highlights a linker directive in Go. It allows us to import functions from a dynamic library even when CGO is disable. I use the example of a contribution I recently made to the net and runtime packages to demonstrate its use case.
+</span></p>
+
+<p>Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them <a href="https://dave.cheney.net/2018/01/08/gos-hidden-pragmas">here</a>. One such &lsquo;pragma&rsquo; as Cheney calls them, is  <code>//go:cgo_import_dynamic</code>. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.</p>
+
+<p>Let&rsquo;s check out an example from my <a href="https://go-review.googlesource.com/c/go/+/166297">recent contribution</a> to the runtime package.</p>
+
+<p>First, in lookup_darwin.go we use the cgo_import_dynamic directive for <code>res_search</code></p>
+
+<script src="https://gist.github.com/grantseltzer/1d6fdd3ba81a18ea5fbb48d62b2f91c5.js"></script>
+
+<p>When the linker is run after compilation it executes this directive. The linker pulls in the <code>res_search</code> routine from the libSystem dynamic library (found at the given path). It then makes the routine referenceable in Go&rsquo;s assembly code by the name <code>libc_res_search</code>.</p>
+
+<p>Now in order to link assembly code to Go we have a couple of pieces of glue to put in place. Let&rsquo;s take a look first, and then analyze:</p>
+
+<script src="https://gist.github.com/grantseltzer/38c76591c532f3bc40e1367c19502167.js"></script>
+
+<p>The first thing to look at is the symbol definition of <code>res_search_trampoline()</code> <i>(line 13)</i>. This is a function which will be defined in assembly. Defining the symbol in Go code allows the linker to make it referenceable.</p>
+
+<p>We also need a helper function which takes the arguments to pass to the assembly routine, and makes a call to <code>libcCall()</code>. This is a helper function defined inside the runtime package. It takes both the trampoline symbol address, and address of the arguments. It uses these to orchestrate the actual call.</p>
+
+<p>Finally we define the assembly routine for <code>res_search_trampoline</code> which is linked by the Go symbol above.</p>
+
+<script src="https://gist.github.com/grantseltzer/0327af2124ddab0f50682f158e23863c.js"></script>
+
+<p>All this routine does is load the arguments by their offset (calculated by size) and call <code>libc_res_search</code>. It also checks a possible error and calls <code>libc_error</code> (another statically linked function!) accordingly.</p>
+
+<p>From these definitions we can now call the res_search helper function as if it&rsquo;s the res_search function in libSystem. This is all of course regardless of if CGO is enabled!</p>
+
+<p>Do keep in mind, this directive is purposely not part of the language specification. It should probably only be done in Go&rsquo;s runtime package.</p>
+
+        </article>
+  </div>
+<aside id="meta">
+    <div>
+    
+     
+    </div>
+
+</aside>
+</main>
+
+
+	<footer role="contentinfo">
+    <div class="hr"></div>
+    
+		<div>
+        <a class="sociallink" href="mailto:grantseltzer-AT-gmail.com"><img class="socialimg" src="/social/email.png"/></a>
+        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
+        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
+        <a class="sociallink" href="https://www.linkedin.com/in/grantseltzerrichman/"><img class="socialimg" src="/social/linkedin.png"/></a>
+        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
+        <a class="sociallink" href="/photos/photos"><img class="socialimg" src="/social/camera.png"></a>
+
+		</div>
+		<div class="copyright">Copyright &copy; 2018 - 2019</div>
+	</footer>
+
+  </div>
+
+</body>
+</html>

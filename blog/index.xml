@@ -6,10 +6,20 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 04 Apr 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 09 Apr 2019 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using dynamic libraries in static Go binaries</title>
+      <link>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</link>
+      <pubDate>Tue, 09 Apr 2019 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</guid>
+      <description>This post highlights a linker directive in Go. It allows us to import functions from a dynamic library even when CGO is disable. I use the example of a contribution I recently made to the net and runtime packages to demonstrate its use case. 
+Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them here.</description>
+    </item>
     
     <item>
       <title>The Beauty of io.Writer</title>
@@ -19,7 +29,7 @@
       <guid>https://grantseltzer.github.io/blog/the-beauty-of-io-writer/</guid>
       <description>In this post we explore best practices of defining interfaces in Go. We use io.Writer to break down patterns and antipatterns. 
 A perfect example of a properly designed Go interface is io.Writer:
-type Writer interface { Write(p []byte) (n int, err error) }  It is short, simple, and powerful. The Write method takes a very generic slice of bytes and write&amp;rsquo;s it to something.
+type Writer interface { Write(p []byte) (n int, err error) }  It is short, simple, and powerful. The Write method takes a very generic slice of bytes and writes it to something.
 In Rob Pike&amp;rsquo;s Go Proverbs talk he talks about how in Go, interfaces are not declared to be satisfied, they&amp;rsquo;re satisfied implicitly.</description>
     </item>
     

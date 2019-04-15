@@ -55,9 +55,9 @@ In this post we explore best practices of defining interfaces in Go. We use <cod
 }
 </code></pre>
 
-<p>It is short, simple, and powerful. The <code>Write</code> method takes a very generic slice of bytes and write&rsquo;s it to <i>something</i>.</p>
+<p>It is short, simple, and powerful. The <code>Write</code> method takes a very generic slice of bytes and writes it to <i>something</i>.</p>
 
-<p>In Rob Pike&rsquo;s <a href="https://youtu.be/PAAkCSZUG1c?t=317">Go Proverbs talk</a> he talks about how in Go, interfaces are not declared to be satisfied, they&rsquo;re satisfied implicitly. An interface should be a way of classifying types, not as a blueprint for declaring them. In practical terms, an interface should not at all care about how it&rsquo;s  implemented.</p>
+<p>In Rob Pike&rsquo;s <a href="https://youtu.be/PAAkCSZUG1c?t=317">Go Proverbs talk</a> he talks about how in Go, interfaces are not declared to be satisfied, they&rsquo;re satisfied implicitly. An interface should be a way of classifying types, not a blueprint for declaring them. In practical terms, an interface should not at all care about how it&rsquo;s  implemented.</p>
 
 <p>Let&rsquo;s think about how <code>io.Writer</code> embodies this ideal. The <code>Write</code> method takes the most generic form of data, a slice of bytes. Any other data type, no matter how complex, can become a slice of bytes. In this way the method does not care about what&rsquo;s it&rsquo;s passed. It leaves so much up to the implementation&rsquo;s discretion.</p>
 
