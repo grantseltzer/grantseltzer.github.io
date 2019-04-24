@@ -17,7 +17,7 @@
       <pubDate>Tue, 09 Apr 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</guid>
-      <description>This post highlights a linker directive in Go. It allows us to import functions from a dynamic library even when CGO is disable. I use the example of a contribution I recently made to the net and runtime packages to demonstrate its use case. 
+      <description>This post highlights a linker directive in Go. It allows us to import functions from a dynamic library even when CGO is disabled. I use the example of a contribution I recently made to the net and runtime packages to demonstrate its use case. 
 Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them here.</description>
     </item>
     
