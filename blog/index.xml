@@ -6,10 +6,21 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Tue, 09 Apr 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 21 May 2019 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Standardized Streams and Shells</title>
+      <link>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</link>
+      <pubDate>Tue, 21 May 2019 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
+      <description>In this post we discuss how standardized streams (stdin/stdout/stderr) work on Linux, especially related to shells. 
+Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running procceses to easily communicate.
+Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:</description>
+    </item>
     
     <item>
       <title>Using dynamic libraries in static Go binaries</title>
