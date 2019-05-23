@@ -18,7 +18,7 @@
       
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>In this post we discuss how standardized streams (stdin/stdout/stderr) work on Linux, especially related to shells. 
-Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running procceses to easily communicate.
+Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:</description>
     </item>
     
