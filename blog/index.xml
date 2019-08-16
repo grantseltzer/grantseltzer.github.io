@@ -6,7 +6,7 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 05 Aug 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 15 Aug 2019 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     
@@ -14,21 +14,11 @@
     <item>
       <title>Debugging Go tests</title>
       <link>https://grantseltzer.github.io/blog/test-build-modes/</link>
-      <pubDate>Mon, 05 Aug 2019 03:32:37 +0000</pubDate>
+      <pubDate>Thu, 15 Aug 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/test-build-modes/</guid>
       <description>This post discusses building go test binaries and walking through them with delve 
 I recently was working on debugging a unit test I wrote in Go. I couldn&amp;rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a go test and a go run.</description>
-    </item>
-    
-    <item>
-      <title>Fermentation Experimentation</title>
-      <link>https://grantseltzer.github.io/blog/fermentation/</link>
-      <pubDate>Mon, 05 Aug 2019 03:32:37 +0000</pubDate>
-      
-      <guid>https://grantseltzer.github.io/blog/fermentation/</guid>
-      <description>Over the past couple of months i&amp;rsquo;ve been experimenting with various fermentation techniques in my kitchen. I wanted to document some of them here. 
-Like many Brooklynites, I have fallen for a recent craze for Kombucha. I&amp;rsquo;m not 100% sold on the health benefits, but the fermented tea drink is quite delicious.</description>
     </item>
     
     <item>
