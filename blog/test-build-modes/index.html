@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131587033-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-131587033-1');
+</script>
+<script>
+  function emailfunc() {
+    document.getElementById("email").innerHTML = "grantseltzer AT gmail DOT com";
+  }
+</script>
+
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.54.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<title>Debugging Go tests</title>
+</head>
+
+<body> 
+
+ 	<div class="topbar">
+			<a id="homebutton" href="/">GSR</a>
+			<a id="about" href="/about/about">about</a>
+	</div>
+
+  <div class="container"> 
+  <header role="banner">
+  <h1 id="title">Debugging Go tests</h1>
+  </header>
+  <section>
+  
+   
+  <i><span class="entry-meta"><time itemprop="datePublished" datetime="2019-08-05">August 05, 2019 </time></span></section></i>
+  
+
+  </section>
+  <main role="main">
+  <div>
+        <article id="content">
+           <p><span style="color:grey;font-style: italic;font-size: 14px">
+This post discusses building go test binaries and walking through them with delve
+</span></p>
+
+<p>I recently was working on debugging a unit test I wrote in Go. I couldn&rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a <code>go test</code> and a <code>go run</code>. I was looking through Go build mode <a href="https://golang.org/cmd/go/#hdr-Build_modes">documentation</a> while wondering if I could step through it with a debugger. Lo and behold you can compile your tests into an ELF executable! As a result I was able to step through my unit tests using a debugger.</p>
+
+<p>Let&rsquo;s take a look at this esoteric example <i>(inspired by <a href="https://twitter.com/davecheney/status/1133172785440624640">Dave Cheney</a>)</i>:</p>
+
+<pre><code>package switchers
+
+func SwitchFunction(a, b int, c *int) string {
+    switch *c {
+    case a:
+       return &quot;a&quot;
+    case b:
+       return &quot;b&quot;
+    default:
+       return &quot;c&quot;
+    }
+}
+</code></pre>
+
+<pre><code>package switchers
+
+import &quot;testing&quot;
+
+func TestSwitch(t *testing.T) {
+
+    var (
+      a int 
+      b int
+      c = &amp;b
+    )
+
+    x := SwitchFunction(a, b, c)
+
+    if x != &quot;c&quot; {
+        t.Error(&quot;wtf?&quot;)
+    }
+}
+</code></pre>
+
+<p>We can compile a test binary with <code>go test -c</code>. As it turns out, the go <code>test</code> command is completely configurable with all linker, loader, and runtime flags. For example, you can change your <code>GOOS</code> and <code>GOARCH</code> environment variables to compile different test files.</p>
+
+<p>You can then go ahead and run that binary through a debugger, such as <a href="https://github.com/go-delve/delve">delve</a> with <code>dlv exec switchers.test</code></p>
+
+<p>You&rsquo;re going to want to set a breakpoint for the unit test you&rsquo;re trying to debug and continue to it:</p>
+
+<p><img src="/test-build-modes/breakcontinue.png" alt="breakcontinue" /></p>
+
+<p>From there you can step through your test one line (<code>step</code>) or instruction (<code>stepi</code>) at a time. Try out this example and see if you can figure out what&rsquo;s going on! Find the <a href="here">example code</a>.</p>
+
+        </article>
+  </div>
+<aside id="meta">
+    <div>
+    
+     
+    </div>
+
+</aside>
+</main>
+
+
+	<footer role="contentinfo">
+    <div class="hr"></div>
+    
+		<div>
+        <img onclick="emailfunc()" class="socialimg" src="/social/email.png"/>
+        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
+        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
+        <a class="sociallink" href="https://www.linkedin.com/in/grantseltzerrichman/"><img class="socialimg" src="/social/linkedin.png"/></a>
+        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
+        <a class="sociallink" href="/photos/photos"><img class="socialimg" src="/social/camera.png"></a>
+    </div>
+    <p id="email"></p>
+		<div class="copyright">Copyright &copy; 2018 - 2019</div>
+	</footer>
+
+  </div>
+
+</body>
+</html>
