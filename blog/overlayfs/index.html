@@ -59,7 +59,7 @@
 
 <p><center><img src="/overlay/seperate.png" alt="seperate" /></center></p>
 
-<p>Here we have three seperate directories. They each contain various files. You may also notice that both <code>/tmp/middle</code> and <code>/tmp/upper</code> contain files with the same name (<code>c.txt</code>).</p>
+<p>Here we have three separate directories. They each contain various files. You may also notice that both <code>/tmp/middle</code> and <code>/tmp/upper</code> contain files with the same name (<code>c.txt</code>).</p>
 
 <p>Let&rsquo;s say I want to create an overlayfs with these three directories. You can do it from the command like this:</p>
 
@@ -83,7 +83,7 @@
 
 <p>In the case of <code>c.txt</code> here, the instance of the file that&rsquo;s in the highest most layer is what&rsquo;s displayed.</p>
 
-<p>All of the layers except the top one are read-only. This means changes made to files from the unfified overlay directory will not change the actual files. Changes would be written to a new file in the top most layer and displayed over the original. If you don&rsquo;t want any changes to files in your bottom layers you can just create an empty directory to use as your top layer.</p>
+<p>All of the layers except the top one are read-only. This means changes made to files from the unified overlay directory will not change the actual files. Changes would be written to a new file in the top most layer and displayed over the original. If you don&rsquo;t want any changes to files in your bottom layers you can just create an empty directory to use as your top layer.</p>
 
 <p>Here&rsquo;s an asciicast of what this all looks like in terminal:</p>
 
