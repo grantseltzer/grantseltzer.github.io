@@ -6,10 +6,20 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 15 Aug 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 18 Sep 2019 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Linux Overlayfs</title>
+      <link>https://grantseltzer.github.io/blog/overlayfs/</link>
+      <pubDate>Wed, 18 Sep 2019 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/overlayfs/</guid>
+      <description>Remember back to when your teacher in grade school would write on sheets of clear plastic, stack them, and display them with an overhead projector? That is exactly how overlayfs works&amp;hellip; except with filesystems.
+Overlay filesystems allow you to take multiple directory trees and view them as if they were merged together. The added benefit is that changes in the merged view do not affect the underlying directories. There are many use cases for this, mostly related to containers, but more on that at the end.</description>
+    </item>
     
     <item>
       <title>Debugging Go tests</title>
