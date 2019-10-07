@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+ 
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131587033-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-131587033-1');
+</script>
+<script>
+  function emailfunc() {
+    document.getElementById("email").innerHTML = "grantseltzer AT gmail DOT com";
+  }
+</script>
+
+<meta charset="utf-8">
+<meta name="generator" content="Hugo 0.54.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
+<link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
+<link rel="stylesheet" href="/css/normalize.css">
+<link rel="stylesheet" href="/css/skeleton.css">
+<link rel="stylesheet" href="/css/custom.css">
+<title>Linux Procfs</title>
+</head>
+
+<body> 
+
+ 	<div class="topbar">
+			<a id="homebutton" href="/">GSR</a>
+			<a id="about" href="/about/about">about</a>
+	</div>
+
+  <div class="container"> 
+  <header role="banner">
+  <h1 id="title">Linux Procfs</h1>
+  </header>
+  <section>
+  
+   
+  <i><span class="entry-meta"><time itemprop="datePublished" datetime="2019-10-02">October 02, 2019 </time></span></section></i>
+  
+
+  </section>
+  <main role="main">
+  <div>
+        <article id="content">
+           
+
+<p>I love the procfs because it provides an intuative and easy to use interface for interacting with the kernel. In the same way you&rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.</p>
+
+<p>A procfs is mounted at <code>/proc</code> by default. If you go into <code>/proc</code> you&rsquo;ll see something like this:</p>
+
+<p><center><img src="/procfs/toplevel.png" alt="toplevel" /></center></p>
+
+<p>You&rsquo;ll notice a lot of the directories that are just named by numbers. There is one for each individual procces. The directory names correspond to the process ID. One directory for each process.</p>
+
+<p>They all have the same layout:</p>
+
+<p><center><img src="/procfs/process_dir.png" alt="process_dir" /></center></p>
+
+<p>Among these files you can find out information such as performance of the process, where the executable is located, resource limits, or namespace information. There&rsquo;s a lot to explore but here&rsquo;s some highlights:</p>
+
+<h2 id="b-proc-pid-fd-b"><b> - <code>/proc/[pid]/fd</code> </b></h2>
+
+<p>A file descriptor is a process&rsquo; handle on an open file. This directory contains symbolic links to open file descriptors that the process has. Most importantly you can find the file descriptors for <a href="/blog/standardized-streams-and-shells">standardized streams</a>. One use case for this is using <code>tail</code> to follow logs printed to standard error of a particular process (<code>tail -f /proc/[pid]/fd/2</code>)</p>
+
+<h2 id="b-proc-pid-exe-and-proc-pid-cmdline-b"><b> - <code>/proc/[pid]/exe</code> and <code>/proc/[pid]/cmdline</code> </b></h2>
+
+<p>The <code>exe</code> file is a symbolic link to the executable that spawned the process. This could be useful if you have a program that wants to re-execute itself. The <code>cmdline</code> file will tell you what arguments were passed at the command line to run that process.</p>
+
+<h2 id="b-proc-pid-stat-proc-pid-status-b"><b> - <code>/proc/[pid]/stat</code> / <code>/proc/[pid]/status</code> </b></h2>
+
+<p>The <code>stat</code> and <code>status</code> files contain resource usage information about the process. Everything from what CPU core the process is running on, to how many clock ticks the process has spent running or idle. Any system monitor program such as <code>top</code> would read the <code>stat</code> file every few seconds for CPU and Memory share percentages.</p>
+
+<h2 id="b-proc-kallsyms-b"><b> - <code>/proc/kallsyms</code> </b></h2>
+
+<p>Here&rsquo;s a really cool one. This contains every symbol (function or variable) in your kernels code. If you <code>cat</code> it as root it&rsquo;ll also give you their static memory addresses. This is used for setting <a href="https://lwn.net/Articles/132196/">kprobes</a> or for use in kernel modules.</p>
+
+<h2 id="b-proc-self-b"><b> - <code>/proc/self</code> </b></h2>
+
+<p>This is a symlink to the <i>currently running</i> process. Meaning this will be the <code>/proc/[pid]</code> directory of whatever process requests access to it.</p>
+
+<p><center><img src="/procfs/self.png" alt="self" /></center></p>
+
+<p>The directories and files in <code>/proc</code> don&rsquo;t actually exist on disk. The procfs is the kernel representing the proceses on your system <i>as if</i> they were files. Whenever a process requests files in the procfs, the kernel responds with the contents of the theoretical file.</p>
+
+<p>Now if only Apple would enable procfs on Macos&hellip;</p>
+
+        </article>
+  </div>
+<aside id="meta">
+    <div>
+    
+     
+    </div>
+
+</aside>
+</main>
+
+
+	<footer role="contentinfo">
+    <div class="hr"></div>
+    
+		<div>
+        <img onclick="emailfunc()" class="socialimg" src="/social/email.png"/>
+        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
+        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
+        <a class="sociallink" href="https://www.linkedin.com/in/grantseltzerrichman/"><img class="socialimg" src="/social/linkedin.png"/></a>
+        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
+        <a class="sociallink" href="/photos/photos"><img class="socialimg" src="/social/camera.png"></a>
+    </div>
+    <p id="email"></p>
+		<div class="copyright">Copyright &copy; 2018 - 2019</div>
+	</footer>
+
+  </div>
+
+</body>
+</html>
