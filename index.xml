@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>GrantSeltzer</title>
@@ -6,10 +6,21 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 02 Oct 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 11 Dec 2019 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Using Karn for Seccomp Enforcement</title>
+      <link>https://grantseltzer.github.io/blog/karn/</link>
+      <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/karn/</guid>
+      <description>me when someone turns off seccomp
+Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!</description>
+    </item>
     
     <item>
       <title>Linux Procfs</title>
