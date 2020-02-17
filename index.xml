@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>GrantSeltzer</title>
@@ -6,10 +6,21 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 11 Dec 2019 03:32:37 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 14 Feb 2020 03:32:37 +0000</lastBuildDate>
     
 	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Tracing Go Functions with eBPF: Part 1</title>
+      <link>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</link>
+      <pubDate>Fri, 14 Feb 2020 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</guid>
+      <description>eBPF makes you an omniscient gopher
+eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
+There&amp;rsquo;s many use cases for eBPF.</description>
+    </item>
     
     <item>
       <title>Using Karn for Seccomp Enforcement</title>
@@ -28,7 +39,7 @@ For example, A developer using Karn can simply specify that their application ne
       <pubDate>Wed, 02 Oct 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/procfs/</guid>
-      <description>I love the procfs because it provides an intuative and easy to use interface for interacting with the kernel. In the same way you&amp;rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.
+      <description>I love the procfs because it provides an intuitive and easy to use interface for interacting with the kernel. In the same way you&amp;rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.
 A procfs is mounted at /proc by default. If you go into /proc you&amp;rsquo;ll see something like this:</description>
     </item>
     
@@ -112,7 +123,7 @@ Assembly code cannot lie. By reading assembly we become as close as possible to 
       
       <guid>https://grantseltzer.github.io/about/about/</guid>
       <description>My name is Grant Seltzer Richman. I am a Security Engineer at Oscar Health. Previously I worked as a software engineer for Capsule8. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about systems, security, and sabermetrics and posting photos from good hiking trips.
-Feel free to reach out if you want to say hi! Also here&amp;rsquo;s a picture of me:</description>
+Feel free to reach out if you want to say hi!</description>
     </item>
     
     <item>
