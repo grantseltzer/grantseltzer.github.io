@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.65.0-DEV" />
+<meta name="generator" content="Hugo 0.59.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -49,9 +49,14 @@
   <main role="main">
   <div>
         <article id="content">
-           <!-- raw HTML omitted -->
+           <p><span style="color:grey;font-style: italic;font-size: 14px">
+This post discusses building go test binaries and walking through them with delve
+</span></p>
+
 <p>I recently was working on debugging a unit test I wrote in Go. I couldn&rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a <code>go test</code> and a <code>go run</code>. I was looking through Go build mode <a href="https://golang.org/cmd/go/#hdr-Build_modes">documentation</a> while wondering if I could step through it with a debugger. Lo and behold you can compile your tests into an ELF executable!</p>
-<p>Let&rsquo;s take a look at this esoteric example <!-- raw HTML omitted -->(inspired by <a href="https://twitter.com/davecheney/status/1133172785440624640">Dave Cheney</a>)<!-- raw HTML omitted -->:</p>
+
+<p>Let&rsquo;s take a look at this esoteric example <i>(inspired by <a href="https://twitter.com/davecheney/status/1133172785440624640">Dave Cheney</a>)</i>:</p>
+
 <pre><code>package switchers
 
 func SwitchFunction(a, b int, c *int) string {
@@ -64,7 +69,9 @@ func SwitchFunction(a, b int, c *int) string {
        return &quot;c&quot;
     }
 }
-</code></pre><pre><code>package switchers
+</code></pre>
+
+<pre><code>package switchers
 
 import &quot;testing&quot;
 
@@ -82,10 +89,16 @@ func TestSwitch(t *testing.T) {
         t.Error(&quot;wtf?&quot;)
     }
 }
-</code></pre><p>We can compile a test binary with <code>go test -c</code>. As it turns out, the go <code>test</code> command is completely configurable with all linker, loader, and runtime flags. For example, you can change your <code>GOOS</code> and <code>GOARCH</code> environment variables to compile different test files.</p>
+</code></pre>
+
+<p>We can compile a test binary with <code>go test -c</code>. As it turns out, the go <code>test</code> command is completely configurable with all linker, loader, and runtime flags. For example, you can change your <code>GOOS</code> and <code>GOARCH</code> environment variables to compile different test files.</p>
+
 <p>You can then go ahead and run that binary through a debugger, such as <a href="https://github.com/go-delve/delve">delve</a> with <code>dlv exec switchers.test</code></p>
+
 <p>You&rsquo;re going to want to set a breakpoint for the unit test you&rsquo;re trying to debug and continue to it:</p>
-<p><img src="/test-build-modes/breakcontinue.png" alt="breakcontinue"></p>
+
+<p><img src="/test-build-modes/breakcontinue.png" alt="breakcontinue" /></p>
+
 <p>From there you can step through your test one line (<code>step</code>) or instruction (<code>stepi</code>) at a time. Try out this example and see if you can figure out what&rsquo;s going on! Find the example code <a href="https://github.com/grantseltzer/switchers-blog-example">here</a>.</p>
 
         </article>
