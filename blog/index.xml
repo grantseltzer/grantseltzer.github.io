@@ -17,9 +17,8 @@
       <pubDate>Fri, 14 Feb 2020 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</guid>
-      <description>eBPF makes you an omniscient gopher
-eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
-There&amp;rsquo;s many use cases for eBPF.</description>
+      <description>eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
+There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do.</description>
     </item>
     
     <item>
@@ -28,9 +27,9 @@ There&amp;rsquo;s many use cases for eBPF.</description>
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/karn/</guid>
-      <description>me when someone turns off seccomp
-Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
-For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!</description>
+      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).
+So, how does it work?</description>
     </item>
     
     <item>
@@ -40,7 +39,8 @@ For example, A developer using Karn can simply specify that their application ne
       
       <guid>https://grantseltzer.github.io/blog/procfs/</guid>
       <description>I love the procfs because it provides an intuitive and easy to use interface for interacting with the kernel. In the same way you&amp;rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.
-A procfs is mounted at /proc by default. If you go into /proc you&amp;rsquo;ll see something like this:</description>
+A procfs is mounted at /proc by default. If you go into /proc you&amp;rsquo;ll see something like this:
+You&amp;rsquo;ll notice a lot of the directories that are just named by numbers.</description>
     </item>
     
     <item>
@@ -59,8 +59,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <pubDate>Thu, 15 Aug 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/test-build-modes/</guid>
-      <description>This post discusses building go test binaries and walking through them with delve 
-I recently was working on debugging a unit test I wrote in Go. I couldn&amp;rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a go test and a go run.</description>
+      <description>I recently was working on debugging a unit test I wrote in Go. I couldn&amp;rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a go test and a go run. I was looking through Go build mode documentation while wondering if I could step through it with a debugger.</description>
     </item>
     
     <item>
@@ -69,9 +68,9 @@ I recently was working on debugging a unit test I wrote in Go. I couldn&amp;rsqu
       <pubDate>Tue, 21 May 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
-      <description>In this post we discuss how standardized streams (stdin/stdout/stderr) work on Linux, especially related to shells. 
-Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
-Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:</description>
+      <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
+Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
+$~ cat /dev/urandom | less</description>
     </item>
     
     <item>
@@ -80,8 +79,8 @@ Standardized streams enable you to string together multiple commands with a pipe
       <pubDate>Tue, 09 Apr 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</guid>
-      <description>This post highlights a linker directive in Go. It allows us to import functions from a dynamic library even when CGO is disabled. I use the example of a contribution I recently made to the net and runtime packages to demonstrate its use case. 
-Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them here.</description>
+      <description>Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them here. One such &amp;lsquo;pragma&amp;rsquo; as Cheney calls them is //go:cgo_import_dynamic. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.
+Let&amp;rsquo;s check out an example from my recent contribution to the runtime package.</description>
     </item>
     
     <item>
@@ -90,10 +89,9 @@ Go has many little known features that allow you to give instructions to the com
       <pubDate>Thu, 04 Apr 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/the-beauty-of-io-writer/</guid>
-      <description>In this post we explore best practices of defining interfaces in Go. We use io.Writer to break down patterns and antipatterns. 
-A perfect example of a properly designed Go interface is io.Writer:
-type Writer interface { Write(p []byte) (n int, err error) }  It is short, simple, and powerful. The Write method takes a very generic slice of bytes and writes it to something.
-In Rob Pike&amp;rsquo;s Go Proverbs talk he talks about how in Go, interfaces are not declared to be satisfied, they&amp;rsquo;re satisfied implicitly.</description>
+      <description>A perfect example of a properly designed Go interface is io.Writer:
+type Writer interface { Write(p []byte) (n int, err error) } It is short, simple, and powerful. The Write method takes a very generic slice of bytes and writes it to something.
+In Rob Pike&amp;rsquo;s Go Proverbs talk he talks about how in Go, interfaces are not declared to be satisfied, they&amp;rsquo;re satisfied implicitly. An interface should be a way of classifying types, not a blueprint for declaring them.</description>
     </item>
     
     <item>
@@ -102,8 +100,7 @@ In Rob Pike&amp;rsquo;s Go Proverbs talk he talks about how in Go, interfaces ar
       <pubDate>Tue, 20 Nov 2018 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/understanding-cgroups/</guid>
-      <description>This post will introduce you to cgroups. The goal is to give a comprehensive enough explanation of cgroups and subsystems to broadly understand what they accomplish and how. The major focus will be on the CPU cgroup. The second section and third section will explore using cgroups from the command line. 
-Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited.</description>
+      <description>Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&amp;rsquo;t want a google chrome process (or it&amp;rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that. They are an extremely powerful tool by which you can guarentee limits on performance, but understanding how they work and how to use them can be a little daunting.</description>
     </item>
     
     <item>
@@ -112,8 +109,17 @@ Control groups (or cgroups) are a feature of the Linux kernel by which groups of
       <pubDate>Fri, 14 Sep 2018 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/dissecting-go-binaries/</guid>
-      <description>This post will introduce you to the basic concepts of disassembly and walk through writing a simple disassembler in Go. The goal is to make the whole concept of disassembly as accessible as possible and hopefully give you, the reader, a takeaway or two about how compiled Go binaries work. 
-Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips.</description>
+      <description>Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.
+If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t worry, most of us aren&amp;rsquo;t.</description>
+    </item>
+    
+    <item>
+      <title>Fermentation Experimentation</title>
+      <link>https://grantseltzer.github.io/blog/fermentation/</link>
+      <pubDate>Mon, 05 Aug 2013 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/fermentation/</guid>
+      <description>In recent months I&amp;rsquo;ve decided that I haven&amp;rsquo;t perpetuated enough hipster Brooklyn stereotypes and have taken up fermentation as a hobby. This post goes through a few of the experiments that I&amp;rsquo;ve run with varying success. My research mostly involved reading The Art Of Fermentation, an amazing tome of knowledge by Sandor Katz. In it, he goes into fascinating detail about almost every fermentation technique that&amp;rsquo;s been used through centuries of human history.</description>
     </item>
     
   </channel>

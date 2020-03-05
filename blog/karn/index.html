@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.65.0-DEV" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -49,62 +49,32 @@
   <main role="main">
   <div>
         <article id="content">
-           
-
-<p><center><img src="/karn-blog/karn_art.jpeg" alt="karn" /></center>
-<center><i>me when someone turns off seccomp</i></center></p>
-
+           <!-- raw HTML omitted -->
 <p><a href="https://github.com/grantseltzer/karn">Karn</a> aims to provide for Linux what <a href="https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html">entitlements</a> provide for iOS, or what <a href="https://man.openbsd.org/pledge.2">pledge</a> provides for OpenBSD. It does this by translating a high level set of intuitive &lsquo;entitlements&rsquo; into complex seccomp profiles.</p>
-
 <p>For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).</p>
-
 <p>So, how does it work?</p>
-
 <p><a href="https://www.kernel.org/doc/html/latest/userspace-api/seccomp_filter.html">Seccomp</a> is a powerful security system inside the linux kernel that allows programmers to limit system call privileges for running procceses. This is useful because you can do some scary things via system calls like load a kernel module, install bpf programs, or reboot a machine.</p>
-
 <p>Most container runtimes use seccomp as a way of limiting privilege by default. If a program running inside the container is potentially exploitable, seccomp is a useful line of defense, keeping attackers from doing serious damage.</p>
-
 <p>Here&rsquo;s an example of a seccomp configuration that you can use to block the <code>getcwd</code> system call and allow all others:</p>
-
-<p><center><img src="/karn-blog/no_getcwd.png" alt="no-getcwd" /></center>
-<center><i>an example seccomp profile</i></center></p>
-
+<!-- raw HTML omitted -->
 <p>You can run a container with the above profile. When a process tries to use the <code>getcwd</code> syscall a seccomp filter will be run that prevents it:</p>
-
-<p><center><img src="/karn-blog/running_getcwd.png" alt="no-getcwd" /></center></p>
-
+<!-- raw HTML omitted -->
 <p>Although containers have <a href="https://docs.docker.com/engine/security/seccomp/">default profiles</a> which grant all the permissions most applications will need, there are plenty of potential applications which will not be allowed. In those cases most people will instantly go for running their container with the <code>privileged</code> flag, disabling seccomp, apparmor, SELinux, and granting full device access. This opens applications up to a whole slew of risks. It&rsquo;s also an example of my most strongly held beliefs in security:</p>
-
-<p><b>If it&rsquo;s easier to disable a security control than it is to configure, it&rsquo;s getting disabled.</b></p>
-
+<p><!-- raw HTML omitted -->If it&rsquo;s easier to disable a security control than it is to configure, it&rsquo;s getting disabled.<!-- raw HTML omitted --></p>
 <p>For example, when was the last time you heard about someone configuring SELinux instead of turning it off when they got a violation?</p>
-
 <p>The reason so few people write custom seccomp configurations instead of turning seccomp off is because it requires a ton of domain knowledge of system calls, and a lot of work to profile applications. There are hundreds of system calls, often they&rsquo;re architecture specific, and different versions of the same library may use different versions of the same system call (i.e. fchownat vs fchown).</p>
-
 <p>A common approach people could take is to trace and profile their applications to see what system calls it uses and generate a profile based on that (<a href="https://podman.io/blogs/2019/10/15/generate-seccomp-profiles.html">example</a>). This however is fraught with difficulty and is fragile to the point of not actually solving the issue of stopping people from disabling seccomp.</p>
-
-<p>The central philosophy that lead me to writing Karn is this: <i>In order to have effective and sustainable security the operator has to strike a balance between usability and actual effectiveness.</i></p>
-
+<p>The central philosophy that lead me to writing Karn is this: <!-- raw HTML omitted -->In order to have effective and sustainable security the operator has to strike a balance between usability and actual effectiveness.<!-- raw HTML omitted --></p>
 <p>With that in mind, let&rsquo;s look at the design principles of Karn:</p>
-
-<p><b>1. Use high level entitlements that match how a developer/user thinks about their application.</b></p>
-
+<p><!-- raw HTML omitted -->1. Use high level entitlements that match how a developer/user thinks about their application.<!-- raw HTML omitted --></p>
 <p>People think of software as needing to make network connections, not needing to <code>setsockopt</code>, <code>bind</code>, <code>listen</code>, <code>sendmsg</code>, or <code>recvfrom</code>. Karn accomplishes this with it&rsquo;s custom written set of <a href="https://github.com/grantseltzer/karn/blob/master/pkg/entitlements/entitlements.go">entitlements</a>.</p>
-
-<p><b>2. Let developers use Karn how they want to.</b></p>
-
-<p>If the goal is to make seccomp as easy and accessible as possible then Karn shouldn&rsquo;t change anyone&rsquo;s workflow. It accomplishes this by generating <a href="https://github.com/opencontainers/runtime-spec">OCI-compliant</a> profiles for containers. It <i>also</i> provides simple <a href="https://github.com/grantseltzer/karn/blob/master/docs/quickstart.md#library">libraries</a> that you can use in your non-containerized programs to enforce seccomp rules at the start of your process execution. Currently libraries are available in both C and Go with more languages to come.</p>
-
-<p><b>3. Denylist instead of allowlist.</b></p>
-
+<p><!-- raw HTML omitted -->2. Let developers use Karn how they want to.<!-- raw HTML omitted --></p>
+<p>If the goal is to make seccomp as easy and accessible as possible then Karn shouldn&rsquo;t change anyone&rsquo;s workflow. It accomplishes this by generating <a href="https://github.com/opencontainers/runtime-spec">OCI-compliant</a> profiles for containers. It <!-- raw HTML omitted -->also<!-- raw HTML omitted --> provides simple <a href="https://github.com/grantseltzer/karn/blob/master/docs/quickstart.md#library">libraries</a> that you can use in your non-containerized programs to enforce seccomp rules at the start of your process execution. Currently libraries are available in both C and Go with more languages to come.</p>
+<p><!-- raw HTML omitted -->3. Denylist instead of allowlist.<!-- raw HTML omitted --></p>
 <p>This could be a controversial one. The seccomp man page and community typically encourages creating an allowlist. This means specifying what system calls are allowed, and denying all others by default. This would protect you in the case that a new system call is introduced in a newer kernel which is potentially dangerous.</p>
-
 <p>However, I feel this is too much of an ask for most users. The lift to profile an application is heavy, and fragile. Non-profiling techniques include static analysis which isn&rsquo;t effective.</p>
-
 <p>Missing a needed system call is way too common of an occurrence. If the generated profile breaks user&rsquo;s applications they aren&rsquo;t going to give Karn another chance. The added benefit from denying large swaths of dangerous system calls is so great that it&rsquo;s worth the small risk of missing one if it&rsquo;ll actually be used.</p>
-
-<h2 id="b-get-started-b"><b>Get Started!</b></h2>
-
+<h2 id="bget-startedb"><!-- raw HTML omitted -->Get Started!<!-- raw HTML omitted --></h2>
 <p>For more hands on documentation check out the <a href="https://github.com/grantseltzer/karn/blob/master/docs/quickstart.md">quickstart</a> over on github. Feel free to reach out on twitter to discuss, or if i&rsquo;ve convinced you to give Karn a try I encourage you to create issues or make a contribution! Above all, I hope you keep in mind the balance worth striking between effective and usable security.</p>
 
         </article>
