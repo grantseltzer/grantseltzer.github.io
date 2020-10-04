@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.69.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -45,24 +45,18 @@
   <i><span class="entry-meta"><time itemprop="datePublished" datetime="2019-09-18">September 18, 2019 </time></span></section></i>
   
 
+  
+
   </section>
   <main role="main">
   <div>
         <article id="content">
-           
-
-<p>Remember back to when your teacher in grade school would write on sheets of clear plastic, stack them, and display them with an overhead projector? That is exactly how <code>overlayfs</code> works&hellip; except with filesystems.</p>
-
+           <p>Remember back to when your teacher in grade school would write on sheets of clear plastic, stack them, and display them with an overhead projector? That is exactly how <code>overlayfs</code> works&hellip; except with filesystems.</p>
 <p>Overlay filesystems allow you to take multiple directory trees and view them as if they were merged together. The added benefit is that changes in the merged view do not affect the underlying directories. There are many use cases for this, mostly related to containers, but more on that at the end.</p>
-
 <p>Let&rsquo;s look at an example:</p>
-
-<p><center><img src="/overlay/seperate.png" alt="seperate" /></center></p>
-
+<!-- raw HTML omitted -->
 <p>Here we have three separate directories. They each contain various files. You may also notice that both <code>/tmp/middle</code> and <code>/tmp/upper</code> contain files with the same name (<code>c.txt</code>).</p>
-
 <p>Let&rsquo;s say I want to create an overlayfs with these three directories. You can do it from the command like this:</p>
-
 <pre><code>mount \
     -t overlay \
     -o \
@@ -71,28 +65,16 @@
     workdir=/tmp/workdir \
     none \
     /tmp/overlay
-</code></pre>
-
-<p>The order here is important. You can create an overlay with any amount of directories. The order in which you specify them is the order that they&rsquo;re effectively stacked on top of one another.</p>
-
-<p><center><img src="/overlay/stacked.png" alt="stacked" /></center></p>
-
+</code></pre><p>The order here is important. You can create an overlay with any amount of directories. The order in which you specify them is the order that they&rsquo;re effectively stacked on top of one another.</p>
+<!-- raw HTML omitted -->
 <p>Here&rsquo;s what creating the overlayfs mount is effectively doing. The &lsquo;overlay&rsquo; is what you see if you were to look through all these layers like sheets of clear plastic on an overhead projector:</p>
-
-<p><center><img src="/overlay/overlayview.png" alt="overlayview" /></center></p>
-
+<!-- raw HTML omitted -->
 <p>In the case of <code>c.txt</code> here, the instance of the file that&rsquo;s in the highest most layer is what&rsquo;s displayed.</p>
-
 <p>All of the layers except the top one are read-only. This means changes made to files from the unified overlay directory will not change the actual files. Changes would be written to a new file in the top most layer and displayed over the original. If you don&rsquo;t want any changes to files in your bottom layers you can just create an empty directory to use as your top layer.</p>
-
 <p>Here&rsquo;s an animation of what this all looks like in terminal:</p>
-
-<p><center><img src="/overlay/overlayfs.gif" alt="gif" /></center></p>
-
+<!-- raw HTML omitted -->
 <h1 id="why">Why?</h1>
-
 <p>Overlayfs is used so that multiple containers can share the same base image. The root file system of the image is stored somewhere on disk. An overlayfs is created for each running container where the bottom layer is the image rootfs and the top layer is mounted into the container.</p>
-
 <p>You can also use it in other ways. I like to create an overlay mount of my home directory and mount it into containers so that I have an environment that looks like my home but any changes won&rsquo;t persist once I close the container. This is useful for installing programs that I think may break my dependencies.</p>
 
         </article>

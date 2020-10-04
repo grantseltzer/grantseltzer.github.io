@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.59.1" />
+<meta name="generator" content="Hugo 0.69.0" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -45,21 +45,16 @@
   <i><span class="entry-meta"><time itemprop="datePublished" datetime="2020-02-14">February 14, 2020 </time></span></section></i>
   
 
+  
+
   </section>
   <main role="main">
   <div>
         <article id="content">
-           
-
-<p><center><img src="/weaver/DrManhattanGopher.png" alt="manhattangopher" /></center>
-<center><i>eBPF makes you an omniscient gopher</i></center></p>
-
+           <!-- raw HTML omitted -->
 <p>eBPF is a virtual machine, similar in concept to the JVM, except it&rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, <a href="https://lwn.net/Articles/132196/">kprobes</a>, or  <a href="https://www.kernel.org/doc/ols/2007/ols2007v1-pages-215-224.pdf">uprobes</a>.</p>
-
 <p>There&rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do. You can write an eBPF program which logs every time certain files are modified. You use eBPF to profile performance of your other programs. You can implement host-based networking rules, or use it for <a href="https://www.youtube.com/watch?v=yrrxFZfyEsw">writing malware</a>.</p>
-
 <p>I have become obsessed with eBPF. In particular the most interesting functionality to me is the ability to attach eBPF programs to uprobes. These are a seperate technology from eBPF but they play very well together. Uprobes let you create a hook at a memory address anywhere in userspace. That means after you compile a program, let&rsquo;s say one written in Go, you can attach a hook to a specified function inside that program. Let&rsquo;s look at an example:</p>
-
 <pre><code>package main
 
 func functionA() {
@@ -69,26 +64,15 @@ func functionA() {
 func main() {
     functionA()
 }
-</code></pre>
-
-<p>When you <code>go build</code> it, <code>functionA()</code> is created as a symbol in the created binary. We can see it here with this command:</p>
-
+</code></pre><p>When you <code>go build</code> it, <code>functionA()</code> is created as a symbol in the created binary. We can see it here with this command:</p>
 <pre><code>[*] objdump --syms ./test | grep functionA
 0000000000452330 g     F .text	0000000000000001 main.functionA
-</code></pre>
-
-<p><code>objdump</code> is used to list all the symbols in the binary. In the above output just worry about the memory offset all the way to the left, and the fact that it corresponds to our function <code>main.functionA</code>. (<i>Check out my other post, &lsquo;<a href="/blog/dissecting-go-binaries">Dissecting Go Binaries</a>&rsquo; for more info on this.</i>)</p>
-
+</code></pre><p><code>objdump</code> is used to list all the symbols in the binary. In the above output just worry about the memory offset all the way to the left, and the fact that it corresponds to our function <code>main.functionA</code>. (<!-- raw HTML omitted -->Check out my other post, &lsquo;<a href="/blog/dissecting-go-binaries">Dissecting Go Binaries</a>&rsquo; for more info on this.<!-- raw HTML omitted -->)</p>
 <p>So in this case, you can attach a uprobe to the <code>functionA</code> symbol, which you can have trigger an eBPF program. The uprobe is copied into memory anytime the binary is executed, meaning it will trigger anytime any process runs that function. Here&rsquo;s a diagram to help better visualize this:</p>
-
-<p><img src="/weaver/uprobe-ebpf.png" alt="diagram" /></p>
-
-<h1 id="let-s-write-some-ebpf">Let&rsquo;s write some eBPF</h1>
-
+<p><img src="/weaver/uprobe-ebpf.png" alt="diagram"></p>
+<h1 id="lets-write-some-ebpf">Let&rsquo;s write some eBPF</h1>
 <p>The best way to instrument eBPF programs is using a library called <a href="https://github.com/iovisor/bcc">bcc</a> which has bindings for high level languages like Go or Python. It lets you load, run, and receive output from eBPF programs to your userspace program. You can think of it as a compiler and runtime that you can use as a Go package.</p>
-
 <p>Take the following example Go program that we&rsquo;re going to trace:</p>
-
 <pre><code>package main
 
 import (
@@ -106,14 +90,9 @@ func main() {
 	http.HandleFunc(&quot;/&quot;, handlerFunction)
 	log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
 }
-</code></pre>
-
-<p>This is just a simple webserver that serves a polite greeting. Doing a <code>curl localhost:8080</code> or going to <code>localhost:8080</code> in your browser will hit the endpoint.</p>
-
+</code></pre><p>This is just a simple webserver that serves a polite greeting. Doing a <code>curl localhost:8080</code> or going to <code>localhost:8080</code> in your browser will hit the endpoint.</p>
 <p>We&rsquo;re going to use eBPF and uprobes to tell us every time the function <code>handlerFunction</code> is called, and therefore every time someone connects to our webserver.</p>
-
-<p>The eBPF program is going to be triggered every time <code>handlerFunction</code> is called. We&rsquo;re going to keep things simple, so the only thing it&rsquo;s actually going to do is send a message to our Go program saying &ldquo;Hey, the handler was called!&rdquo;. Let&rsquo;s look and then break it down:</p>
-
+<p>The eBPF program is going to be triggered every time <code>handlerFunction</code> is called. We&rsquo;re going to keep things simple, so the only thing it&rsquo;s actually going to do is send a message to our Go program saying &ldquo;Hey, the handler was called!&quot;. Let&rsquo;s look and then break it down:</p>
 <pre><code>#include &lt;uapi/linux/ptrace.h&gt;
 #include &lt;linux/string.h&gt;
 
@@ -121,36 +100,25 @@ BPF_PERF_OUTPUT(events);
 
 inline int function_was_called(struct pt_regs *ctx) {
 
-	char x[29] = &quot;Hey, the handler was called!&quot;;
-	events.perf_submit(ctx, &amp;x, sizeof(x));
-	return 0;
+   char x[29] = &quot;Hey, the handler was called!&quot;;
+   events.perf_submit(ctx, &amp;x, sizeof(x));
+   return 0;
 }
-</code></pre>
-
-<p>Just a couple things to note here. First off, we need a way for the eBPF program to tell us that it was triggered (meaning the handler was called in the Go program that we&rsquo;re tracing). To accomplish this, we use a perf output buffer. We can send arbitrary data over it from eBPF, and read it in the Go program which loaded it. We create this table using the helper function <code>BPF_PERF_OUTPUT</code>, which takes one parameter, the name of the table we want to create. You can see it then being used with the call: <code>events.perf_submit(...)</code>. That call just sends the string that we have hardcoded through it.</p>
-
+</code></pre><p>Just a couple things to note here. First off, we need a way for the eBPF program to tell us that it was triggered (meaning the handler was called in the Go program that we&rsquo;re tracing). To accomplish this, we use a perf output buffer. We can send arbitrary data over it from eBPF, and read it in the Go program which loaded it. We create this table using the helper function <code>BPF_PERF_OUTPUT</code>, which takes one parameter, the name of the table we want to create. You can see it then being used with the call: <code>events.perf_submit(...)</code>. That call just sends the string that we have hardcoded through it.</p>
 <p>For now you can ignore the <code>pt_regs ctx</code> parameter, more on that in part two.</p>
-
 <p>Now let&rsquo;s write some Go code. We&rsquo;re going to use bcc to compile the above eBPF code, load it, and then listen for output.</p>
-
 <pre><code>bpfModule := bcc.NewModule(eBPF_Text, []string{}) // We're going to store the eBPF program above in a string, named eBPF_Text
 
 uprobeFd, err := bpfModule.LoadUprobe(&quot;function_was_called&quot;)
 if err != nil {
 	log.Fatal(err)
 }
-</code></pre>
-
-<p>All we&rsquo;re doing above is creating a new module (<i>not a kernel module</i>) by passing in the text of our eBPF program which is kept in a string. We&rsquo;re then creating a new uprobe which we&rsquo;re going to attach the eBPF function <code>function_was_called</code>.</p>
-
+</code></pre><p>All we&rsquo;re doing above is creating a new module (<!-- raw HTML omitted -->not a kernel module<!-- raw HTML omitted -->) by passing in the text of our eBPF program which is kept in a string. We&rsquo;re then creating a new uprobe which we&rsquo;re going to attach the eBPF function <code>function_was_called</code>.</p>
 <pre><code>err = bpfModule.AttachUprobe(pathToBinaryToTrace, &quot;main.handlerFunction&quot;, uprobeFd, -1)
 if err != nil {
 	log.Fatal(err)
 }
-</code></pre>
-
-<p>Uprobes attach to userspace memory locations. In order to do this we give <code>AttachUprobe</code> a path to the binary that contains the symbol <code>&quot;main.handlerFunction&quot;</code>. This helper function will figure out the exact memory address within the binary for us. Whenever the binaries executable code section is mapped into memory, so will the uprobe.</p>
-
+</code></pre><p>Uprobes attach to userspace memory locations. In order to do this we give <code>AttachUprobe</code> a path to the binary that contains the symbol <code>&quot;main.handlerFunction&quot;</code>. This helper function will figure out the exact memory address within the binary for us. Whenever the binaries executable code section is mapped into memory, so will the uprobe.</p>
 <pre><code>table := bcc.NewTable(bpfModule.TableId(&quot;events&quot;), bpfModule)
 
 outputChannel := make(chan []byte)
@@ -159,10 +127,7 @@ perfMap, err := bcc.InitPerfMap(table, outputChannel)
 if err != nil {
 	log.Fatal(err)
 }
-</code></pre>
-
-<p>Next we set up the perf output buffer on the Go userspace side. We&rsquo;ll interact with it in an idiomatic Go way, through a simple channel.</p>
-
+</code></pre><p>Next we set up the perf output buffer on the Go userspace side. We&rsquo;ll interact with it in an idiomatic Go way, through a simple channel.</p>
 <pre><code>
 perfMap.Start()
 defer perfMap.Stop()
@@ -171,20 +136,12 @@ for {
 	value := &lt;-channel
 	fmt.Println(string(value))
 }
-</code></pre>
-
-<p>The above code just prints output as it comes in, and that&rsquo;s it.</p>
-
+</code></pre><p>The above code just prints output as it comes in, and that&rsquo;s it.</p>
 <p>Now if we run our webserver, then run our tracing eBPF/Go program (or in reverse order, doesn&rsquo;t matter), the tracing program will let us know every time someone hits the webserver!</p>
-
 <p>Here&rsquo;s a demo recording:</p>
-
-<p><img src="/weaver/demo.gif" alt="animation" /></p>
-
+<p><img src="/weaver/demo.gif" alt="animation"></p>
 <p>Code for the: <a href="https://gist.github.com/grantseltzer/43154e656b5df1d4fe2f3d9a62cb3eeb">webserver</a> and <a href="https://gist.github.com/grantseltzer/f82d5e2471e563f6aaf800ad9cdcf8a1">tracer</a></p>
-
 <h2 id="next-steps">Next steps</h2>
-
 <p>In the next part of this series we&rsquo;re going to learn about how we can extract a lot more information using eBPF. Things like function arguments, calling process information, and more!</p>
 
         </article>
