@@ -6,11 +6,7 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 May 2020 03:32:37 +0000</lastBuildDate>
-    
-	<atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Sun, 10 May 2020 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tracing Go Functions with eBPF Part 2</title>
       <link>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2/</link>
@@ -28,7 +24,7 @@ In this post we&amp;rsquo;re going to delve a bit deeper.</description>
       
       <guid>https://grantseltzer.github.io/blog/fermentation/</guid>
       <description>In the past year I&amp;rsquo;ve decided that I haven&amp;rsquo;t perpetuated enough Brooklyn stereotypes and have taken up fermentation as a hobby. This post goes through a few of the experiments that I&amp;rsquo;ve run with varying success.
-My set up is pretty basic. I have a small cabinet/closet in the corner of my kitchen that i&amp;rsquo;ve designated as the &#39;fermentation station&#39;. I have a thermometer but it mostly stays at room temperature.</description>
+My set up is pretty basic. I have a small cabinet/closet in the corner of my kitchen that i&amp;rsquo;ve designated as the &amp;lsquo;fermentation station&amp;rsquo;. I have a thermometer but it mostly stays at room temperature.</description>
     </item>
     
     <item>
@@ -37,7 +33,7 @@ My set up is pretty basic. I have a small cabinet/closet in the corner of my kit
       <pubDate>Fri, 14 Feb 2020 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</guid>
-      <description>eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
+      <description>eBPF makes you an omniscient gophereBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
 There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do.</description>
     </item>
     
@@ -47,9 +43,8 @@ There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full s
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/karn/</guid>
-      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
-For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).
-So, how does it work?</description>
+      <description>me when someone turns off seccompKarn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!</description>
     </item>
     
     <item>

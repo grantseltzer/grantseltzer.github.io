@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.75.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -51,16 +51,18 @@
   <main role="main">
   <div>
         <article id="content">
-           <!-- raw HTML omitted -->
+           <p><img src="/karn-blog/karn_art.jpeg" alt="karn"></p>
+<p><!-- raw HTML omitted -->me when someone turns off seccomp<!-- raw HTML omitted --></p>
 <p><a href="https://github.com/grantseltzer/karn">Karn</a> aims to provide for Linux what <a href="https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html">entitlements</a> provide for iOS, or what <a href="https://man.openbsd.org/pledge.2">pledge</a> provides for OpenBSD. It does this by translating a high level set of intuitive &lsquo;entitlements&rsquo; into complex seccomp profiles.</p>
 <p>For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).</p>
 <p>So, how does it work?</p>
 <p><a href="https://www.kernel.org/doc/html/latest/userspace-api/seccomp_filter.html">Seccomp</a> is a powerful security system inside the linux kernel that allows programmers to limit system call privileges for running procceses. This is useful because you can do some scary things via system calls like load a kernel module, install bpf programs, or reboot a machine.</p>
 <p>Most container runtimes use seccomp as a way of limiting privilege by default. If a program running inside the container is potentially exploitable, seccomp is a useful line of defense, keeping attackers from doing serious damage.</p>
 <p>Here&rsquo;s an example of a seccomp configuration that you can use to block the <code>getcwd</code> system call and allow all others:</p>
-<!-- raw HTML omitted -->
+<p><img src="/karn-blog/no_getcwd.png" alt="no-getcwd"></p>
+<p><!-- raw HTML omitted -->an example seccomp profile<!-- raw HTML omitted --></p>
 <p>You can run a container with the above profile. When a process tries to use the <code>getcwd</code> syscall a seccomp filter will be run that prevents it:</p>
-<!-- raw HTML omitted -->
+<p><img src="/karn-blog/running_getcwd.png" alt="no-getcwd"></p>
 <p>Although containers have <a href="https://docs.docker.com/engine/security/seccomp/">default profiles</a> which grant all the permissions most applications will need, there are plenty of potential applications which will not be allowed. In those cases most people will instantly go for running their container with the <code>privileged</code> flag, disabling seccomp, apparmor, SELinux, and granting full device access. This opens applications up to a whole slew of risks. It&rsquo;s also an example of my most strongly held beliefs in security:</p>
 <p><!-- raw HTML omitted -->If it&rsquo;s easier to disable a security control than it is to configure, it&rsquo;s getting disabled.<!-- raw HTML omitted --></p>
 <p>For example, when was the last time you heard about someone configuring SELinux instead of turning it off when they got a violation?</p>

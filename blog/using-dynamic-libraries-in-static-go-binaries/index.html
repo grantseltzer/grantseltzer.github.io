@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.75.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -55,15 +55,47 @@
 <p>Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them <a href="https://dave.cheney.net/2018/01/08/gos-hidden-pragmas">here</a>. One such &lsquo;pragma&rsquo; as Cheney calls them is  <code>//go:cgo_import_dynamic</code>. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.</p>
 <p>Let&rsquo;s check out an example from my <a href="https://go-review.googlesource.com/c/go/+/166297">recent contribution</a> to the runtime package.</p>
 <p>First, in lookup_darwin.go we use the cgo_import_dynamic directive for <code>res_search</code></p>
-<!-- raw HTML omitted -->
-<p>When the linker is run after compilation it executes this directive. The linker pulls in the <code>res_search</code> routine from the libSystem dynamic library (found at the given path). It then makes the routine referenceable in Go&rsquo;s assembly code by the name <code>libc_res_search</code>.</p>
+<pre><code>//go:cgo_import_dynamic libc_res_search res_search &quot;/usr/lib/libSystem.B.dylib&quot;
+</code></pre><p>When the linker is run after compilation it executes this directive. The linker pulls in the <code>res_search</code> routine from the libSystem dynamic library (found at the given path). It then makes the routine referenceable in Go&rsquo;s assembly code by the name <code>libc_res_search</code>.</p>
 <p>Now in order to link assembly code to Go we have a couple of pieces of glue to put in place. Let&rsquo;s take a look first, and then analyze:</p>
-<!-- raw HTML omitted -->
-<p>The first thing to look at is the symbol definition of <code>res_search_trampoline()</code> <!-- raw HTML omitted -->(line 13)<!-- raw HTML omitted -->. This is a function which will be defined in assembly. Defining the symbol in Go code allows the linker to make it referenceable.</p>
+<pre><code>//go:nosplit
+//go:cgo_unsafe_args
+func res_search(dname *byte, class int32, rtype int32, answer *byte, anslen int32) (int32, int32) {
+	args := struct {
+		dname                   *byte
+		class, rtype            int32
+		answer                  *byte
+		anslen, retSize, retErr int32
+	}{dname, class, rtype, answer, anslen, 0, 0}
+	libcCall(unsafe.Pointer(funcPC(res_search_trampoline)), unsafe.Pointer(&amp;args))
+	return args.retSize, args.retErr
+}
+func res_search_trampoline()
+</code></pre><p>The first thing to look at is the symbol definition of <code>res_search_trampoline()</code> <!-- raw HTML omitted -->(line 13)<!-- raw HTML omitted -->. This is a function which will be defined in assembly. Defining the symbol in Go code allows the linker to make it referenceable.</p>
 <p>We also need a helper function which takes the arguments to pass to the assembly routine, and makes a call to <code>libcCall()</code>. This is a helper function defined inside the runtime package. It takes both the trampoline symbol address, and address of the arguments. It uses these to orchestrate the actual call.</p>
 <p>Finally we define the assembly routine for <code>res_search_trampoline</code> which is linked by the Go symbol above.</p>
-<!-- raw HTML omitted -->
-<p>All this routine does is load the arguments by their offset (calculated by size) and call <code>libc_res_search</code>. It also checks a possible error and calls <code>libc_error</code> (another statically linked function!) accordingly.</p>
+<pre><code>TEXT runtime·res_search_trampoline(SB),NOSPLIT,$0
+    PUSHQ    BP
+    MOVQ     SP, BP
+    MOVQ     DI, BX   // move DI into BX to preserve struct addr
+    MOVL     24(BX), R8  // arg 5 anslen
+    MOVQ     16(BX), CX  // arg 4 answer
+    MOVL     12(BX), DX  // arg 3 type
+    MOVL     8(BX), SI   // arg 2 class
+    MOVQ     0(BX), DI   // arg 1 name
+    CALL     libc_res_search(SB)
+    XORL     DX, DX
+    CMPQ     AX, $-1
+    JNE ok
+    CALL     libc_error(SB)
+    MOVLQSX  (AX), DX             // move return from libc_error into DX
+    XORL     AX, AX               // size on error is 0
+ok:
+    MOVQ    AX, 28(BX) // size
+    MOVQ    DX, 32(BX) // error code
+    POPQ    BP
+    RET
+</code></pre><p>All this routine does is load the arguments by their offset (calculated by size) and call <code>libc_res_search</code>. It also checks a possible error and calls <code>libc_error</code> (another statically linked function!) accordingly.</p>
 <p>From these definitions we can now call the res_search helper function as if it&rsquo;s the res_search function in libSystem. This is all of course regardless of if CGO is enabled!</p>
 <p>Do keep in mind, this directive is purposely not part of the language specification. It should probably only be done in Go&rsquo;s runtime package.</p>
 

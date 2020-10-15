@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.75.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -53,17 +53,32 @@
         <article id="content">
            <!-- raw HTML omitted -->
 <p>A perfect example of a properly designed Go interface is <code>io.Writer</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Writer</span> <span style="color:#66d9ef">interface</span> {
-    <span style="color:#a6e22e">Write</span>(<span style="color:#a6e22e">p</span> []<span style="color:#66d9ef">byte</span>) (<span style="color:#a6e22e">n</span> <span style="color:#66d9ef">int</span>, <span style="color:#a6e22e">err</span> <span style="color:#66d9ef">error</span>)
+<pre><code>type Writer interface {
+    Write(p []byte) (n int, err error)
 }
-</code></pre></div><p>It is short, simple, and powerful. The <code>Write</code> method takes a very generic slice of bytes and writes it to <!-- raw HTML omitted -->something<!-- raw HTML omitted -->.</p>
+</code></pre><p>It is short, simple, and powerful. The <code>Write</code> method takes a very generic slice of bytes and writes it to <!-- raw HTML omitted -->something<!-- raw HTML omitted -->.</p>
 <p>In Rob Pike&rsquo;s <a href="https://youtu.be/PAAkCSZUG1c?t=317">Go Proverbs talk</a> he talks about how in Go, interfaces are not declared to be satisfied, they&rsquo;re satisfied implicitly. An interface should be a way of classifying types, not a blueprint for declaring them. In practical terms, an interface should not at all care about how it&rsquo;s  implemented.</p>
 <p>Let&rsquo;s think about how <code>io.Writer</code> embodies this ideal. The <code>Write</code> method takes the most generic form of data, a slice of bytes. Any other data type, no matter how complex, can become a slice of bytes. In this way the method does not care about what&rsquo;s it&rsquo;s passed. It leaves so much up to the implementation&rsquo;s discretion.</p>
 <p>For example, you can define a writer that takes that slice of bytes, encodes it as a jpeg, and writes it to a specific file. You can define a writer that takes the slice of bytes, treats it as a string, and prints it to standard error. You can also define a writer that takes the slice of bytes, encodes it as mp3 data and writes it to an audio device. Currently there are over 75 types that satisfy the <code>io.Writer</code> interface in the Go standard library alone.</p>
 <p>This flexibility is subtle but very intentional.</p>
-<p>Let&rsquo;s say you create a package that produces some kind of data, ASCII art for example. It is not your job to worry about what other programmers are using that art for. If you are exporting API that creates the art, and writes it to a file specified by a path, you are reinventing the wheel. You would have to then create an function for every possible output location. You would also be denying your users a ton of flexibility to use any of the unlimited <code>io.Writer</code>'s they may want to use.</p>
-<!-- raw HTML omitted -->
-<p>The more methods a type has to define to conform to an interface, the less abstraction the interface provides. It&rsquo;s better to break up the functionality into multiple interfaces, or none at all. For the former, consider <a href="https://golang.org/pkg/bytes/#Buffer">bytes.Buffer</a>. It implements both <code>io.Reader</code> and <code>io.Writer</code> interfaces, meaning it has <code>Read</code> and <code>Write</code> methods. The same is true of <code>os.File</code>.</p>
+<p>Let&rsquo;s say you create a package that produces some kind of data, ASCII art for example. It is not your job to worry about what other programmers are using that art for. If you are exporting API that creates the art, and writes it to a file specified by a path, you are reinventing the wheel. You would have to then create an function for every possible output location. You would also be denying your users a ton of flexibility to use any of the unlimited <code>io.Writer</code>&rsquo;s they may want to use.</p>
+<pre><code>// This defeats the purpose of io.Writer
+func WriteAsciiArtToFile(path string) error { 
+    f, err := os.Open(path)
+    if err != nil {
+        return err
+    }
+    artBytes := makeSomeArt()
+    _, err = f.Write(artBytes)
+    return err
+}
+
+// Not an anti-pattern, idgaf what you do with my ascii art
+func WriteAsciiArt(w io.Writer) (n int, error) {
+    artBytes := makeSomeArt()
+    return w.Write(artBytes)
+}
+</code></pre><p>The more methods a type has to define to conform to an interface, the less abstraction the interface provides. It&rsquo;s better to break up the functionality into multiple interfaces, or none at all. For the former, consider <a href="https://golang.org/pkg/bytes/#Buffer">bytes.Buffer</a>. It implements both <code>io.Reader</code> and <code>io.Writer</code> interfaces, meaning it has <code>Read</code> and <code>Write</code> methods. The same is true of <code>os.File</code>.</p>
 <p>When defining an interface you should consider the beauty of <code>io.Writer</code>. It makes for easy testing, it&rsquo;s flexible, easy to understand, and does not have any opinions. Be one with <code>io.Writer</code>.</p>
 
         </article>

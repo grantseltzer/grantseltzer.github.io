@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.75.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -51,7 +51,8 @@
   <main role="main">
   <div>
         <article id="content">
-           <!-- raw HTML omitted -->
+           <p><img src="/weaver/DrManhattanGopher.png" alt="manhattangopher"></p>
+<p><!-- raw HTML omitted -->eBPF makes you an omniscient gopher<!-- raw HTML omitted --></p>
 <p>eBPF is a virtual machine, similar in concept to the JVM, except it&rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, <a href="https://lwn.net/Articles/132196/">kprobes</a>, or  <a href="https://www.kernel.org/doc/ols/2007/ols2007v1-pages-215-224.pdf">uprobes</a>.</p>
 <p>There&rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do. You can write an eBPF program which logs every time certain files are modified. You use eBPF to profile performance of your other programs. You can implement host-based networking rules, or use it for <a href="https://www.youtube.com/watch?v=yrrxFZfyEsw">writing malware</a>.</p>
 <p>I have become obsessed with eBPF. In particular the most interesting functionality to me is the ability to attach eBPF programs to uprobes. These are a seperate technology from eBPF but they play very well together. Uprobes let you create a hook at a memory address anywhere in userspace. That means after you compile a program, let&rsquo;s say one written in Go, you can attach a hook to a specified function inside that program. Let&rsquo;s look at an example:</p>
@@ -92,7 +93,7 @@ func main() {
 }
 </code></pre><p>This is just a simple webserver that serves a polite greeting. Doing a <code>curl localhost:8080</code> or going to <code>localhost:8080</code> in your browser will hit the endpoint.</p>
 <p>We&rsquo;re going to use eBPF and uprobes to tell us every time the function <code>handlerFunction</code> is called, and therefore every time someone connects to our webserver.</p>
-<p>The eBPF program is going to be triggered every time <code>handlerFunction</code> is called. We&rsquo;re going to keep things simple, so the only thing it&rsquo;s actually going to do is send a message to our Go program saying &ldquo;Hey, the handler was called!&quot;. Let&rsquo;s look and then break it down:</p>
+<p>The eBPF program is going to be triggered every time <code>handlerFunction</code> is called. We&rsquo;re going to keep things simple, so the only thing it&rsquo;s actually going to do is send a message to our Go program saying &ldquo;Hey, the handler was called!&rdquo;. Let&rsquo;s look and then break it down:</p>
 <pre><code>#include &lt;uapi/linux/ptrace.h&gt;
 #include &lt;linux/string.h&gt;
 

@@ -17,7 +17,7 @@
 </script>
 
 <meta charset="utf-8">
-<meta name="generator" content="Hugo 0.69.0" />
+<meta name="generator" content="Hugo 0.75.1" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
 <link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
@@ -51,7 +51,7 @@
   <main role="main">
   <div>
         <article id="content">
-           <!-- raw HTML omitted -->
+           <p><img src="/weaver/glitch-gopher.png" alt="gopher"></p>
 <p>In <a href="/blog/tracing-go-functions-with-ebpf-part-1">part 1</a> of this series we learned about how to attach uprobes and eBPF programs to specific functions in Go programs. We went through an example where we attached our probe to the handler of a webserver. Everytime the probe was triggered we simply printed out a log saying that the handler was called. This could be adapted to record metrics, perhaps using counters instead of log lines.</p>
 <p>In this post we&rsquo;re going to delve a bit deeper. We&rsquo;re going to use the capabilities that eBPF has for traversing through the memory of the program we&rsquo;re tracing.</p>
 <h2 id="arguments">Arguments</h2>
@@ -110,76 +110,76 @@ inline int get_arguments(struct pt_regs *ctx) {
 <table>
 <thead>
 <tr>
-<th align="left">Datatypes</th>
-<th align="left">Size (in bytes)</th>
-<th align="left">Note</th>
+<th style="text-align:left">Datatypes</th>
+<th style="text-align:left">Size (in bytes)</th>
+<th style="text-align:left">Note</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td align="left">int8, uint8</td>
-<td align="left">1</td>
+<td style="text-align:left">int8, uint8</td>
+<td style="text-align:left">1</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">int16, uint16</td>
-<td align="left">2</td>
+<td style="text-align:left">int16, uint16</td>
+<td style="text-align:left">2</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">int32, uint32</td>
-<td align="left">4</td>
+<td style="text-align:left">int32, uint32</td>
+<td style="text-align:left">4</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">int, uint, int64, uint64</td>
-<td align="left">8</td>
+<td style="text-align:left">int, uint, int64, uint64</td>
+<td style="text-align:left">8</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">float32</td>
-<td align="left">4</td>
+<td style="text-align:left">float32</td>
+<td style="text-align:left">4</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">float64</td>
-<td align="left">8</td>
+<td style="text-align:left">float64</td>
+<td style="text-align:left">8</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">bool</td>
-<td align="left">1</td>
+<td style="text-align:left">bool</td>
+<td style="text-align:left">1</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">byte</td>
-<td align="left">1</td>
+<td style="text-align:left">byte</td>
+<td style="text-align:left">1</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">rune</td>
-<td align="left">4</td>
+<td style="text-align:left">rune</td>
+<td style="text-align:left">4</td>
 <td></td>
 </tr>
 <tr>
-<td align="left">string</td>
-<td align="left">16</td>
-<td align="left">8 for address of array, then 8 for length</td>
+<td style="text-align:left">string</td>
+<td style="text-align:left">16</td>
+<td style="text-align:left">8 for address of array, then 8 for length</td>
 </tr>
 <tr>
-<td align="left">pointers</td>
-<td align="left">8</td>
-<td align="left">Same size regardless of what it&rsquo;s a pointer to.</td>
+<td style="text-align:left">pointers</td>
+<td style="text-align:left">8</td>
+<td style="text-align:left">Same size regardless of what it&rsquo;s a pointer to.</td>
 </tr>
 <tr>
-<td align="left">structs</td>
-<td align="left">8</td>
-<td align="left">Address of the struct. The same padding logic described below applies within the struct content.</td>
+<td style="text-align:left">structs</td>
+<td style="text-align:left">8</td>
+<td style="text-align:left">Address of the struct. The same padding logic described below applies within the struct content.</td>
 </tr>
 <tr>
-<td align="left">interfaces</td>
-<td align="left">16</td>
-<td align="left">Requires knowledge of the type by parsing DWARF info.</td>
+<td style="text-align:left">interfaces</td>
+<td style="text-align:left">16</td>
+<td style="text-align:left">Requires knowledge of the type by parsing DWARF info.</td>
 </tr>
 </tbody>
 </table>
