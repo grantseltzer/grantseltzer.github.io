@@ -1,57 +1,106 @@
 <!DOCTYPE html>
-<html lang="en-us">
-<head>
- 
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-131587033-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
 
-  gtag('config', 'UA-131587033-1');
-</script>
-<script>
-  function emailfunc() {
-    document.getElementById("email").innerHTML = "grantseltzer AT gmail DOT com";
-  }
-</script>
+    <head>
 
-<meta charset="utf-8">
-<meta name="generator" content="Hugo 0.75.1" />
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
-<link href="//fonts.googleapis.com/css?family=Open+Sans:400,800" rel="stylesheet" type="text/css">
-<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/github.min.css">
-<link rel="stylesheet" href="/css/normalize.css">
-<link rel="stylesheet" href="/css/skeleton.css">
-<link rel="stylesheet" href="/css/custom.css">
-<title>Using dynamic libraries in static Go binaries</title>
-</head>
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.75.1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<body> 
+        <style>
 
- 	<div class="topbar">
-			<a id="homebutton" href="/">GSR</a>
-			<a id="about" href="/about/about">about</a>
-	</div>
+        body { margin: 0; }
 
-  <div class="container"> 
-  <header role="banner">
-  <h1 id="title">Using dynamic libraries in static Go binaries</h1>
-  </header>
-  <section>
-  
-   
-  <i><span class="entry-meta"><time itemprop="datePublished" datetime="2019-04-09">April 09, 2019 </time></span></section></i>
-  
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
 
-  
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
 
-  </section>
-  <main role="main">
-  <div>
-        <article id="content">
-           <!-- raw HTML omitted -->
+        img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 90%;
+            height: auto;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            white-space: pre-wrap;
+            border: 1px solid #000000;
+            line-height: 25px;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">Using dynamic libraries in static Go binaries</h1>
+
+        <div id="text-content">
+        <!-- raw HTML omitted -->
 <p>Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them <a href="https://dave.cheney.net/2018/01/08/gos-hidden-pragmas">here</a>. One such &lsquo;pragma&rsquo; as Cheney calls them is  <code>//go:cgo_import_dynamic</code>. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.</p>
 <p>Let&rsquo;s check out an example from my <a href="https://go-review.googlesource.com/c/go/+/166297">recent contribution</a> to the runtime package.</p>
 <p>First, in lookup_darwin.go we use the cgo_import_dynamic directive for <code>res_search</code></p>
@@ -99,38 +148,12 @@ ok:
 <p>From these definitions we can now call the res_search helper function as if it&rsquo;s the res_search function in libSystem. This is all of course regardless of if CGO is enabled!</p>
 <p>Do keep in mind, this directive is purposely not part of the language specification. It should probably only be done in Go&rsquo;s runtime package.</p>
 
-        </article>
-  </div>
+        
+        
+        </div>
 
-  <center>
-    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-  </center>
+        <span class="copyright">copyright 2018 - 2021</p>
 
-<aside id="meta">
-    <div>
+    </body>
     
-     
-    </div>
-
-</aside>
-</main>
-
-
-	<footer role="contentinfo">
-    <div class="hr"></div>
-    
-		<div>
-        <img onclick="emailfunc()" class="socialimg" src="/social/email.png"/>
-        <a class="sociallink" href="http://www.github.com/grantseltzer"><img class="socialimg" src="/social/github.png"/></a>
-        <a class="sociallink" href="http://www.twitter.com/grantseltzer"><img class="socialimg" src="/social/twitter.png"/></a>
-        <a class="sociallink" href="https://www.linkedin.com/in/grantseltzerrichman/"><img class="socialimg" src="/social/linkedin.png"/></a>
-        <a class="sociallink" href="https://www.goodreads.com/user/show/50650128-grant-seltzer"><img class="socialimg" src="/social/book.png"></a>
-    </div>
-    <p id="email"></p>
-		<div class="copyright">Copyright &copy; 2018 - 2021</div>
-	</footer>
-
-  </div>
-
-</body>
 </html>

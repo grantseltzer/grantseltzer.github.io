@@ -33,7 +33,7 @@ My set up is pretty basic. I have a small cabinet/closet in the corner of my kit
       <pubDate>Fri, 14 Feb 2020 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</guid>
-      <description>eBPF makes you an omniscient gophereBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
+      <description>eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, kprobes, or uprobes.
 There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do.</description>
     </item>
     
@@ -43,8 +43,9 @@ There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full s
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/karn/</guid>
-      <description>me when someone turns off seccompKarn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
-For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!</description>
+      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).
+So, how does it work?</description>
     </item>
     
     <item>
