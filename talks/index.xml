@@ -6,16 +6,7 @@
     <description>Recent content in Talks on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 10 Dec 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/talks/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Go Time #159</title>
-      <link>https://grantseltzer.github.io/talks/gotime/</link>
-      <pubDate>Thu, 10 Dec 2020 00:00:00 +0000</pubDate>
-      
-      <guid>https://grantseltzer.github.io/talks/gotime/</guid>
-      <description>   </description>
-    </item>
-    
+    <lastBuildDate>Fri, 13 Nov 2020 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/talks/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Tracing Go Programs with eBPF!</title>
       <link>https://grantseltzer.github.io/talks/gophercon2020/</link>
@@ -24,6 +15,15 @@
       <guid>https://grantseltzer.github.io/talks/gophercon2020/</guid>
       <description>Code can be found here
   </description>
+    </item>
+    
+    <item>
+      <title>Go Time #159</title>
+      <link>https://grantseltzer.github.io/talks/gotime/</link>
+      <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/talks/gotime/</guid>
+      <description>   </description>
     </item>
     
     <item>
