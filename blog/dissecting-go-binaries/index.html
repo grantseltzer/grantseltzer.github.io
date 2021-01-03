@@ -36,8 +36,10 @@
             border-radius: 4px;
             display: block;
             white-space: pre-wrap;
-            border: 1px solid #000000;
+            border: 3px solid white;
+            color: black;
             line-height: 25px;
+            overflow: scroll;
         }
         
         code {
@@ -47,6 +49,7 @@
             background: #F1F1F1;
             border: 1px solid #d1d1d1;
             white-space: pre;
+            overflow: scroll;
         }
 
         #topbar {
@@ -135,7 +138,7 @@
 0x0:	mov		rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>With these tools our only real task is to extract the relevant raw bytes from the binary file and feed it through Capstone&rsquo;s engine.</p>
 <!-- raw HTML omitted -->
-<p>When you compile a Go program on your laptop the outputted binary will default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
+<p>When you compile a Go program on your laptop the outputted binary will likely default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
 <p><img src="/dissecting/ELF_64.png" alt="ELF64"></p>
 <p>First let&rsquo;s define the term <strong>symbol</strong>. This is any name identifiable object in our code. Variables, functions, types, and constants are all symbols. The Go compiler compiles each symbol and stores reference information about it in the <strong>symbol table</strong>. We can see in the <code>debug/elf</code> package&rsquo;s definition of <code>Symbol</code> that each entry in the symbol table contains the symbol&rsquo;s name, size, memory offset, and type:</p>
 <!-- raw HTML omitted -->

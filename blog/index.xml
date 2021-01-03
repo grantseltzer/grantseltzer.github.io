@@ -6,7 +6,17 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 10 May 2020 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 02 Jan 2021 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Parsing Go Binary Type Information</title>
+      <link>https://grantseltzer.github.io/blog/dwarf/</link>
+      <pubDate>Sat, 02 Jan 2021 03:32:37 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/dwarf/</guid>
+      <description>In my very first blog post, Dissecting Go Binaries, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, weaver, has me exploring a related object file format that Go leverages, DWARF.
+The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program.</description>
+    </item>
+    
     <item>
       <title>Tracing Go Functions with eBPF Part 2</title>
       <link>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2/</link>

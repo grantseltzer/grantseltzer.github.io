@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.75.1" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+        <style>
+
+        body { margin: 0; }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            white-space: pre-wrap;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">Parsing Go Binary Type Information</h1>
+
+        <div id="text-content">
+        <p>In my very first blog post, <a href="/blog/dissecting-go-binaries">Dissecting Go Binaries</a>, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, <a href="https://github.com/grantseltzer/weaver">weaver</a>, has me exploring a related object file format that Go leverages, <a href="http://dwarfstd.org/">DWARF</a>.</p>
+<p>The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program. Entries of a DWARF file are organized in a tree structure where each node can have children and siblings. For example, an entry node that describes a function would have children that describe the parameters. An entry node that describes a struct would have children that describe the fields of it.</p>
+<p>As the unofficial backronym for DWARF (Debugging With Attributed Record Formats) purports, the format is used by debugging tools to gather useful information such as data types or memory offsets. There&rsquo;s a ton of information that you can leverage for reverse engineering, debugging, or learning about systems programming. The Go standard library conveniently includes the <a href="https://golang.org/pkg/debug/dwarf/">debug/dwarf</a> package for reading this information.</p>
+<p>Let&rsquo;s build a program for parsing the DWARF out of any ELF binary and see what useful information we can find.</p>
+<pre><code>import (
+	&quot;debug/elf&quot;
+	&quot;log&quot;
+)
+
+func main() {
+	elfFile, err := elf.Open(&quot;/path/to/binary&quot;)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	dwarfData, err := elfFile.DWARF()
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	entryReader := dwarfData.Reader()
+	
+	for {
+		entry, err := entryReader.Next()
+
+		// Inspect the entry
+	}
+}
+
+</code></pre><p>First we use the <code>debug/elf</code> package to open up the file. Next we pull out the DWARF data, and create the package&rsquo;s notion of &lsquo;Reader&rsquo;. The reader lets us parse the individual entries of the DWARF in sequence.</p>
+<p>Now what can we do with each of these entries? Let&rsquo;s take a look at the definition of the <code>Entry</code> type and then go through it:</p>
+<pre><code>type Entry struct {
+    Offset   Offset
+    Tag      Tag
+    Children bool
+    Field    []Field
+}
+</code></pre><p>The <code>Offset</code> represents the offset of the entry within the DWARF data. This is not to be confused with the offset of the symbol in the actual ELF binary. You can use <code>dwarf.Reader</code>&rsquo;s <code>Seek</code> method with this offset.</p>
+<p>The <code>Tag</code> is a description of what this entry is. For example if the entry represents the definition of a struct the tag would be <code>TagStructType</code>. If the entry represented a function definition the tag would be <code>TagSubroutineType</code>.</p>
+<p><code>Children</code> is simply used to say whether subsequent entries represent child entries of the current one. For example, function parameters have separate entries from the function entry (they would have the tag <code>TagFormalParameter</code>).</p>
+<p>Finally, the slice of <code>Field</code>&rsquo;s describe various attributes about the entry. For example entries typically have a name, in which case there&rsquo;d be a field that contains the entries name. There&rsquo;s some important info to dive into for parsing the fields so let&rsquo;s take a look at the type definition:</p>
+<pre><code>type Field struct {
+    Attr  Attr
+    Val   interface{}
+    Class Class // Go 1.5
+}
+</code></pre><p>You can sort of think about <code>Field</code>&rsquo;s as key value pairs, where the <code>Attr</code> is the key, and the <code>Val</code> is the value. The <code>Class</code> field provides additional context about how to read the raw bytes of data in <code>Val</code>.</p>
+<p>The <code>Attr</code> (or &lsquo;attribute&rsquo;) is the description of what this Field represents. As per the previous example, if this Field represents the name of the entry it is contained in, the Attr would be <code>AttrName</code>. Another example could be <code>AttrType</code>, which means the Field represents the type of the entry it is contained in.</p>
+<p>The contents of <code>Val</code> are what the attribute describes. If the attribute is <code>AttrName</code> then the <code>Val</code> is the actual name. In order to read the value you must take notice of how <code>Class</code> is set. This can vary based on your compiler but some examples include <code>ClassAddress</code> or <code>ClassString</code>, referring to how to find the actual value of <code>Val</code>.</p>
+<p>With all this mind, let&rsquo;s look at how we can add to our above program the functionality to print out the names of all functions:</p>
+<pre><code>	...
+		for {
+			// Read all entries in sequence
+			entry, err := entryReader.Next()
+			if err == io.EOF {
+				// We've reached the end of DWARF entries
+				break 
+			}
+
+			// Check if this entry is a function
+			if entry.Tag == dwarf.TagSubprogram {
+				
+				// Go through fields 
+				for _, field := range entry.Field {
+
+					if field.Attr == dwarf.AttrName {
+						fmt.Println(field.Val.(string))
+					}
+				}
+			}
+		}
+	...
+</code></pre><p>(Full program <a href="https://gist.github.com/grantseltzer/51c7c0827b95e9a1c07796d6b352076c">here</a>)</p>
+<p>All function parameters have their own entries and are placed in order right after the function&rsquo;s entry. They have the tag <code>TagFormalParameter</code>. We can read what datatype the parameter is by reading the <code>AttrType</code> field. All we need to do in that case would be to have a second <code>Reader</code> jump to the entry of the type definition. We would just continue reading entries while checking if they&rsquo;re function parameters. Like so:</p>
+<pre><code>...
+		if !(readingAStruct &amp;&amp; entry.Tag == dwarf.TagFormalParameter) {
+			continue
+		}
+
+		for _, field := range entry.Field {
+
+			if field.Attr == dwarf.AttrName {
+				name = field.Val.(string)
+			}
+
+			if field.Attr == dwarf.AttrType {
+				typeReader.Seek(field.Val.(dwarf.Offset))
+				typeEntry, err := typeReader.Next()
+				if err != nil {
+					log.Fatal(err)
+				}
+
+				for i := range typeEntry.Field {
+					if typeEntry.Field[i].Attr == dwarf.AttrName {
+						typeName = typeEntry.Field[i].Val.(string)
+					}
+				}
+			}
+		}
+
+		fmt.Printf(&quot;\t%s %s\n&quot;, name, typeName)
+...
+</code></pre><p>(Full program <a href="https://gist.github.com/grantseltzer/7e30682b215567976298dc8a2cc4d92f">here</a>)</p>
+<p>Compiling this binary and running it on itself we can see all of our functions, plus of course all the runtime dependencies that Go packs into our binaries as well:</p>
+<pre><code>.
+.
+.
+debug/dwarf.(*Data).Reader
+	d *debug/dwarf.Data
+fmt.Printf
+	format string
+	a []interface {}
+	n int
+	err error
+main.entryIsEmpty
+	e *debug/dwarf.Entry
+type..eq.[2]interface {}
+	p *[2]interface {}
+	q *[2]interface {}
+	r bool
+main.main
+</code></pre><p>If you try running this yourself you&rsquo;ll also notice that you can get return types and their names as well. Those have the attribute <code>AttrVarParam</code>.</p>
+<p>There is a lot to cover and a lot of possibilities that you can use this information for, far more than I can fit into a single blog post. As part of refactoring <a href="github.com/grantseltzer/weaver">weaver</a> i&rsquo;m writing a higher level package for querying type information from binaries, so please keep an eye out!</p>
+
+        
+        
+        </div>
+
+        <span class="copyright">copyright 2018 - 2021</span>
+
+    </body>
+    
+</html>
