@@ -8,7 +8,7 @@
     <language>en-us</language>
     <lastBuildDate>Sat, 02 Jan 2021 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Parsing Go Binary Type Information</title>
+      <title>Parsing Go Binary DWARF Info</title>
       <link>https://grantseltzer.github.io/blog/dwarf/</link>
       <pubDate>Sat, 02 Jan 2021 03:32:37 +0000</pubDate>
       
