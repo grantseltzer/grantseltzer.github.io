@@ -123,7 +123,7 @@
 <p><img src="/libbpf/vmlinux.png" alt="vmlinux"></p>
 <h2 id="what-about-core">What about CO:RE?</h2>
 <p>A powerful concept that libbpf enables is something called &ldquo;CO:RE&rdquo; or &ldquo;Compile once, run everywhere&rdquo;. There are macros defined in libbpf (such as <code>BPF_CORE_READ</code>) that will analyze what fields you&rsquo;re trying to access in the types that are defined in your <code>vmlinux.h</code>. If the field you want to access has been moved within the struct definition that the running kernel uses, the macro/helpers will find it for you. Therefore, it doesn&rsquo;t matter if you compile your bpf program with the <code>vmlinux.h</code> file you generated from your own kernel and then ran on a different one.</p>
-<p>I am not yet an expert on this so please refer to Andrii Nakryiko&rsquo;s blog post <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">here</a> until better documentation exists.</p>
+<p>Refer to Andrii Nakryiko&rsquo;s blog post <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">here</a> on the subject.</p>
 
         
         
