@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.75.1" />
+        <meta name="generator" content="Hugo 0.80.0" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -127,13 +127,15 @@
 <!-- raw HTML omitted -->
 <p>First of all, in order to build a disassembler we need to know what all of the binary machine code translates to in assembly instructions. To do this we must have a reference for all assembly instructions for the architecture of the compiled binary. If you&rsquo;re not familiar with this task you wouldn&rsquo;t think it&rsquo;d be so difficult. However, there are multiple micro-architectures, assembly syntaxes, sparsely-documented instructions, and encoding schemes that change over time. If you want more analysis on why this is difficult I enjoy <a href="https://stefanheule.com/blog/how-many-x86-64-instructions-are-there-anyway/">this article</a>.</p>
 <p>Thankfully all of the heavy lifting has been done for us by the authors and maintainers of <a href="http://www.capstone-engine.org/">Capstone</a>, a disassembly framework. Capstone is widely accepted as the standard to use for writing disassembly tools. Reimplementing it would be quite a daunting, albeit educational, task so we won&rsquo;t be doing that as part of this post. Using Capstone in Go is as simple as importing its cleverly named Go bindings, <a href="https://github.com/bnagy/gapstone">gapstone</a>:</p>
-<!-- raw HTML omitted -->
+<script type="application/javascript" src="https://gist.github.com/grantseltzer/85452bdb369315a79beb619c5544e2a9.js"></script>
+
 <p>For example, you can plug the the following raw bytes (displayed in hex) through Capstone and it will translate them into the corresponding x86_64 instruction:</p>
 <pre><code>0x64 0x48 0x8B 0xC 0x25 0xF8 0xFF 0xFF 0xFF
 </code></pre><p>Translates to:</p>
 <pre><code>mov rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>In code and then running it looks like this:</p>
-<!-- raw HTML omitted -->
+<script type="application/javascript" src="https://gist.github.com/grantseltzer/c44ac782ef271b141fa1ac88c0e5fcd4.js"></script>
+
 <pre><code>$~ go run main.go
 0x0:	mov		rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>With these tools our only real task is to extract the relevant raw bytes from the binary file and feed it through Capstone&rsquo;s engine.</p>
@@ -141,14 +143,17 @@
 <p>When you compile a Go program on your laptop the outputted binary will likely default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
 <p><img src="/dissecting/ELF_64.png" alt="ELF64"></p>
 <p>First let&rsquo;s define the term <strong>symbol</strong>. This is any name identifiable object in our code. Variables, functions, types, and constants are all symbols. The Go compiler compiles each symbol and stores reference information about it in the <strong>symbol table</strong>. We can see in the <code>debug/elf</code> package&rsquo;s definition of <code>Symbol</code> that each entry in the symbol table contains the symbol&rsquo;s name, size, memory offset, and type:</p>
-<!-- raw HTML omitted -->
+<script type="application/javascript" src="https://gist.github.com/grantseltzer/3634c10d8c2fa4c2ce38c9c83855ac78.js"></script>
+
 <p>Although it&rsquo;s not clear by naming convention, the memory offset is stored in <code>Value</code>. By memory offset, I mean the number of addresses from the beginning of the <strong>.text</strong> section. This is the section where executable instructions (function symbols) defined in the actual program are stored.  Also unclear by naming convention is the <code>Info</code> byte. This is a special value that conveys the type of the symbol. For the sake of our disassembler we only want to look at functions, so after doing some digging I discovered that Go uses the values &lsquo;2&rsquo; and &lsquo;18&rsquo; for its function symbols. This appears to be for arbitrary reasons.</p>
 <p>So, with this knowledge it becomes clear that we want to extract the symbol table from the ELF binary and traverse through each symbol to find out where we can find the bytes to disassemble:</p>
-<!-- raw HTML omitted -->
+<script type="application/javascript" src="https://gist.github.com/grantseltzer/1ccd6cf37dd98c012a089b0f0f00babd.js"></script>
+
 <p>Let&rsquo;s calculate the starting and ending indices of the symbol within the <code>.text</code> section&rsquo;s array of bytes. For each symbol we want to subtract its <code>Value</code> from the text section&rsquo;s starting address; this will give us the starting index. To calculate the ending index we just add the symbol&rsquo;s size to the starting index. From there we can collect the bytes and feed them through Capstone.</p>
 <p><img src="/dissecting/SymbolTableToTextSection.png" alt="SymTableToTextSection"></p>
 <p>We&rsquo;re essentially finished now. We&rsquo;re going to open up the <code>.text</code> section to get the starting address and raw data, do the address calculation for each symbol, run the data through Capstone, and print out the resulting instructions:</p>
-<!-- raw HTML omitted -->
+<script type="application/javascript" src="https://gist.github.com/grantseltzer/6dfd8ed453e6836ad8dfb4b63cf1dbe6.js"></script>
+
 <p>And that&rsquo;s it! The full program can be found <a href="https://gist.github.com/grantseltzer/3efa8ecc5de1fb566e8091533050d608">here</a>. By leveraging some very powerful tools in the Go ecosystem we were able to build a fully functioning disassembler in under 75 lines of code! Thank you for reading and feel free to reach out via email for any questions or comments!</p>
 <p>Recording of our disassembler in action:</p>
 <p><a href="https://asciinema.org/a/P5SZTG7aXgZFzAI8df2yPaI0a"><img src="https://asciinema.org/a/P5SZTG7aXgZFzAI8df2yPaI0a.png" alt="asciicast"></a></p>

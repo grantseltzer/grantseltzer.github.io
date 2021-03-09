@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+        <style>
+
+        body { margin: 0; }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            white-space: pre-wrap;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">Getting started with bpf and libbpfgo</h1>
+
+        <div id="text-content">
+        <p>In my <a href="/blog/tracing-go-functions-with-ebpf-part-1">previous posts</a> on the subject of bpf I used a project called BCC to compile, load, and interact with my bpf programs. I, and many other developers, have recently heard about a better way to build ebpf projects called <a href="https://github.com/libbpf/libbpf">libbpf</a>. There are a few good resources to use when developing libbpf based programs but getting started can still be a quite overwhelming. The goal of this post is to provide a simple and effective explanation of what libbpf is and how to start using it.</p>
+<p>libbpf is library that you can import in both your userspace and bpf programs. It provides developers with an API for loading and interacting with bpf programs. It is maintained in the linux kernel <a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/lib/bpf">source tree</a> which makes it a very promising package to rely on.</p>
+<p>In order to illustrate the nature of libbpf and how to use it, we&rsquo;re going to write a simple bpf program that tells us everytime a process uses the <code>mmap</code> system call. We&rsquo;re then going to write a userspace program, in C, which loads the compiled bpf program and listens for output from it.</p>
+<p><img src="/libbpf/simple_diagram.png" alt="simple"></p>
+<div style="text-align: center;">
+    <em>
+
+We're going to build on this diagram
+
+</em>
+</div>
+<h3 id="kernel-side">Kernel side</h3>
+<p>Let&rsquo;s start with the imports:</p>
+<pre><code>#include &lt;bpf/bpf_helpers.h&gt;  
+#include &quot;vmlinux.h&quot;
+#include &quot;simple.h&quot;
+</code></pre><p>The <code>bpf_helpers.h</code> header file is part of libbpf. As you might assume, it contains a lot of useful functions for you to use in your bpf programs. As for <code>vmlinux.h</code>, I wrote a complementary blog post on the subject, you can find it <a href="/blog/vmlinux-header">here</a>.</p>
+<p>Now we&rsquo;re going to need a way to transmit output to userspace everytime the bpf program is called. For this we&rsquo;re going to set up a <a href="https://nakryiko.com/posts/bpf-ringbuf/">ringbuffer</a>:</p>
+<pre><code>struct {
+    __uint(type, BPF_MAP_TYPE_RINGBUF);
+    __uint(max_entries, 1 &lt;&lt; 24);
+} events SEC(&quot;.maps&quot;);
+</code></pre><p>There are many <a href="https://elixir.bootlin.com/linux/v5.11.2/source/include/uapi/linux/bpf.h#L130">types of maps</a> you can use in bpf programs. Ringbuffers are a reliable way to transport data from kernel space to user space. If this isn&rsquo;t the first bpf program you&rsquo;ve written, you&rsquo;ve likely also seen perfbuffers. In the blog post I linked above you can read about the benefits of using ringbuffers instead of perf.</p>
+<p>We&rsquo;re going to transmit an &lsquo;event&rsquo; over the ringbuffer whenever our bpf program is called, so we&rsquo;ll just define that as a struct like this:</p>
+<pre><code>typedef struct process_info {
+    int pid;
+    char comm[100];
+} proc_info;
+</code></pre><p>Finally, let&rsquo;s look at the actual bpf program:</p>
+<pre><code>SEC(&quot;kprobe/sys_execve&quot;)
+int kprobe__sys_execve(struct pt_regs *ctx)
+{
+    __u64 id = bpf_get_current_pid_tgid();
+    __u32 tgid = id &gt;&gt; 32;
+    proc_info *process;
+
+    // Reserve space on the ringbuffer for the sample
+    process = bpf_ringbuf_reserve(&amp;events, sizeof(proc_info), ringbuffer_flags);
+    if (!process) {
+        return 0;
+    }
+
+    process-&gt;pid = tgid;
+    bpf_get_current_comm(&amp;process-&gt;comm, 100);
+
+    bpf_ringbuf_submit(process, ringbuffer_flags);
+    return 0;
+}
+</code></pre><p>The bpf program itself is just this function, it&rsquo;s essentially <code>main()</code>. We can define and import other functions of course, but those must be marked with the <code>__always_inline</code> attribute. This is to limit complexity and avoid any recursion as bpf programs must terminate!</p>
+<p>So, let&rsquo;s break this down.</p>
+<pre><code>SEC(&quot;kprobe/sys_execve&quot;)
+</code></pre><p>This is the section macro (defined in <a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/lib/bpf/bpf_helpers.h#n25">bpf_helpers.h</a>). All programs must have one to tell libbpf what part of the compiled binary to place the program. This is essentially a qualified name for your program. There isn&rsquo;t a strict rule for what it should be but you should follow the conventions defined in libbpf. You can also see the <code>SEC</code> label above in the ringbuffer definition.</p>
+<pre><code>int kprobe__sys_execve(struct pt_regs *ctx)
+</code></pre><p>Here we can see that the program name is <code>kprobe__sys_execve</code>. You can name it whatever you like and use this name as an identifier from the userspace side. Every <a href="https://elixir.bootlin.com/linux/v5.11.2/source/include/uapi/linux/bpf.h#L171">different type of bpf program</a> has its own &lsquo;context&rsquo; that you get access to for use in your bpf program. A good breakdown on the different things you can attach bpf programs to and what context is available for them can be found <a href="https://blogs.oracle.com/linux/notes-on-bpf-1">here</a>.</p>
+<p>In the case of this kprobe bpf program we have a <a href="https://elixir.bootlin.com/linux/v5.11.2/source/arch/x86/include/asm/ptrace.h#L12"><code>struct pt_regs</code></a> which gives us access to the virtual registers of the calling process.</p>
+<p>After this, it&rsquo;s mostly self explanatory:</p>
+<pre><code>    __u64 id = bpf_get_current_pid_tgid();
+    __u32 tgid = id &gt;&gt; 32;
+    proc_info *process;
+
+    // Reserve space on the ringbuffer for the sample
+    process = bpf_ringbuf_reserve(&amp;events, sizeof(proc_info), ringbuffer_flags);
+    if (!process) {
+        return 0;
+    }
+
+    process-&gt;pid = tgid;
+    bpf_get_current_comm(&amp;process-&gt;comm, 100);
+
+    bpf_ringbuf_submit(process, ringbuffer_flags);
+    return 0;
+</code></pre><p>We&rsquo;re reserving space for a <code>struct process_info</code> on the ringbuffer, reading in the process ID, and the process name for it, and submitting it on the ringbuffer, that&rsquo;s it!</p>
+<h3 id="userspace-side-libbpfgo">Userspace side (libbpfgo)</h3>
+<p>Our goal for the userspace program is to load the compiled bpf program, attach it to the appropriate kprobe, listen for the output from the ringbuffer, and clean things up when we&rsquo;re done.</p>
+<p>Since libbpf is a C library it&rsquo;s simple to create bindings for it in higher level languages, like Go. <em>If you&rsquo;d like to write your userspace code in pure C, you can follow <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">this post</a>.</em></p>
+<p>The first step is to compile the bpf code into an object file:</p>
+<p><code>clang -g -O2 -c -target bpf -o mybpfobject.o mybpfcode.bpf.c</code></p>
+<p>Now we can use <em><a href="https://github.com/aquasecurity/tracee/blob/main/libbpfgo">libbpfgo</a></em>, a thin wrapper around libbpf itself. The goal of libbpfgo is to implement all of the public API of libbpf so you can easily use it from Go. We&rsquo;ve started with the features that <a href="https://github.com/aquasecurity/tracee">tracee</a> needs, but everything else will be coming soon!</p>
+<p>Before we implement it in code, let&rsquo;s look at a highlevel what we&rsquo;re going to be doing:</p>
+<p><img src="/libbpf/bpf-basic-flow.png" alt="flow"></p>
+<p>We can load in the object file like so:</p>
+<pre><code>    bpfModule, err := bpf.NewModuleFromFile(&quot;mybpfobject.o&quot;)
+    if err != nil {
+        panic(err)
+    }
+    defer bpfModule.Close()
+
+    bpfModule.BPFLoadObject()
+</code></pre><p>Next we can find the bpf program that we want to use (you can put multiple into a single object file), and attach it to the hook we want to, in this case the <code>__x64_sys_mmap</code> kernel function.</p>
+<pre><code>    prog, err := bpfModule.GetProgram(&quot;kprobe__sys_mmap&quot;)
+    if err != nil {
+        panic()
+    }
+
+    _, err = prog.AttachKprobe(&quot;__x64_sys_mmap&quot;)
+    if err != nil {
+        panic()
+    }
+</code></pre><p>And finally we set up a go channel to use for listening to output from the ringbuffer, and print out events as they come in.</p>
+<pre><code>    eventsChannel := make(chan []byte)
+    rb, err := bpfModule.InitRingBuf(&quot;events&quot;, eventsChannel)
+    if err != nil {
+        panic()
+    }
+
+    rb.Start()
+
+    for {
+        eventBytes := &lt;-eventsChannel
+
+        pid := int(binary.LittleEndian.Uint32(eventBytes[0:4])) // Treat first 4 bytes as LittleEndian Uint32
+        comm := string(bytes.TrimRight(eventBytes[4:], &quot;\x00&quot;)) // Remove excess 0's from comm, treat as string
+        
+        fmt.Printf(&quot;%d %v\n&quot;, pid, comm)
+	}
+</code></pre><p>The only other thing to note is that we have to import &ldquo;C&rdquo; at the top of this file.</p>
+<p>Building looks like this:</p>
+<p><code>CC=gcc CGO_CFLAGS=&quot;-I /usr/include/bpf&quot; CGO_LDFLAGS=&quot;/usr/lib64/libbpf.a&quot; go build -o libbpfgo-prog</code></p>
+<p>So we have a couple dependencies here that we need to have, but luckily are provided by most package managers. <code>/usr/include/bpf</code> is the path to the libbpf source code on my system. If it&rsquo;s not provided by your distribution (something like &lsquo;libbpf-dev&rsquo;) you can just commit the libbpf source code in your project repository. <code>libbpf.a</code> can either be built manually or provided by a package (something like libbpf-dev-static). The resulting binary will be named <code>libbpfgo-prog</code>.</p>
+<p>Finally you can either run this as root or with CAP_BPF/CAP_TRACING (linux 5.8+):</p>
+<pre><code>[*] sudo ./libbpfgo-prog
+6400 sh
+6399 sh
+6401 node
+6403 sh
+6402 sh
+6404 node
+...
+</code></pre><h3 id="wrapup-roundup">Wrapup roundup</h3>
+<p>To review, we first wrote a bpf program using helpers defined in libbpf. The bpf program read information like the process ID and command then wrote it to a shared ringbuffer. We compiled it with clang, then used libbpfgo to load it into the kernel and listen for output from the ringbuffer.</p>
+<p>Check out documentation for libbpfgo <a href="https://pkg.go.dev/github.com/aquasecurity/tracee/libbpfgo">here</a>, a good place to look for examples of usage would be in the tests <a href="https://github.com/aquasecurity/tracee/tree/main/libbpfgo/selftest">here</a>. All of the code written for this blog post can be found <a href="https://github.com/grantseltzer/libbpfgo-example">here</a>.</p>
+
+        
+        
+        </div>
+
+        <span class="copyright">copyright 2018 - 2021</span>
+
+    </body>
+    
+</html>
