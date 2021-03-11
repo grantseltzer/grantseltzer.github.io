@@ -6,7 +6,18 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 02 Jan 2021 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 11 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What is vmlinux.h?</title>
+      <link>https://grantseltzer.github.io/blog/vmlinux-header/</link>
+      <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
+      <description>If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+#include &amp;quot;vmlinux.h&amp;quot; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
+When you build Linux one of the output artifacts is a file called vmlinux. It&amp;rsquo;s also typically packaged with major distributions.</description>
+    </item>
+    
     <item>
       <title>Parsing Go Binary DWARF Info</title>
       <link>https://grantseltzer.github.io/blog/dwarf/</link>
