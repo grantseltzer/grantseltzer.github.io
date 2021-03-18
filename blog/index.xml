@@ -6,7 +6,16 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 11 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 18 Mar 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Getting started with bpf and libbpfgo</title>
+      <link>https://grantseltzer.github.io/blog/libbpf-beginners-part-one/</link>
+      <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/libbpf-beginners-part-one/</guid>
+      <description>In my previous posts on the subject of bpf I used a project called BCC to compile, load, and interact with my bpf programs. I, and many other developers, have recently heard about a better way to build ebpf projects called libbpf. There are a few good resources to use when developing libbpf based programs but getting started can still be a quite overwhelming. The goal of this post is to provide a simple and effective explanation of what libbpf is and how to start using it.</description>
+    </item>
+    
     <item>
       <title>What is vmlinux.h?</title>
       <link>https://grantseltzer.github.io/blog/vmlinux-header/</link>
