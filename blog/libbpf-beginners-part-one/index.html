@@ -139,7 +139,7 @@ The basic nature of libbpf
 <p>We&rsquo;re going to transmit an &lsquo;event&rsquo; over the ringbuffer whenever our bpf program is called, so we&rsquo;ll just define that as a struct like this:</p>
 <pre><code>typedef struct process_info {
     int pid;
-    char comm[100];
+    char comm[TASK_COMM_LEN];
 } proc_info;
 </code></pre><p>Finally, let&rsquo;s look at the actual bpf program:</p>
 <pre><code>SEC(&quot;kprobe/sys_execve&quot;)
