@@ -111,7 +111,7 @@
         </div>
 
         <h1 id="title">Debugging Go tests</h1>
-
+        <h4>August 15, 2019</h4>
         <div id="text-content">
         <!-- raw HTML omitted -->
 <p>I recently was working on debugging a unit test I wrote in Go. I couldn&rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a <code>go test</code> and a <code>go run</code>. I was looking through Go build mode <a href="https://golang.org/cmd/go/#hdr-Build_modes">documentation</a> while wondering if I could step through it with a debugger. Lo and behold you can compile your tests into an ELF executable!</p>

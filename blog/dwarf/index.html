@@ -111,7 +111,7 @@
         </div>
 
         <h1 id="title">Parsing Go Binary DWARF Info</h1>
-
+        <h4>January 02, 2021</h4>
         <div id="text-content">
         <p>In my very first blog post, <a href="/blog/dissecting-go-binaries">Dissecting Go Binaries</a>, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, <a href="https://github.com/grantseltzer/weaver">weaver</a>, has me exploring a related object file format that Go leverages, <a href="http://dwarfstd.org/">DWARF</a>.</p>
 <p>The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program. Entries of a DWARF file are organized in a tree structure where each node can have children and siblings. For example, an entry node that describes a function would have children that describe the parameters. An entry node that describes a struct would have children that describe the fields of it.</p>

@@ -111,7 +111,7 @@
         </div>
 
         <h1 id="title">Tracing Go Functions with eBPF Part 1</h1>
-
+        <h4>February 14, 2020</h4>
         <div id="text-content">
         <p>eBPF is a virtual machine, similar in concept to the JVM, except it&rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, <a href="https://lwn.net/Articles/132196/">kprobes</a>, or  <a href="https://www.kernel.org/doc/ols/2007/ols2007v1-pages-215-224.pdf">uprobes</a>.</p>
 <p>There&rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do. You can write an eBPF program which logs every time certain files are modified. You use eBPF to profile performance of your other programs. You can implement host-based networking rules, or use it for <a href="https://www.youtube.com/watch?v=yrrxFZfyEsw">writing malware</a>.</p>
