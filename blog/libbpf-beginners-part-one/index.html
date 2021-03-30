@@ -156,7 +156,7 @@ int kprobe__sys_execve(struct pt_regs *ctx)
     }
 
     process-&gt;pid = tgid;
-    bpf_get_current_comm(&amp;process-&gt;comm, 100);
+    bpf_get_current_comm(&amp;process-&gt;comm, TASK_COMM_LEN);
 
     bpf_ringbuf_submit(process, ringbuffer_flags);
     return 0;
@@ -180,7 +180,7 @@ int kprobe__sys_execve(struct pt_regs *ctx)
     }
 
     process-&gt;pid = tgid;
-    bpf_get_current_comm(&amp;process-&gt;comm, 100);
+    bpf_get_current_comm(&amp;process-&gt;comm, TASK_COMM_LEN);
 
     bpf_ringbuf_submit(process, ringbuffer_flags);
     return 0;
