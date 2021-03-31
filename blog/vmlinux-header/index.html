@@ -113,7 +113,14 @@
         <h1 id="title">What is vmlinux.h?</h1>
         <h4>March 11, 2021</h4>
         <div id="text-content">
-        <p>If you&rsquo;ve been reading much bpf code recently, you&rsquo;ve probably seen this:</p>
+        <div style="color: gray; font-style: italic; font-size: smaller;">
+    <p>
+
+A version of this post was also uploaded to Aqua's blog <a href="https://blog.aquasec.com/vmlinux.h-ebpf-programs">here</a>
+
+</p>
+</div>
+<p>If you&rsquo;ve been reading much bpf code recently, you&rsquo;ve probably seen this:</p>
 <pre><code>#include &quot;vmlinux.h&quot;
 </code></pre><p><code>vmlinux.h</code> is generated code. it contains all of the type definitions that your running Linux kernel uses in it&rsquo;s own source code. This is an important concept to wrap your head around so let me explain.</p>
 <p>When you build Linux one of the output artifacts is a file called <code>vmlinux</code>. It&rsquo;s also typically packaged with major distributions. This is an <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> binary that contains the compiled kernel inside it.</p>

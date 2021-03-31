@@ -22,9 +22,9 @@
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
 #include &amp;quot;vmlinux.h&amp;quot; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
-When you build Linux one of the output artifacts is a file called vmlinux. It&amp;rsquo;s also typically packaged with major distributions.</description>
+When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
     
     <item>
