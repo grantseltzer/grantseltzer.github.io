@@ -136,7 +136,7 @@ A version of this post was also uploaded to Aqua's blog <a href="https://blog.aq
 <pre><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
 #pragma clang attribute push (__attribute__((preserve_access_index)), apply_to = record)
 #endif
-</code></pre><p>This applies the &lsquo;preserve_access_index&rsquo; attribute to all of the data structures defined in this massive header file. It enables preserving the type&rsquo;s debug information indices which the CO:RE helpers make use of. The attribute is then turned off at the bottom of the header:</p>
+</code></pre><p>This applies the &lsquo;preserve_access_index&rsquo; attribute to all of the data structures defined in this massive header file. It enables preserving the type&rsquo;s debug information indices which the CO:RE helpers make use of. You could apply this attribute to structs in the various normal header files you&rsquo;d import and skip vmlinux.h altogether though there&rsquo;s some challenge to that which we ran into. The attribute is then turned off at the bottom of the header:</p>
 <pre><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
 #pragma clang attribute pop
 #endif
