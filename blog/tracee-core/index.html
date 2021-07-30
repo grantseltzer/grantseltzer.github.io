@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.87.0-DEV" />
+        <meta name="generator" content="Hugo 0.80.0" />
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -191,6 +191,10 @@
 <p>Note that this same performance hit applies if using <code>BPF_CORE_READ</code>/<code>BPF_PROBE_READ</code> as the definition is similar to <code>READ_KERN</code>.</p>
 <h4 id="distribution">Distribution</h4>
 <p>The CO:RE version of tracee can be compiled in any environment, regardless of if BTF is enabled in it&rsquo;s kernel. This is because we version controlled the vmlinux.h file. As a result, the CO:RE enabled bpf object is always built with tracee. When the userspace Go code is compiled, we embed this bpf object using Go&rsquo;s embed directive. At runtime tracee detects if BTF (and therefore CO:RE) is supported, in which case it runs the CO:RE object. Otherwise it looks for a kernel specific bpf object, or attempts to build one.</p>
+<h2 id="it-works">It works!</h2>
+<p>Here we can see the same CO:RE enabled BPF object file running perfectly on a 5.12 kernel, and a 4.18 one!</p>
+<p><img src="/tracee-core/5.12kernel.png" alt="5.12"></p>
+<p><img src="/tracee-core/4.18kernel.png" alt="4.18"></p>
 
         
         
