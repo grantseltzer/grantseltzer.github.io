@@ -113,13 +113,13 @@
         <h1 id="title">Supporting CO:RE in Tracee</h1>
         <h4>July 23, 2021</h4>
         <div id="text-content">
-        <p>If you&rsquo;re used to developing software in a high level language like Go or Java you probably haven&rsquo;t thought about supporting different operating system versions much. Sure you want to be able to run on Linux, Macos, or Windows, but that&rsquo;s mostly abstracted away for you.</p>
-<p>If you&rsquo;re developing eBPF software, however, you have to think about the hundreds of Linux kernel versions that your users may be using. When your eBPF programs are reading in specific kernel data structure fields, there&rsquo;s no guarantee of backwards compatibility or stable APIs. Take a look at this example:</p>
-<p>In Linux version 4.18, in order to get the pid of a process within a PID namespace you would read fields in the following order:</p>
+        <p>If you&rsquo;re used to developing software in a high level language like Go or Java you likely haven&rsquo;t thought about supporting different operating system versions. Sure you want to be able to run on Linux, Macos, or Windows, but that&rsquo;s abstracted away for you.</p>
+<p>When developing eBPF software you must think about hundreds of Linux kernel versions. When your eBPF programs are reading in kernel data structure fields, there&rsquo;s no guarantee of backwards compatibility or stable APIs. Take a look at this example:</p>
+<p>In Linux version 4.18, to get the pid of a process within a PID namespace you would read fields in the following order:</p>
 <p><code>task_struct-&gt;group_leader-&gt;pids[PIDTYPE_PID].pid-&gt;numbers[LEVEL].nr</code></p>
 <p>but starting in kernel 4.19 this data was moved to:</p>
 <p><code>task_struct-&gt;group_leader-&gt;thread_pid-&gt;numbers[LEVEL].nr</code></p>
-<p>You don&rsquo;t have to know what any of these fields are, they&rsquo;re just to demonstrate that things change and it&rsquo;s a lot to keep track of.</p>
+<p>You don&rsquo;t have to know what any of these fields are. They&rsquo;re to show that things change and it&rsquo;s a lot to keep track of.</p>
 <p>Ok, so relevant data structures change from kernel version to version, how do you handle this?</p>
 <h2 id="the-fragile-tedious-way">The fragile tedious way</h2>
 <p>Check out this snippet of code from <a href="https://github.com/aquasecurity/tracee">tracee</a>:</p>
@@ -132,24 +132,23 @@
     return READ_KERN(tpid-&gt;numbers[level].nr);
 #endif
 }
-</code></pre><p>Here we have a simple example where we use macro&rsquo;s we defined for checking kernel versions at runtime. This is effective as long as you maintain logic like for every difference in kernel version for every single field of every single data structure you want to read in.</p>
+</code></pre><p>Here we have a simple example where we use macro&rsquo;s we defined for checking kernel versions at runtime. This is somewhat effective but cumbersome to maintain.</p>
 <h2 id="enter-core-or-the-better-way">Enter CO:RE (or &lsquo;the better way&rsquo;)</h2>
-<p>What if we could safely read from kernel data structures without having to worry about changes in those structure definitions? That is the promise of &lsquo;CO:RE&rsquo; or &lsquo;Compile Once, Run Everywhere&rsquo;.</p>
-<p>This works by replacing libbpf helper functions like <code>bpf_probe_read</code> which simply reads from one location to another. Instead you could just use <code>bpf_core_read</code>. This helper uses offset relocation for source address using clang&rsquo;s <code>__builtin_preserve_access_index()</code>. An overly simple explanation of how it works is that the helper uses kernel debug info (BTF) to find where kernel structure fields have been relocated to. For an actual in depth explanation of how this works, check out Andrii Nakriyko&rsquo;s <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">blog post</a> on the subject.</p>
+<p>What if we could read from kernel data structures without having to worry about changes in their definitions? That is the promise of &lsquo;CO:RE&rsquo; or &lsquo;Compile Once, Run Everywhere&rsquo;.</p>
+<p>This works by replacing libbpf helper functions like <code>bpf_probe_read</code> which reads from kernel memory to the stack. Instead you can use <code>bpf_core_read</code>. This helper uses offset relocation for source address using clang&rsquo;s <code>__builtin_preserve_access_index()</code>. A simple explanation of how it works is that the helper uses kernel debug info (BTF) to find where kernel structure fields have been relocated to. For an actual in depth explanation of how this works, check out Andrii Nakriyko&rsquo;s <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">blog post</a> on the subject.</p>
 <h2 id="adding-this-support-to-tracee">Adding this support to Tracee</h2>
-<p>One of the goals of <a href="https://github.com/aquasecurity/tracee">tracee</a> development is supporting kernels of major distributions such as RHEL, Centos, Fedora, Ubuntu, and Debian. Not every current release of each of these distributions supports CO:RE out of the box. The RHEL based distributions have BTF support backported all the way back to kernel 4.18. At the time of writing this, Ubuntu and Debian BTF support exists in latest releases only.</p>
-<p>The takeaway from this is that we need to support both CO:RE and non-CO:RE version of tracee. The rest of this blog post is a writeup of how we did just that.</p>
+<p>One of the goals of <a href="https://github.com/aquasecurity/tracee">tracee</a> is to support major distributions such as RHEL, Centos, Fedora, Ubuntu, and Debian. Not every current release of each of these distributions supports CO:RE out of the box. The RHEL based distributions have BTF support back ported all the way back to kernel 4.18. At the time of writing this, Ubuntu and Debian BTF support exists in latest releases only.</p>
+<p>The takeaway from this is that we need to support both CO:RE and non-CO:RE version of tracee. The rest of this blog post is a write up of how we did just that.</p>
 <h4 id="vmlinuxh">vmlinux.h</h4>
-<p>The first thing we needed to do was generate a <code>vmlinux.h</code> file. I wrote a whole <a href="/blog/vmlinux-header">post</a> about this file but in summary, it contains all the kernel data structure definitions of a particular kernel. We generated a single vmlinux.h file and commmitted it to source control. All the kernel data structure accesses in tracee bpf code use those definitions.</p>
+<p>The first thing we needed to do was generate a <code>vmlinux.h</code> file. I wrote a dedicated <a href="/blog/vmlinux-header">post</a> about the subject but i&rsquo;ll summarize. It contains all the kernel data structure definitions of a particular kernel. We generated a single vmlinux.h file and committed it to source control. All the kernel data structure accesses in tracee bpf code use those definitions.</p>
 <h4 id="updating-our-kernel-read-macro">Updating our kernel-read macro</h4>
-<p>Tracee defines a custom macro that it uses for reading data structures named <code>READ_KERN</code>. You can see it used above. Before recent CO:RE changes it&rsquo;s definition looked like this:</p>
+<p>Tracee defines a custom macro for reading data structures named <code>READ_KERN</code>. You can see it used above. Before recent CO:RE changes it&rsquo;s definition looked like this:</p>
 <pre><code>#define READ_KERN(ptr) ({ typeof(ptr) _val;                             \
                           __builtin_memset(&amp;_val, 0, sizeof(_val));     \
                           bpf_probe_read(&amp;_val, sizeof(_val), &amp;ptr);    \
                           _val;                                         \
                         })
-</code></pre><p>It creates a value, zeroes out memory, reads in the value with <code>bpf_probe_read</code>, and &lsquo;returns&rsquo; the address.</p>
-<p>All the CO:RE changes did was change bpf_probe_read to <code>bpf_core_read</code>:</p>
+</code></pre><p>All the CO:RE changes did was change bpf_probe_read to <code>bpf_core_read</code>:</p>
 <pre><code>#ifndef CORE
 #define READ_KERN(ptr) ({ typeof(ptr) _val;                             \
                           __builtin_memset(&amp;_val, 0, sizeof(_val));     \
@@ -163,8 +162,8 @@
                           _val;                                         \
                         })
 #endif
-</code></pre><p>You can see that we use a compile time variable called &ldquo;CORE&rdquo;. That&rsquo;s passed via clang using <code>-DCORE</code>. Alternatively you can use <code>bpf_core_read</code> directly or even better yet <code>BPF_CORE_READ</code>/<code>BPF_CORE_READ_INTO</code> from libbpf.</p>
-<p>One important thing to note is that as a result of this change we had to un-nest succesive calls of <code>READ_KERN</code>. Under the hood <code>bpf_core_read()</code> applies the clang function <code>__builtin_preserve_access_index()</code> which causes the compiler to describe type and relocation information. You cannot nest calls to <code>__builtin_preserve_access_index()</code> so we ended up with changes like this:</p>
+</code></pre><p>You can see that we use a compile time variable called &ldquo;CORE&rdquo;. That&rsquo;s passed via clang using <code>-DCORE</code>. You can use <code>bpf_core_read</code> directly or even better yet <code>BPF_CORE_READ</code>/<code>BPF_CORE_READ_INTO</code> from libbpf.</p>
+<p>One important thing to note is that, as a result of this change, we had to un-nest successive calls of <code>READ_KERN</code>. Under the hood <code>bpf_core_read()</code> applies the clang function <code>__builtin_preserve_access_index()</code> which causes the compiler to describe type and relocation information. You cannot nest calls to <code>__builtin_preserve_access_index()</code> so we ended up with changes like this:</p>
 <pre><code>static __always_inline u32 get_mnt_ns_id(struct nsproxy *ns)
 {
     return READ_KERN(READ_KERN(ns-&gt;mnt_ns)-&gt;ns.inum);
@@ -175,21 +174,21 @@
     struct mnt_namespace* mntns = READ_KERN(ns-&gt;mnt_ns);
     return READ_KERN(mntns-&gt;ns.inum);
 }
-</code></pre><h4 id="missing-header-definitions">Missing header definitions</h4>
-<p>The generated vmlinux.h file that we rely on for data structure definitions does not contain the the macros and functions that you&rsquo;d find in system header files which we would otherwise use. For example, we want to use <code>TASK_COMM_LEN</code> which is found in <code>linux/sched.h</code>. Another example is the function <code>inet_sk</code> from <code>net/inet_sock.h</code>.</p>
-<p>I had a <a href="https://lore.kernel.org/bpf/CAO658oV9AAcMMbVhjkoq5PtpvbVf41Cd_TBLCORTcf3trtwHfw@mail.gmail.com/">conversation</a> on the mailing list asking what the best way of handling this is. The unfortunate reality is that we have to maintain a header file where we redefine macros and functions that tracee relies on in it&rsquo;s non-CO:RE version.</p>
-<p>Hopefully something like the <code>__builtin_is_type_defined</code> suggested on the mailing list can be implemented in clang in the near future but until then a missing macros header is the way.</p>
+</code></pre><h4 id="missing-definitions-header">Missing Definitions Header</h4>
+<p>The generated vmlinux.h does not contain the the macros or functions that you&rsquo;d find in system header files. For example, we want to use <code>TASK_COMM_LEN</code> which is found in <code>linux/sched.h</code>. Another example is the function <code>inet_sk</code> from <code>net/inet_sock.h</code>.</p>
+<p>I had a <a href="https://lore.kernel.org/bpf/CAO658oV9AAcMMbVhjkoq5PtpvbVf41Cd_TBLCORTcf3trtwHfw@mail.gmail.com/">conversation</a> on the mailing list asking how to handle this. The unfortunate reality is that we have to maintain a header file where we redefine macros and functions that tracee relies on.</p>
+<p>Hopefully something like the <code>__builtin_is_type_defined</code> suggested in that thread list can be implemented in clang but until then a missing macros header is the way.</p>
 <p>Again, refer to my <a href="/blog/vmlinux-header">vmlinux.h blog post</a> for more information.</p>
-<h4 id="performance-trouble">Performance Trouble</h4>
-<p>There were a few performance issues that we ran into with the verifier which blocked us for some time. The bpf verifier output is notoriously difficult to decipher.</p>
+<h4 id="verifier-compalints">Verifier Compalints</h4>
+<p>There were a few verifier issues that we ran into which blocked us for some time. The bpf verifier output is  decipher but that&rsquo;s nothing unique to CO:RE.</p>
 <p>Take another look at our definition of the <code>READ_KERN</code> function macro:</p>
 <pre><code>#define READ_KERN(ptr) ({ typeof(ptr) _val;                             \
                           __builtin_memset(&amp;_val, 0, sizeof(_val));     \
                           bpf_core_read(&amp;_val, sizeof(_val), &amp;ptr);     \
                           _val;                                         \
                         })
-</code></pre><p>Notice how everytime READ_KERN is called, another variable is allocated. In loops that get unrolled there&rsquo;s no optimization available to reuse the same variable. As a result it&rsquo;s very easy to exceed the 512 byte stack limit. The strange thing is that the <code>bpf_probe_read</code> version of <code>READ_KERN</code> did not cause the stack limit to be exceeded, but <code>bpf_core_read</code> did. I never confirmed what causes this but I assume it has to do with stack spilage as a result of the relocation code. We mitigated this by optimizing loops to reuse variables that are defined before the loop starts.</p>
-<p>Note that this same performance hit applies if using <code>BPF_CORE_READ</code>/<code>BPF_PROBE_READ</code> as the definition is pretty similar to <code>READ_KERN</code>.</p>
+</code></pre><p>Notice how every time READ_KERN is called, another variable is allocated. In loops that get unrolled, there&rsquo;s no optimization to reuse the same variable. As a result it&rsquo;s very easy to exceed the 512 byte stack limit. The strange thing is that the <code>bpf_probe_read</code> version of <code>READ_KERN</code> did not cause the stack limit to be exceeded, but <code>bpf_core_read</code> did. I never confirmed what causes this but I assume it has to do with stack spillage as a result of the relocation code. We mitigated this by optimizing loops to reuse variables that are defined before the loop starts.</p>
+<p>Note that this same performance hit applies if using <code>BPF_CORE_READ</code>/<code>BPF_PROBE_READ</code> as the definition is similar to <code>READ_KERN</code>.</p>
 <h4 id="distribution">Distribution</h4>
 <p>The CO:RE version of tracee can be compiled in any environment, regardless of if BTF is enabled in it&rsquo;s kernel. This is because we version controlled the vmlinux.h file. As a result, the CO:RE enabled bpf object is always built with tracee. When the userspace Go code is compiled, we embed this bpf object using Go&rsquo;s embed directive. At runtime tracee detects if BTF (and therefore CO:RE) is supported, in which case it runs the CO:RE object. Otherwise it looks for a kernel specific bpf object, or attempts to build one.</p>
 

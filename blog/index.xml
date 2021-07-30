@@ -13,8 +13,8 @@
       <pubDate>Fri, 23 Jul 2021 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/tracee-core/</guid>
-      <description>If you&amp;rsquo;re used to developing software in a high level language like Go or Java you probably haven&amp;rsquo;t thought about supporting different operating system versions much. Sure you want to be able to run on Linux, Macos, or Windows, but that&amp;rsquo;s mostly abstracted away for you.
-If you&amp;rsquo;re developing eBPF software, however, you have to think about the hundreds of Linux kernel versions that your users may be using. When your eBPF programs are reading in specific kernel data structure fields, there&amp;rsquo;s no guarantee of backwards compatibility or stable APIs.</description>
+      <description>If you&amp;rsquo;re used to developing software in a high level language like Go or Java you likely haven&amp;rsquo;t thought about supporting different operating system versions. Sure you want to be able to run on Linux, Macos, or Windows, but that&amp;rsquo;s abstracted away for you.
+When developing eBPF software you must think about hundreds of Linux kernel versions. When your eBPF programs are reading in kernel data structure fields, there&amp;rsquo;s no guarantee of backwards compatibility or stable APIs.</description>
     </item>
     
     <item>
