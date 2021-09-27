@@ -6,7 +6,17 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 23 Jul 2021 03:32:37 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 19 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Compile Once Run Everywhere, the eBPF Dream!</title>
+      <link>https://grantseltzer.github.io/talks/ebpfsummit2021/</link>
+      <pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/talks/ebpfsummit2021/</guid>
+      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)
+  </description>
+    </item>
+    
     <item>
       <title>Supporting CO:RE in Tracee</title>
       <link>https://grantseltzer.github.io/blog/tracee-core/</link>
@@ -15,6 +25,15 @@
       <guid>https://grantseltzer.github.io/blog/tracee-core/</guid>
       <description>If you&amp;rsquo;re used to developing software in a high level language like Go or Java you likely haven&amp;rsquo;t thought about supporting different operating system versions. Sure you want to be able to run on Linux, Macos, or Windows, but that&amp;rsquo;s abstracted away for you.
 When developing eBPF software you must think about hundreds of Linux kernel versions. When your eBPF programs are reading in kernel data structure fields, there&amp;rsquo;s no guarantee of backwards compatibility or stable APIs.</description>
+    </item>
+    
+    <item>
+      <title>Tracing Go Programs with eBPF!</title>
+      <link>https://grantseltzer.github.io/talks/gopherconeu2021/</link>
+      <pubDate>Thu, 27 May 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/talks/gopherconeu2021/</guid>
+      <description>   </description>
     </item>
     
     <item>
