@@ -3,23 +3,28 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://grantseltzer.github.io/talks/ebpfsummit2021/</loc>
-    <lastmod>2021-08-19T00:00:00+00:00</lastmod>
+    <loc>https://grantseltzer.github.io/blog/</loc>
+    <lastmod>2021-10-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://grantseltzer.github.io/</loc>
+    <lastmod>2021-10-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://grantseltzer.github.io/blog/contribute-docs-libbpf/</loc>
+    <lastmod>2021-10-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://grantseltzer.github.io/talks/ebpfsummit2021/</loc>
     <lastmod>2021-08-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>https://grantseltzer.github.io/talks/</loc>
     <lastmod>2021-08-19T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://grantseltzer.github.io/blog/</loc>
-    <lastmod>2021-07-23T03:32:37+00:00</lastmod>
   </url>
   
   <url>

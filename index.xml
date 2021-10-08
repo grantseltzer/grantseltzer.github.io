@@ -6,7 +6,17 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 19 Aug 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 08 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>The libbpf Documentation Site</title>
+      <link>https://grantseltzer.github.io/blog/contribute-docs-libbpf/</link>
+      <pubDate>Fri, 08 Oct 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/contribute-docs-libbpf/</guid>
+      <description>libbpf is the standard implementation of the userspace library for loading and interacting with bpf programs. It defines the bpf ELF file format and CO-RE features. It&amp;rsquo;s a crucial part of the bpf ecosystem and is soon aproaching its first major release. With this in mind, it&amp;rsquo;s important to have proper documentation.
+Introducing libbpf.readthedocs.org. By going to the API docs you can see that each libbpf API function, type, enum and macro are listed.</description>
+    </item>
+    
     <item>
       <title>Compile Once Run Everywhere, the eBPF Dream!</title>
       <link>https://grantseltzer.github.io/talks/ebpfsummit2021/</link>
