@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+        <style>
+
+        body { margin: 0; }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            white-space: pre-wrap;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">Basic Guide to Linux Mailing Lists</h1>
+        <h4>October 10, 2021</h4>
+        <div id="text-content">
+        <p>The Linux kernel is the biggest open source project in existence. It has tens of thousands of contributors from all around the world, from many different companies and communities.</p>
+<p>Linux development does not happen in a single github repository, and likely never will. Instead there are many forks of the linux kernel. Development happens in these forks for very specific subsystems, only a fraction of the overall code. Contributors submit relevant patches to the &lsquo;mailing list&rsquo; that is used for each of these forks. The fork maintainers review these patches, and at regular intervals submit groups of patches &lsquo;upstream&rsquo; to more generalized forks. All these patches eventually make their way up to the &lsquo;mainline&rsquo; kernel which a single maintainer presides over. Eventually the forks pull down the changes from other downstream forks.</p>
+<p>It&rsquo;s a huge task to keep track of this whole system at once but luckily as an individual contributor, you don&rsquo;t need to. Once you know what subsystem community you&rsquo;d like to be a part of, you can find the correspond <em>mailing list</em>.</p>
+<p>Mailing lists are where kernel developers discuss ideas, and submit patches. Mailing lists are not much more than an email forwarder. You send an email to the mailing list, and then everyone who is subscribed to the mailing list gets your email. It&rsquo;s an intimidating system so let&rsquo;s dive into how to start using it.</p>
+<h2 id="subscribe">Subscribe</h2>
+<p>You can subscribe to the mailing list of your choice using majordomo (a mailing list manager). You can find the many lists for the various subsystem communities <a href="http://vger.kernel.org/vger-lists.html">here</a>. You can find instructions <a href="http://vger.kernel.org/majordomo-info.html#subscription">here</a> for subscribing, but essentially you want to send an email to <code>majordomo@vger.kernel.org</code> with the body of your email saying only <code>subscribe &lt;list-name&gt;</code> (where list name would be replaced by something like &lsquo;bpf&rsquo;). You can unsubscribe the same way.</p>
+<h2 id="using-gmail">Using gmail</h2>
+<p>Once you subscribe to a mailing list, your inbox will quickly be consumed by a deluge of emails. There are a few ways to organize this, but I like to have each mailing list in their own label and not in my inbox. I create a label (via settings), and add filters like so:</p>
+<p><img src="/mailing-list/filters.png" alt="filters"></p>
+<div style="text-align: center;">
+    <em> Filters I created for the bpf mailing list </em>
+</div>
+<p>This way my inbox looks like this:</p>
+<p><img src="/mailing-list/whole.png" alt="whole"></p>
+<div style="text-align: center;">
+    <em> The UX of the mailing list via gmail labels/filters </em>
+</div>
+<h2 id="participating-in-conversation">Participating in conversation</h2>
+<h3 id="code-of-conduct">Code of conduct</h3>
+<p>The linux kernel community has a bad reputation. I haven&rsquo;t experienced any toxicity but have seen evidence of it. There is a <a href="https://github.com/torvalds/linux/blob/master/Documentation/process/code-of-conduct.rst">code of conduct</a> that absolutely should be followed and enforced. You should always feel safe to be part of the linux community and accept that you&rsquo;re allowed to make mistakes.</p>
+<h3 id="plaintext">Plaintext</h3>
+<p>The mailing lists require you to only use plain text as opposed to HTML. If you fail to turn on plain text mode, your email will likely be rejected.</p>
+<p><img src="/mailing-list/plaintext.png" alt="plaintext"></p>
+<h3 id="bottom-posting">Bottom posting</h3>
+<p>Conversation on the mailing list is formatted a little different from normal email conversations. To make it obvious what your message is specifically in response to, your messages should be placed underneath the previous email. Hit &lsquo;reply-all&rsquo;, then expand the full reply message, scroll down to the part of the previous message or patch that you want to reply to, and write your post there. You can and should reply in multiple places as well.</p>
+<p><img src="/mailing-list/bottom-posting.png" alt="bottom-posting"></p>
+<h2 id="formatting-patches">Formatting patches</h2>
+<p>Patches can actually be submitted via git on the command line. There are a few workflows that you can use but this is how I like to do it.</p>
+<p>First, make your code changes.</p>
+<p>Next, make your commits with meaningful commit messages. You can find a good guide on how to properly format your commit message <a href="https://chris.beams.io/posts/git-commit/#separate">here</a>. You can do a <code>git log</code> to take a look at examples. Seperate each commit logically</p>
+<p>Next, you&rsquo;re going to format a patch or series of patches. A patch is a file which contains a plaintext representation of a commit, as well as headers to be interpreted for an email client, such as gmail. Here&rsquo;s what that looks like:</p>
+<p><img src="/mailing-list/patch.png" alt="patch"></p>
+<p>The patch file is created using git, and sent to the mailing list using git.</p>
+<p>To create a patch, you use <code>git format-patch</code>. You can specify specific commits with this to generate patch files. If your changes span multiple commits, you would create one patch file for each commit. For example:</p>
+<pre><code>git format-patch HEAD~1
+</code></pre><p>This would create a single patch file out of the most recent commit. If you made 3 commits that you want to submit as a single patch series, you would do <code>HEAD~3</code> instead. The file will be created in your current working directory named something like &ldquo;0001-libbpf-Add-API-documentation-convention-guidelines.patch&rdquo;. The <code>0001</code> is just the number of the patch file in the order it was created. The rest of the name is the subject line of the commit message.</p>
+<p>Next, there&rsquo;s a script for checking to see if you made any simple mistakes in formatting your patch/commit message. You can run from the base of the linux repo like so:</p>
+<pre><code>[*] ./scripts/checkpatch.pl 0001-libbpf-Add-API-documentation-convention-guidelines.patch                                                                                               130 ↵
+total: 0 errors, 0 warnings, 46 lines checked
+
+0001-libbpf-Add-API-documentation-convention-guidelines.patch has no obvious style problems and is ready for submission.
+</code></pre><p>Correct any problems that the script points out, and then you&rsquo;re ready to send it!</p>
+<h2 id="submitting-patches">Submitting patches</h2>
+<p>Now that you have your patch file(s) you can send them to the mailing list via email. Git has a useful command for doing exactly this.</p>
+<p>First you need to set up git to use gmail. A very helpful guide can be found <a href="https://git-send-email.io/">here</a>. It&rsquo;s just a matter of setting up gmail as your git smtp server.</p>
+<p>Here&rsquo;s an example command:</p>
+<pre><code>[*] git send-email ./0001-my-changes.patch --to maintainers-name@kernel.org --cc mailing-list-name@vger.kernel.org
+</code></pre><p>The only arguments that <code>git send-email</code> takes are the paths to patch files. If you&rsquo;ve created a multiple patch set, invoke the command once with all of them specified. Then you pass recipients via the <code>to</code> and <code>cc</code> flags. You should of course include the mailing list and specific maintainers which you can get by invoking the <code>scripts/get_maintainers.pl</code> script.</p>
+<h2 id="note">Note</h2>
+<p>I was very intimidated making my first contribution but I had the help of some very kind people who patiently walked me through the very contents of this guide. If you&rsquo;re ever worried or intimidated about using the mailing list, I would be more than happy to help you with it, you can always reach out via email.</p>
+
+        
+        
+        </div>
+
+        <span class="copyright">copyright 2018 - 2021</span>
+
+    </body>
+    
+</html>

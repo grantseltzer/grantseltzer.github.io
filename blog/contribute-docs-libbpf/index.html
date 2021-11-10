@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+        <style>
+
+        body { margin: 0; }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            white-space: pre-wrap;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">The libbpf Documentation Site</h1>
+        <h4>October 10, 2021</h4>
+        <div id="text-content">
+        <p>libbpf is the standard implementation of the userspace library for loading and interacting with bpf programs. It defines the bpf ELF file format and CO-RE features. It&rsquo;s a crucial part of the bpf ecosystem and is soon approaching its first major release. With this in mind, it&rsquo;s important to have proper documentation.</p>
+<p>Introducing <a href="https://libbpf.readthedocs.org">libbpf.readthedocs.org</a>. By going to the <a href="https://libbpf.readthedocs.io/en/latest/api.html">API docs</a> you can see that each libbpf API function, type, enum and macro are listed. This is generated from the libbpf header files. Comments can be placed in code above the relevant API code and displayed on the documentation site.</p>
+<p>If you&rsquo;re interested in contributing, you can find a guide on the format for the API documentation comments <a href="https://libbpf.readthedocs.io/en/latest/libbpf_naming_convention.html#api-documentation-convention">here</a>. Since libbpf is hosted in the linux kernel repo under <a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/lib/bpf">tools/lib/bpf</a>, contributing to it requires use of the mailing list. You can check out my <a href="/blog/mailing-list-guide">guide to using the mailing list</a> as well. The markdown documents on the documentation site can be found under <a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/Documentation/bpf/libbpf">Documentation/bpf/libbpf/</a>.</p>
+<p>This documentation is synced to the <a href="https://github.com/libbpf/libbpf">github mirror</a>. Since libbpf maintainers cut releases from the github mirror, this means that the documentation is also versioned. You can toggle versions on the bottom left corner of the page.</p>
+<p>You can also find relevant documentation for the bpf system call <a href="https://www.kernel.org/doc/html/latest/userspace-api/ebpf/syscall.html">here</a>.</p>
+
+        
+        
+        </div>
+
+        <span class="copyright">copyright 2018 - 2021</span>
+
+    </body>
+    
+</html>
