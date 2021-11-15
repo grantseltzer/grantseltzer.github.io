@@ -126,8 +126,8 @@ The basic nature of libbpf
 </div>
 <h3 id="kernel-side">Kernel side</h3>
 <p>Let&rsquo;s start with the imports:</p>
-<pre><code>#include &lt;bpf/bpf_helpers.h&gt;  
-#include &quot;vmlinux.h&quot;
+<pre><code>#include &quot;vmlinux.h&quot;
+#include &lt;bpf/bpf_helpers.h&gt;  
 #include &quot;simple.h&quot;
 </code></pre><p>As you might assume, <a href="https://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf-next.git/tree/tools/lib/bpf/bpf_helpers.h"><code>bpf_helpers.h</code></a> contains a lot of useful functions for you to use in your bpf programs. As for <code>vmlinux.h</code>, I wrote a complementary blog post on the subject, you can find it <a href="/blog/vmlinux-header">here</a>.</p>
 <p>Now we&rsquo;re going to need a way to transmit output to userspace everytime the bpf program is called. For this we&rsquo;re going to set up a <a href="https://nakryiko.com/posts/bpf-ringbuf/">ringbuffer</a>:</p>
