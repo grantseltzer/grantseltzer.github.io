@@ -6,7 +6,17 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 16 Mar 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Fri, 20 May 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>BPF Map Concurrency Techniques</title>
+      <link>https://grantseltzer.github.io/blog/bpf-concurrency/</link>
+      <pubDate>Fri, 20 May 2022 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/bpf-concurrency/</guid>
+      <description>There are times when developing your BPF projects when you need to ensure safe access to shared memory. You may have a counter that you&amp;rsquo;re updating from various different BPF programs and reading in userspace. You may also be updating map values from both userspace and from BPF. In this post i&amp;rsquo;ll demonstrate a couple different techniques for handing this scenarios safely.
+Per-cpu maps Per-cpu maps are types of maps where each CPU has its own copy of underlying memory.</description>
+    </item>
+    
     <item>
       <title>Handling errors with CGO</title>
       <link>https://grantseltzer.github.io/blog/cgo-errors/</link>
