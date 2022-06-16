@@ -110,11 +110,12 @@
         </div>
 
         <h1 id="title">BPF Map Concurrency Techniques</h1>
-        <h4>May 20, 2022</h4>
+        <h4>June 16, 2022</h4>
         <div id="text-content">
         <p>There are times when developing your BPF projects when you need to ensure safe access to shared memory. You may have a counter that you&rsquo;re updating from various different BPF programs and reading in userspace. You may also be updating map values from both userspace and from BPF. In this post i&rsquo;ll demonstrate a couple different techniques for handing this scenarios safely.</p>
 <h2 id="per-cpu-maps">Per-cpu maps</h2>
-<p>Per-cpu maps are types of maps where each CPU has its own copy of underlying memory. Since BPF programs can&rsquo;t be preempted, when you access a value inside one of these maps from your BPF program, you know that it&rsquo;s the only program touching that value. The userspace program can <em>read</em> these values at any time safely.</p>
+<p>Per-cpu maps are types of maps where each possible CPU has its own copy of underlying memory. Since BPF programs can&rsquo;t be preempted, when you access a value inside one of these maps from your BPF program, you know that it&rsquo;s the only program touching that value. The userspace program can <em>read</em> these values at any time safely.</p>
+<p>Note that this is only safe if the read can occur with a single operation. If the value in the map requires multiple reads (such as a large struct), it&rsquo;s possible that userspace only reads a partial update. The same is true of BPF programs that can sleep and are using large data types as values.</p>
 <p>The advantage of this approach is completely avoiding lock contention. It&rsquo;s therefore the most performant way of sharing a value that&rsquo;s only updated in BPF.</p>
 <p>The disadvantage of this approach is that you can&rsquo;t update the map values from userspace safely.</p>
 <p>A simple example of how per-cpu maps are useful is updating a shared counter. There are plenty of reasons why you might need to use a counter, such as keeping track of lost events when using ring buffers.</p>
