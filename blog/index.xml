@@ -13,7 +13,7 @@
       <pubDate>Thu, 16 Jun 2022 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/bpf-concurrency/</guid>
-      <description>There are times when developing your BPF projects when you need to ensure safe access to shared memory. You may have a counter that you&amp;rsquo;re updating from various different BPF programs and reading in userspace. You may also be updating map values from both userspace and from BPF. In this post i&amp;rsquo;ll demonstrate a couple different techniques for handing this scenarios safely.
+      <description>There are times when developing your BPF projects when you need to ensure safe access to shared memory. You may have a counter that you&amp;rsquo;re updating from various different BPF programs and reading in userspace. You may also be updating map values from both userspace and from BPF. In this post i&amp;rsquo;ll demonstrate a couple different techniques for handing these scenarios safely.
 Per-cpu maps Per-cpu maps are types of maps where each possible CPU has its own copy of underlying memory.</description>
     </item>
     
