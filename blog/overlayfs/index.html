@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -118,7 +118,7 @@
 <p><img src="/overlay/seperate.png" alt="seperate"></p>
 <p>Here we have three separate directories. They each contain various files. You may also notice that both <code>/tmp/middle</code> and <code>/tmp/upper</code> contain files with the same name (<code>c.txt</code>).</p>
 <p>Let&rsquo;s say I want to create an overlayfs with these three directories. You can do it from the command like this:</p>
-<pre><code>mount \
+<pre tabindex="0"><code>mount \
     -t overlay \
     -o \
     lowerdir=/home/grant:/tmp/middle, \

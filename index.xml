@@ -43,7 +43,7 @@ func (m *Module) BPFLoadObject() error { ret := C.bpf_object__load(m.obj) if ret
       <pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfdaycncf2021/</guid>
-      <description>   </description>
+      <description> </description>
     </item>
     
     <item>
@@ -72,8 +72,7 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime2/</guid>
-      <description>Listen on Changelog.com
- </description>
+      <description>Listen on Changelog.com</description>
     </item>
     
     <item>
@@ -82,8 +81,7 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfsummit2021/</guid>
-      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)
-  </description>
+      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)</description>
     </item>
     
     <item>
@@ -102,7 +100,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 27 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gopherconeu2021/</guid>
-      <description>   </description>
+      <description> </description>
     </item>
     
     <item>
@@ -120,8 +118,8 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
-#include &amp;quot;vmlinux.h&amp;quot; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+#include &amp;#34;vmlinux.h&amp;#34; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
 When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
     
@@ -141,8 +139,7 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gophercon2020/</guid>
-      <description>Code can be found here
-  </description>
+      <description>Code can be found here</description>
     </item>
     
     <item>
@@ -151,8 +148,7 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime/</guid>
-      <description>Listen on Changelog.com
- </description>
+      <description>Listen on Changelog.com</description>
     </item>
     
     <item>
@@ -191,7 +187,7 @@ There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full s
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/karn/</guid>
-      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;rsquo;entitlements&amp;rsquo; into complex seccomp profiles.
 For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).
 So, how does it work?</description>
     </item>
@@ -252,7 +248,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
-$~ cat /dev/urandom | less</description>
+$~ cat /dev/urandom | less In this example, bash executes the commands on both sides of the pipe.</description>
     </item>
     
     <item>
@@ -311,7 +307,7 @@ If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t 
       
       <guid>https://grantseltzer.github.io/recipes/recipes/</guid>
       <description>Recipes:
- Miami Rolls  </description>
+Miami Rolls </description>
     </item>
     
     <item>
@@ -320,7 +316,7 @@ If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/about/about/</guid>
-      <description>My name is Grant Seltzer Richman. I am an Open Source Engineer at Aqua. Previously I worked as a software engineer for Oscar Health, Capsule8, and Red Hat. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about linux, security, and various hobbies.
+      <description>My name is Grant Seltzer Richman. I have worked as a software engineer at Aqua, Oscar Health, Capsule8, and Red Hat. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about linux, security, and various hobbies.
 Feel free to reach out if you want to say hi!</description>
     </item>
     

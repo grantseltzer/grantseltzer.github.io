@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -120,7 +120,7 @@ A version of this post was also uploaded to Aqua's blog <a href="https://blog.aq
 </p>
 </div>
 <p>If you&rsquo;ve been reading much bpf code recently, you&rsquo;ve probably seen this:</p>
-<pre><code>#include &quot;vmlinux.h&quot;
+<pre tabindex="0"><code>#include &#34;vmlinux.h&#34;
 </code></pre><p><code>vmlinux.h</code> is generated code. it contains all of the type definitions that your running Linux kernel uses in it&rsquo;s own source code. This is an important concept to wrap your head around so let me explain.</p>
 <p>When you build Linux one of the output artifacts is a file called <code>vmlinux</code>. It&rsquo;s also typically packaged with major distributions. This is an <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> binary that contains the compiled kernel inside it.</p>
 <p>There&rsquo;s a tool, aptly named bpftool, that is maintained within the Linux source repository. It has a feature to read the <code>vmlinux</code> file and generate a <code>vmlinux.h</code> file. Since it contains every type-definition that the installed kernel uses, it&rsquo;s a very large header file.</p>
@@ -132,11 +132,11 @@ A version of this post was also uploaded to Aqua's blog <a href="https://blog.aq
 <p>Since the vmlinux.h file is generated from your installed kernel, your bpf program could break if you try to run it on another machine without recompiling if it’s running a different kernel version. This is because, from version to version, definitions of internal structs change within the linux source code.</p>
 <p>However, by using libbpf, you can enable something called &ldquo;CO:RE&rdquo; or &ldquo;Compile once, run everywhere&rdquo;. There are macros defined in libbpf (such as <code>BPF_CORE_READ</code>) that will analyze what fields you&rsquo;re trying to access in the types that are defined in your <code>vmlinux.h</code>. If the field you want to access has been moved within the struct definition that the running kernel uses, the macro/helpers will find it for you. It doesn&rsquo;t matter if you compile your bpf program with the <code>vmlinux.h</code> file you generated from your own kernel and then ran on a different one.</p>
 <p>You&rsquo;ll also notice an interesting set of lines at the top of vmlinux.h</p>
-<pre><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
+<pre tabindex="0"><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
 #pragma clang attribute push (__attribute__((preserve_access_index)), apply_to = record)
 #endif
 </code></pre><p>This applies the &lsquo;preserve_access_index&rsquo; attribute to all of the data structures defined in this massive header file. It enables preserving the type&rsquo;s debug information indices which the CO:RE helpers make use of. You could apply this attribute to structs in the various normal header files you&rsquo;d import and skip vmlinux.h altogether though there&rsquo;s some challenge to that which you may ran into. The attribute is then turned off at the bottom of the header:</p>
-<pre><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
+<pre tabindex="0"><code>#ifndef BPF_NO_PRESERVE_ACCESS_INDEX
 #pragma clang attribute pop
 #endif
 </code></pre><p>Macros defined in Linux are not defined in DWARF/BTF, and will not be part of the generated vmlinux.h file.</p>

@@ -73,8 +73,8 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
-#include &amp;quot;vmlinux.h&amp;quot; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+#include &amp;#34;vmlinux.h&amp;#34; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
 When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
     
@@ -124,7 +124,7 @@ There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full s
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/karn/</guid>
-      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;lsquo;entitlements&amp;rsquo; into complex seccomp profiles.
+      <description>Karn aims to provide for Linux what entitlements provide for iOS, or what pledge provides for OpenBSD. It does this by translating a high level set of intuitive &amp;rsquo;entitlements&amp;rsquo; into complex seccomp profiles.
 For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).
 So, how does it work?</description>
     </item>
@@ -167,7 +167,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
-$~ cat /dev/urandom | less</description>
+$~ cat /dev/urandom | less In this example, bash executes the commands on both sides of the pipe.</description>
     </item>
     
     <item>

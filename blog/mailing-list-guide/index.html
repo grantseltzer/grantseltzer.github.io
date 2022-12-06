@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -146,10 +146,10 @@
 <p><img src="/mailing-list/patch.png" alt="patch"></p>
 <p>The patch file is created using git, and sent to the mailing list using git.</p>
 <p>To create a patch, you use <code>git format-patch</code>. You can specify specific commits with this to generate patch files. If your changes span multiple commits, you would create one patch file for each commit. For example:</p>
-<pre><code>git format-patch HEAD~1
+<pre tabindex="0"><code>git format-patch HEAD~1
 </code></pre><p>This would create a single patch file out of the most recent commit. If you made 3 commits that you want to submit as a single patch series, you would do <code>HEAD~3</code> instead. The file will be created in your current working directory named something like &ldquo;0001-libbpf-Add-API-documentation-convention-guidelines.patch&rdquo;. The <code>0001</code> is just the number of the patch file in the order it was created. The rest of the name is the subject line of the commit message.</p>
 <p>Next, there&rsquo;s a script for checking to see if you made any simple mistakes in formatting your patch/commit message. You can run from the base of the linux repo like so:</p>
-<pre><code>[*] ./scripts/checkpatch.pl 0001-libbpf-Add-API-documentation-convention-guidelines.patch                                                                                               130 ↵
+<pre tabindex="0"><code>[*] ./scripts/checkpatch.pl 0001-libbpf-Add-API-documentation-convention-guidelines.patch                                                                                               130 ↵
 total: 0 errors, 0 warnings, 46 lines checked
 
 0001-libbpf-Add-API-documentation-convention-guidelines.patch has no obvious style problems and is ready for submission.
@@ -158,7 +158,7 @@ total: 0 errors, 0 warnings, 46 lines checked
 <p>Now that you have your patch file(s) you can send them to the mailing list via email. Git has a useful command for doing exactly this.</p>
 <p>First you need to set up git to use gmail. A very helpful guide can be found <a href="https://git-send-email.io/">here</a>. It&rsquo;s just a matter of setting up gmail as your git smtp server.</p>
 <p>Here&rsquo;s an example command:</p>
-<pre><code>[*] git send-email ./0001-my-changes.patch --to maintainers-name@kernel.org --cc mailing-list-name@vger.kernel.org
+<pre tabindex="0"><code>[*] git send-email ./0001-my-changes.patch --to maintainers-name@kernel.org --cc mailing-list-name@vger.kernel.org
 </code></pre><p>The only arguments that <code>git send-email</code> takes are the paths to patch files. If you&rsquo;ve created a multiple patch set, invoke the command once with all of them specified. Then you pass recipients via the <code>to</code> and <code>cc</code> flags. You should of course include the mailing list and specific maintainers which you can get by invoking the <code>scripts/get_maintainers.pl</code> script.</p>
 <h2 id="note">Note</h2>
 <p>I was very intimidated making my first contribution but I had the help of some very kind people who patiently walked me through the very contents of this guide. If you&rsquo;re ever worried or intimidated about using the mailing list, I would be more than happy to help you with it, you can always reach out via email.</p>

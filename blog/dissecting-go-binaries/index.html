@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -129,13 +129,13 @@
 <script type="application/javascript" src="https://gist.github.com/grantseltzer/85452bdb369315a79beb619c5544e2a9.js"></script>
 
 <p>For example, you can plug the the following raw bytes (displayed in hex) through Capstone and it will translate them into the corresponding x86_64 instruction:</p>
-<pre><code>0x64 0x48 0x8B 0xC 0x25 0xF8 0xFF 0xFF 0xFF
+<pre tabindex="0"><code>0x64 0x48 0x8B 0xC 0x25 0xF8 0xFF 0xFF 0xFF
 </code></pre><p>Translates to:</p>
-<pre><code>mov rcx, qword ptr fs:[0xfffffffffffffff8]
+<pre tabindex="0"><code>mov rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>In code and then running it looks like this:</p>
 <script type="application/javascript" src="https://gist.github.com/grantseltzer/c44ac782ef271b141fa1ac88c0e5fcd4.js"></script>
 
-<pre><code>$~ go run main.go
+<pre tabindex="0"><code>$~ go run main.go
 0x0:	mov		rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>With these tools our only real task is to extract the relevant raw bytes from the binary file and feed it through Capstone&rsquo;s engine.</p>
 <!-- raw HTML omitted -->

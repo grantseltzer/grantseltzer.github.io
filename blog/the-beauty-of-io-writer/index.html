@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -114,7 +114,7 @@
         <div id="text-content">
         <!-- raw HTML omitted -->
 <p>A perfect example of a properly designed Go interface is <code>io.Writer</code>:</p>
-<pre><code>type Writer interface {
+<pre tabindex="0"><code>type Writer interface {
     Write(p []byte) (n int, err error)
 }
 </code></pre><p>It is short, simple, and powerful. The <code>Write</code> method takes a very generic slice of bytes and writes it to <!-- raw HTML omitted -->something<!-- raw HTML omitted -->.</p>
@@ -123,7 +123,7 @@
 <p>For example, you can define a writer that takes that slice of bytes, encodes it as a jpeg, and writes it to a specific file. You can define a writer that takes the slice of bytes, treats it as a string, and prints it to standard error. You can also define a writer that takes the slice of bytes, encodes it as mp3 data and writes it to an audio device. Currently there are over 75 types that satisfy the <code>io.Writer</code> interface in the Go standard library alone.</p>
 <p>This flexibility is subtle but very intentional.</p>
 <p>Let&rsquo;s say you create a package that produces some kind of data, ASCII art for example. It is not your job to worry about what other programmers are using that art for. If you are exporting API that creates the art, and writes it to a file specified by a path, you are reinventing the wheel. You would have to then create an function for every possible output location. You would also be denying your users a ton of flexibility to use any of the unlimited <code>io.Writer</code>&rsquo;s they may want to use.</p>
-<pre><code>// This defeats the purpose of io.Writer
+<pre tabindex="0"><code>// This defeats the purpose of io.Writer
 func WriteAsciiArtToFile(path string) error { 
     f, err := os.Open(path)
     if err != nil {

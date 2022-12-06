@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -116,10 +116,10 @@
 <p>Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them <a href="https://dave.cheney.net/2018/01/08/gos-hidden-pragmas">here</a>. One such &lsquo;pragma&rsquo; as Cheney calls them is  <code>//go:cgo_import_dynamic</code>. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.</p>
 <p>Let&rsquo;s check out an example from my <a href="https://go-review.googlesource.com/c/go/+/166297">recent contribution</a> to the runtime package.</p>
 <p>First, in lookup_darwin.go we use the cgo_import_dynamic directive for <code>res_search</code></p>
-<pre><code>//go:cgo_import_dynamic libc_res_search res_search &quot;/usr/lib/libSystem.B.dylib&quot;
+<pre tabindex="0"><code>//go:cgo_import_dynamic libc_res_search res_search &#34;/usr/lib/libSystem.B.dylib&#34;
 </code></pre><p>When the linker is run after compilation it executes this directive. The linker pulls in the <code>res_search</code> routine from the libSystem dynamic library (found at the given path). It then makes the routine referenceable in Go&rsquo;s assembly code by the name <code>libc_res_search</code>.</p>
 <p>Now in order to link assembly code to Go we have a couple of pieces of glue to put in place. Let&rsquo;s take a look first, and then analyze:</p>
-<pre><code>//go:nosplit
+<pre tabindex="0"><code>//go:nosplit
 //go:cgo_unsafe_args
 func res_search(dname *byte, class int32, rtype int32, answer *byte, anslen int32) (int32, int32) {
 	args := struct {
@@ -135,7 +135,7 @@ func res_search_trampoline()
 </code></pre><p>The first thing to look at is the symbol definition of <code>res_search_trampoline()</code> <!-- raw HTML omitted -->(line 13)<!-- raw HTML omitted -->. This is a function which will be defined in assembly. Defining the symbol in Go code allows the linker to make it referenceable.</p>
 <p>We also need a helper function which takes the arguments to pass to the assembly routine, and makes a call to <code>libcCall()</code>. This is a helper function defined inside the runtime package. It takes both the trampoline symbol address, and address of the arguments. It uses these to orchestrate the actual call.</p>
 <p>Finally we define the assembly routine for <code>res_search_trampoline</code> which is linked by the Go symbol above.</p>
-<pre><code>TEXT runtime·res_search_trampoline(SB),NOSPLIT,$0
+<pre tabindex="0"><code>TEXT runtime·res_search_trampoline(SB),NOSPLIT,$0
     PUSHQ    BP
     MOVQ     SP, BP
     MOVQ     DI, BX   // move DI into BX to preserve struct addr

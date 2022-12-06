@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -114,10 +114,10 @@
         <div id="text-content">
         <p>One of the main projects that I work on is <a href="https://github.com/aquasecurity/libbpfgo">libbpfgo</a>. This is a Go wrapper around <a href="https://github.com/libbpf/libbpf">libbpf</a>, a userspace library for dealing with bpf objects. The wrapper uses CGO to reference individual functions and data types in libbpf, which is written in C.</p>
 <p>For example, <code>BPFLoadObject()</code> is a libbpfgo API function which calls <code>bpf_object__load()</code>, a libbpf API function.</p>
-<pre><code>func (m *Module) BPFLoadObject() error {
+<pre tabindex="0"><code>func (m *Module) BPFLoadObject() error {
 	ret := C.bpf_object__load(m.obj)
 	if ret != 0 {
-		return fmt.Errorf(&quot;failed to load BPF object&quot;)
+		return fmt.Errorf(&#34;failed to load BPF object&#34;)
 	}
 
 	return nil
@@ -125,12 +125,12 @@
 </code></pre><p>The goal for libbpfgo is to fully implement the libbpf API (<a href="https://libbpf.readthedocs.io/en/latest/api.html">which is pretty big</a>). One complication with this is that libbpf has very inconsistent error handling. Some APIs will return an integer error code directly, some will return a NULL pointer and set the error code in errno, some will return an error code inside of a pointer, and some return an error code which is also in errno. As a result of trying to maintain libbpfgo&rsquo;s error handling sanity, I&rsquo;ve picked up some lessons on how you can use CGO to your advantage.</p>
 <p><code>errno</code> is essentially just a global variable. It&rsquo;s used to convey errors in cases where directly surfacing an error isn&rsquo;t always easy. Keep in mind that C functions can&rsquo;t have more than one return value like in Go. errno is also used quite a bit with system calls.</p>
 <p>If you&rsquo;re calling a C function that uses errno, you can add a second return variable to capture the value of errno into an <code>error</code> variable. For example:</p>
-<pre><code>func (m *Module) GetMap(mapName string) (*BPFMap, error) {
+<pre tabindex="0"><code>func (m *Module) GetMap(mapName string) (*BPFMap, error) {
 	cs := C.CString(mapName)
 	bpfMap, errno := C.bpf_object__find_map_by_name(m.obj, cs)
 	C.free(unsafe.Pointer(cs))
 	if bpfMap == nil {
-		return nil, fmt.Errorf(&quot;failed to find BPF map %s: %w&quot;, mapName, errno)
+		return nil, fmt.Errorf(&#34;failed to find BPF map %s: %w&#34;, mapName, errno)
 	}
 
 	return &amp;BPFMap{
@@ -142,10 +142,10 @@
 }
 </code></pre><p>In the above example, <code>bpf_object__find_map_by_name()</code> is an API function which returns a pointer. That pointer will either be a memory address of a bpf map, or in the case of an error, <code>NULL</code>. The error code is set to errno.</p>
 <p>C standards assign a specific cause of error to specific integer values. Go has these defined <a href="https://pkg.go.dev/syscall#E2BIG">here</a>. Since these are wrapped in the standard Go error type, you can treat it like any error. You can also cast an integer error code as an <code>syscall.Errno</code> for the same benefit. Like so:</p>
-<pre><code>func (b *BPFMap) Resize(maxEntries uint32) error {
+<pre tabindex="0"><code>func (b *BPFMap) Resize(maxEntries uint32) error {
 	errC := C.bpf_map__set_max_entries(b.bpfMap, C.uint(maxEntries))
 	if errC != 0 {
-		return fmt.Errorf(&quot;failed to resize map %s to %v: %w&quot;, b.name, maxEntries, syscall.Errno(-errC))
+		return fmt.Errorf(&#34;failed to resize map %s to %v: %w&#34;, b.name, maxEntries, syscall.Errno(-errC))
 	}
 	return nil
 }

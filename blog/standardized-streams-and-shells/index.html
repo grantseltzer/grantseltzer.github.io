@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -118,7 +118,7 @@
 <p><code>$~ cat /dev/urandom | less </code></p>
 <p>In this example, bash executes the commands on both sides of the pipe. It writes the stdout of <code>cat</code> to stdin of <code>less</code>. For both, stderr is written to the terminal. Most programs, like <code>less</code>, are made to write to stdout/stderr and read from stdin for this exact reason.</p>
 <p>When a new process is created, file descriptors are opened for each of these standardized streams. You can view each processes open file descriptors in <code>/proc</code> like this:</p>
-<pre><code>$~ ls -l /proc/$PPID/fd
+<pre tabindex="0"><code>$~ ls -l /proc/$PPID/fd
 lrwx------ 1 root root 64 May 20 16:58 0 -&gt; /dev/pts/0
 lrwx------ 1 root root 64 May 20 16:58 1 -&gt; /dev/pts/0
 lrwx------ 1 root root 64 May 20 16:58 2 -&gt; /dev/pts/0

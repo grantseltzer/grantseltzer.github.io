@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.80.0" />
+        <meta name="generator" content="Hugo 0.105.0"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -116,7 +116,7 @@
 <p>In this post we&rsquo;re going to delve a bit deeper. We&rsquo;re going to use the capabilities that eBPF has for traversing through the memory of the program we&rsquo;re tracing.</p>
 <h2 id="arguments">Arguments</h2>
 <p>Let&rsquo;s say we want to get the argument values of specific functions anytime it&rsquo;s called. For example, the function <code>simpleFunction</code> here:</p>
-<pre><code>package main
+<pre tabindex="0"><code>package main
 
 func simpleFunction(x int) {
     // some code
@@ -127,7 +127,7 @@ func main() {
 }
 </code></pre><p>We would attach a uprobe and eBPF program to it in the same way as in Part 1. We&rsquo;ll just focus on eBPF code that we&rsquo;ll load, the Go code is the same as the previous post. You can find that <a href="https://gist.github.com/grantseltzer/f82d5e2471e563f6aaf800ad9cdcf8a1">here</a>.</p>
 <p>Just to refresh your memory, the following eBPF function, <code>get_arguments</code>, is going to be set up so that it&rsquo;s executed inside the eBPF virtual machine everytime <code>simpleFunction</code> is called in a running Go program:</p>
-<pre><code>#include &lt;uapi/linux/ptrace.h&gt;
+<pre tabindex="0"><code>#include &lt;uapi/linux/ptrace.h&gt;
 
 inline int get_arguments(struct pt_regs *ctx) {
 
@@ -136,7 +136,7 @@ inline int get_arguments(struct pt_regs *ctx) {
     return 0;
 }
 </code></pre><p>The cool thing about eBPF programs is that they have access to all of addressable memory. This of course includes the stack and heap of the processes that are running our programs! For more context let&rsquo;s take a look at the definition of <code>struct pt_regs</code>, which will be populated for us as the parameter in our eBPF function:</p>
-<pre><code>struct pt_regs {
+<pre tabindex="0"><code>struct pt_regs {
 
     unsigned long sp;
 	unsigned long bx;
@@ -153,7 +153,7 @@ inline int get_arguments(struct pt_regs *ctx) {
 <p>When a Go function is called, the runtime places the parameters on the stack, rather than using registers. We can get a pointer to the stack from the <code>sp</code> register like so:</p>
 <p><code>void* stackAddr = (void*)ctx-&gt;sp;</code></p>
 <p>From there we can calculate starting/ending offsets of our parameters and extract their values accordingly. In the case of our example, the offsets would be <code>sp+8</code> -&gt; <code>sp+16</code>. This is because the return address of functions takes up the first 8 bytes, and then the <code>int</code> parameter is 8 bytes. Here&rsquo;s what that would look like in ebpf:</p>
-<pre><code>#include &lt;uapi/linux/ptrace.h&gt;
+<pre tabindex="0"><code>#include &lt;uapi/linux/ptrace.h&gt;
 
 BPF_PERF_OUTPUT(events);
 
@@ -245,10 +245,10 @@ inline int get_arguments(struct pt_regs *ctx) {
 </table>
 <p>To calculate the actual offset of each parameter from the top of the stack, we look at the size of the largest data type that&rsquo;s being parsed to see the size of the &lsquo;window&rsquo;. Each successive parameter is limited by if it would fit into the current window. If it would go over the limits of a window, pad the current windows, and start a new one.</p>
 <p>For example let&rsquo;s say we&rsquo;re trying to parse the function:</p>
-<pre><code>func parseMe(a int, b bool, c float32) { ... }
+<pre tabindex="0"><code>func parseMe(a int, b bool, c float32) { ... }
 </code></pre><p>The largest data type is the <code>int</code> at 8 bytes. The offsets for the parameter <code>a</code> would therefore be <code>sp+8</code> through <code>sp+15</code>. The parameter <code>b</code> is one byte, so its offset is <code>sp+16</code>. The parameter <code>c</code> is 4 bytes, so that would be <code>sp+17</code> through <code>sp+20</code>.</p>
 <p>Here&rsquo;s what the code for that would look like:</p>
-<pre><code>#include &lt;uapi/linux/ptrace.h&gt;
+<pre tabindex="0"><code>#include &lt;uapi/linux/ptrace.h&gt;
 
 BPF_PERF_OUTPUT(events);
 
