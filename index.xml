@@ -43,7 +43,7 @@ func (m *Module) BPFLoadObject() error { ret := C.bpf_object__load(m.obj) if ret
       <pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfdaycncf2021/</guid>
-      <description> </description>
+      <description>   </description>
     </item>
     
     <item>
@@ -72,7 +72,8 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime2/</guid>
-      <description>Listen on Changelog.com</description>
+      <description>Listen on Changelog.com
+ </description>
     </item>
     
     <item>
@@ -81,7 +82,8 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfsummit2021/</guid>
-      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)</description>
+      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)
+  </description>
     </item>
     
     <item>
@@ -100,7 +102,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 27 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gopherconeu2021/</guid>
-      <description> </description>
+      <description>   </description>
     </item>
     
     <item>
@@ -118,7 +120,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>A version of this post was also uploaded to Aqua&#39;s blog here If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
 #include &amp;#34;vmlinux.h&amp;#34; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
 When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
@@ -139,7 +141,8 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gophercon2020/</guid>
-      <description>Code can be found here</description>
+      <description>Code can be found here
+  </description>
     </item>
     
     <item>
@@ -148,7 +151,8 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime/</guid>
-      <description>Listen on Changelog.com</description>
+      <description>Listen on Changelog.com
+ </description>
     </item>
     
     <item>
@@ -248,7 +252,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
-$~ cat /dev/urandom | less In this example, bash executes the commands on both sides of the pipe.</description>
+$~ cat /dev/urandom | less</description>
     </item>
     
     <item>
@@ -293,6 +297,16 @@ If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t 
     
     <item>
       <title></title>
+      <link>https://grantseltzer.github.io/recipes/bialys/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/recipes/bialys/</guid>
+      <description>Bialys Bialys are a traditional roll that are fundamental to Ashkenazi Jewsish cuisine. They were a staple at bakeries in New York throughout the 20th century but are hard to find outside of areas with large Ashkenazi populations. Bagels simply get all the glory.
+Whereas bagels are supposed to be tough and chewy, Bialys are soft, light, and have an even airy crumb structure. Instead of having a hole, they have a divet in the center which has caramelized onions.</description>
+    </item>
+    
+    <item>
+      <title></title>
       <link>https://grantseltzer.github.io/recipes/miami-rolls/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
@@ -307,7 +321,7 @@ If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t 
       
       <guid>https://grantseltzer.github.io/recipes/recipes/</guid>
       <description>Recipes:
-Miami Rolls </description>
+ Miami Rolls Bialys  </description>
     </item>
     
     <item>
