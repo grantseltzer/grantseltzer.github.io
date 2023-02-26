@@ -43,7 +43,7 @@ func (m *Module) BPFLoadObject() error { ret := C.bpf_object__load(m.obj) if ret
       <pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfdaycncf2021/</guid>
-      <description>   </description>
+      <description> </description>
     </item>
     
     <item>
@@ -72,8 +72,7 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime2/</guid>
-      <description>Listen on Changelog.com
- </description>
+      <description>Listen on Changelog.com</description>
     </item>
     
     <item>
@@ -82,8 +81,7 @@ Introducing libbpf.readthedocs.org. By going to the API docs you can see that ea
       <pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/ebpfsummit2021/</guid>
-      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)
-  </description>
+      <description>Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)</description>
     </item>
     
     <item>
@@ -102,7 +100,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 27 May 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gopherconeu2021/</guid>
-      <description>   </description>
+      <description> </description>
     </item>
     
     <item>
@@ -120,7 +118,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
 #include &amp;#34;vmlinux.h&amp;#34; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
 When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
@@ -141,8 +139,7 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gophercon2020/</guid>
-      <description>Code can be found here
-  </description>
+      <description>Code can be found here</description>
     </item>
     
     <item>
@@ -151,8 +148,7 @@ The DWARF specification is, of course, not Go specific. The DWARF object file sp
       <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/talks/gotime/</guid>
-      <description>Listen on Changelog.com
- </description>
+      <description>Listen on Changelog.com</description>
     </item>
     
     <item>
@@ -252,7 +248,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
-$~ cat /dev/urandom | less</description>
+$~ cat /dev/urandom | less In this example, bash executes the commands on both sides of the pipe.</description>
     </item>
     
     <item>
@@ -321,16 +317,7 @@ Whereas bagels are supposed to be tough and chewy, Bialys are soft, light, and h
       
       <guid>https://grantseltzer.github.io/recipes/recipes/</guid>
       <description>Recipes:
- Miami Rolls Bialys  </description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link>https://grantseltzer.github.io/recipes/teglach/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid>https://grantseltzer.github.io/recipes/teglach/</guid>
-      <description>Teglach Teglach is a very old world Ashkenazi dessert. Most of the time if people know what it is, they know it as the thing that their great aunt always brought to Jewish holidays that no one ever ended up eating. I admit to never giving it a try before actually making it at home with my mom, her mother&amp;rsquo;s recipe. It was fantastic, teglach is cookies, mixed with nuts, and boiled in spiced honey, how could it be bad?</description>
+Miami Rolls Bialys </description>
     </item>
     
     <item>
@@ -339,7 +326,7 @@ Whereas bagels are supposed to be tough and chewy, Bialys are soft, light, and h
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/about/about/</guid>
-      <description>My name is Grant Seltzer Richman. I have worked as a software engineer at Aqua, Oscar Health, Capsule8, and Red Hat. My interests include systems programming, security, video games, hiking, watching baseball, and reading. I mostly will be writing blog posts about linux, security, and various hobbies.
+      <description>My name is Grant Seltzer Richman. I currently work at Datadog. I have worked as a software engineer at Aqua, Oscar Health, Capsule8, and Red Hat. My interests include systems programming, cycling, triathlon, security, video games, baseball, and reading. I mostly will be writing blog posts about linux, security, and various hobbies.
 Feel free to reach out if you want to say hi!</description>
     </item>
     

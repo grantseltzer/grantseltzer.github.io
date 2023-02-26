@@ -73,7 +73,7 @@ When developing eBPF software you must think about hundreds of Linux kernel vers
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
-      <description>A version of this post was also uploaded to Aqua&#39;s blog here  If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
+      <description>A version of this post was also uploaded to Aqua&#39;s blog here If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:
 #include &amp;#34;vmlinux.h&amp;#34; vmlinux.h is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.
 When you build Linux one of the output artifacts is a file called vmlinux.</description>
     </item>
@@ -167,7 +167,7 @@ Overlay filesystems allow you to take multiple directory trees and view them as 
       <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.
 Standardized streams enable you to string together multiple commands with a pipe (|) in your shell like this:
-$~ cat /dev/urandom | less</description>
+$~ cat /dev/urandom | less In this example, bash executes the commands on both sides of the pipe.</description>
     </item>
     
     <item>
