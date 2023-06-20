@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.110.0"> 
+        <meta name="generator" content="Hugo 0.92.2" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -120,16 +120,16 @@
 func SwitchFunction(a, b int, c *int) string {
     switch *c {
     case a:
-       return &#34;a&#34;
+       return &quot;a&quot;
     case b:
-       return &#34;b&#34;
+       return &quot;b&quot;
     default:
-       return &#34;c&#34;
+       return &quot;c&quot;
     }
 }
 </code></pre><pre tabindex="0"><code>package switchers
 
-import &#34;testing&#34;
+import &quot;testing&quot;
 
 func TestSwitch(t *testing.T) {
 
@@ -141,8 +141,8 @@ func TestSwitch(t *testing.T) {
 
     x := SwitchFunction(a, b, c)
 
-    if x != &#34;c&#34; {
-        t.Error(&#34;wtf?&#34;)
+    if x != &quot;c&quot; {
+        t.Error(&quot;wtf?&quot;)
     }
 }
 </code></pre><p>We can compile a test binary with <code>go test -c</code>. As it turns out, the go <code>test</code> command is completely configurable with all linker, loader, and runtime flags. For example, you can change your <code>GOOS</code> and <code>GOARCH</code> environment variables to compile different test files.</p>

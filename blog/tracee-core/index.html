@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.110.0"> 
+        <meta name="generator" content="Hugo 0.92.2" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -132,7 +132,7 @@
 #endif
 }
 </code></pre><p>Here we have a simple example where we use macro&rsquo;s we defined for checking kernel versions at runtime. This is somewhat effective but cumbersome to maintain.</p>
-<h2 id="enter-core-or-the-better-way">Enter CO:RE (or &rsquo;the better way')</h2>
+<h2 id="enter-core-or-the-better-way">Enter CO:RE (or &lsquo;the better way&rsquo;)</h2>
 <p>What if we could read from kernel data structures without having to worry about changes in their definitions? That is the promise of &lsquo;CO:RE&rsquo; or &lsquo;Compile Once, Run Everywhere&rsquo;.</p>
 <p>This works by replacing libbpf helper functions like <code>bpf_probe_read</code> which reads from kernel memory to the stack. Instead you can use <code>bpf_core_read</code>. This helper uses offset relocation for source address using clang&rsquo;s <code>__builtin_preserve_access_index()</code>. A simple explanation of how it works is that the helper uses kernel debug info (BTF) to find where kernel structure fields have been relocated to. For an actual in depth explanation of how this works, check out Andrii Nakryiko&rsquo;s <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">blog post</a> on the subject.</p>
 <h2 id="adding-this-support-to-tracee">Adding this support to Tracee</h2>

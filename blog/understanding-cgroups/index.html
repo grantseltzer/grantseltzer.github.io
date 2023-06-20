@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.110.0"> 
+        <meta name="generator" content="Hugo 0.92.2" /> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -115,7 +115,7 @@
         <!-- raw HTML omitted -->
 <p>Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&rsquo;t want a google chrome process (or it&rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that. They are an extremely powerful tool by which you can guarentee limits on performance, but understanding how they work and how to use them can be a little daunting.</p>
 <p>There are 12 different types of cgroups available in Linux. Each of them corresponds to a resource that processes use, such as the <!-- raw HTML omitted -->memory<!-- raw HTML omitted --> cgroup.</p>
-<p>Before we actually dive into cgroups, there&rsquo;s a few bases we should cover. Cgroups specifically deal with processes which are a fundamental piece of any operating system. A process is just a running instance of a program.  When you want to run a program the Linux kernel loads the executable into memory, assigns a process ID to it, allocates various resources&rsquo; for it, and begins to run it. Throughout the lifetime of a process the kernel keeps track of its various state and resource usage information.</p>
+<p>Before we actually dive into cgroups, there&rsquo;s a few bases we should cover. Cgroups specifically deal with processes which are a fundamental piece of any operating system. A process is just a running instance of a program.  When you want to run a program the Linux kernel loads the executable into memory, assigns a process ID to it, allocates various resources' for it, and begins to run it. Throughout the lifetime of a process the kernel keeps track of its various state and resource usage information.</p>
 <p>You can see all the processes running on your system and some of their resource statistics with the <!-- raw HTML omitted -->top<!-- raw HTML omitted --> command (I prefer <a href="https://hisham.hm/htop/">htop</a>).</p>
 <p><img src="/cgroups/htop.png" alt="htop">
 <!-- raw HTML omitted -->an htop screenshot<!-- raw HTML omitted --></p>
@@ -143,7 +143,7 @@
 <!-- raw HTML omitted -->a really dorky graphic<!-- raw HTML omitted --></p>
 <p>The purpose of explaining how the CPU cgroup works is to show the nature of what cgroups are. They are not the mechanism by which resources are limited but rather just a glorified way of collecting arguments for those resource limits. It&rsquo;s up to the individual subsystems to read those arguments and take them into consideration. The same goes for every other cgroup implementation.</p>
 <h1 id="using-cgroups">Using cgroups</h1>
-<p>All cgroup functionality is accessed through the cgroup filesystem. This is a virtual filesystem with special files that act as the interface for creating, removing, or altering cgroups. You can find where the various cgroupfs&rsquo; (one for each cgroup type) on your system is mounted using <!-- raw HTML omitted -->mount | grep cgroup<!-- raw HTML omitted -->. They&rsquo;re typically in <!-- raw HTML omitted -->/sys/fs/cgroup<!-- raw HTML omitted -->.</p>
+<p>All cgroup functionality is accessed through the cgroup filesystem. This is a virtual filesystem with special files that act as the interface for creating, removing, or altering cgroups. You can find where the various cgroupfs' (one for each cgroup type) on your system is mounted using <!-- raw HTML omitted -->mount | grep cgroup<!-- raw HTML omitted -->. They&rsquo;re typically in <!-- raw HTML omitted -->/sys/fs/cgroup<!-- raw HTML omitted -->.</p>
 <p><img src="/cgroups/ls-cgroup.png" alt="ls-cgroup">
 <!-- raw HTML omitted -->A cgroupfs directory for each cgroup type<!-- raw HTML omitted --></p>
 <p>Continuing to use the CPU cgroup as an example, let&rsquo;s take a look at the hierarchy and constraints for the CPU cgroup. Within the CPU directory there are a bunch of files that are used for configuring the constraints of processes in the cgroup. Since cgroups exist in hierarchies, you can also find directories that correspond to child cgroups. Making a new child cgroup is as simple as using <!-- raw HTML omitted -->mkdir<!-- raw HTML omitted -->. All the constraint files will be created for you!</p>
