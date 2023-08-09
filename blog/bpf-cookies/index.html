@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+        <style>
+
+        body { margin: 0; }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+        
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px){
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
+        a:hover { font-style: italic; border-bottom: 5px solid yellow }
+        .copyright { padding-top: 50px; display: block; text-align: center; }
+
+        </style>
+
+    </head>
+
+    <body>
+        <div id="topbar">
+            <a id="homelink" href="/">GSR</a>
+        </div>
+
+        <h1 id="title">Attaching BPF Cookies to Tracing Programs</h1>
+        <h4>August 09, 2023</h4>
+        <div id="text-content">
+        <p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many use cases so i&rsquo;ll be explaining how to use it, and going over a few examples from real code i&rsquo;ve written.</p>
+<p>A cookie is just an unsigned 64-bit integer. That&rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&rsquo;s code using the go <code>cilium/ebpf</code> library to assign a cookie to a uprobe:</p>
+<pre tabindex="0"><code>l, err := executable.Uprobe(symbolName, bpfobject.UprobeProgram, &amp;link.UprobeOptions{
+	Cookie: uint64(3),
+})
+</code></pre><p>In this case, for no real reason, I&rsquo;m assigning the value 3 as the cookie.</p>
+<p>Then, in the bpf program, I can get that value using the <code>bpf_get_attach_cookie</code> helper:</p>
+<pre tabindex="0"><code>SEC(&quot;uprobe/instrument&quot;)
+int uprobe_instrument(struct pt_regs *ctx)
+{
+    __u64 cookie_value = bpf_get_attach_cookie(ctx);
+    bpf_printk(&quot;%d\n&quot;, cookie_value);  // prints &quot;3&quot;  
+    return 0;
+}
+</code></pre><p>Cookies are useful because they allow you to provide context to your bpf program as to what it&rsquo;s attached to, or what logic it should follow. Without cookies, if you&rsquo;re sharing a single ringbuffer between multiple instances of the same bpf program, it&rsquo;s difficult to know which program the ringbuffer events came from in user space.</p>
+<h1 id="example-usage">Example usage</h1>
+<h2 id="event-context">Event Context</h2>
+<p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a u64 ID to each symbol&rsquo;s name.</p>
+<p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p>
+<h4 id="assigning-the-symbol-id-cookie-in-userspace">Assigning the symbol ID cookie in userspace:</h4>
+<pre tabindex="0"><code>symbolNamesToID := map[string]uint64{
+	&quot;main.foobar&quot;: 1,
+	&quot;main.bazbuz&quot;: 2,
+}
+
+for symName, symID := range symbolNamesToID {
+	l, err := executable.Uprobe(symName, objs.UprobeInstrument, &amp;link.UprobeOptions{
+		Cookie: symID,
+	})
+	defer l.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+</code></pre><h4 id="retrieving-the-symbol-id-cookie-in-bpf-and-writing-it-back-to-user-space">Retrieving the symbol ID cookie in bpf and writing it back to user space:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c" data-lang="c"><span style="color:#66d9ef">struct</span> event {
+    __u64 event_id;
+    <span style="color:#66d9ef">char</span> stack_content[<span style="color:#ae81ff">50</span>];
+};
+<span style="color:#66d9ef">const</span> <span style="color:#66d9ef">struct</span> event <span style="color:#f92672">*</span>unused <span style="color:#a6e22e">__attribute__</span>((unused));
+
+SEC(<span style="color:#e6db74">&#34;uprobe/instrument&#34;</span>)
+<span style="color:#66d9ef">int</span> uprobe_instrument(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx)
+{
+    <span style="color:#75715e">// Get the event ID from the cookie
+</span><span style="color:#75715e"></span>    __u64 event_id <span style="color:#f92672">=</span> bpf_get_attach_cookie(ctx);
+
+    <span style="color:#66d9ef">struct</span> event <span style="color:#f92672">*</span>e;
+    e <span style="color:#f92672">=</span> bpf_ringbuf_reserve(<span style="color:#f92672">&amp;</span>events, <span style="color:#66d9ef">sizeof</span>(<span style="color:#66d9ef">struct</span> event), <span style="color:#ae81ff">0</span>);
+    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>e) {
+        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+    }
+
+	<span style="color:#75715e">// Send an event over the ringbuffer containing the event&#39;s ID, and stack content
+</span><span style="color:#75715e"></span>    event<span style="color:#f92672">-&gt;</span>event_id <span style="color:#f92672">=</span> event_id;
+    bpf_probe_read(<span style="color:#f92672">&amp;</span>event<span style="color:#f92672">-&gt;</span>stack_content, <span style="color:#ae81ff">50</span>, ctx<span style="color:#f92672">-&gt;</span>sp);
+    bpf_ringbuf_submit(e, <span style="color:#ae81ff">0</span>);
+
+    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+}
+</code></pre></div><h4 id="reading-events-off-the-ringbuffer-in-user-space">Reading events off the ringbuffer in user space:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">for</span> {
+	<span style="color:#75715e">// Blocking wait for events off ringbuffer
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">record</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">Read</span>()
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Is</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ringbuf</span>.<span style="color:#a6e22e">ErrClosed</span>) {
+			<span style="color:#66d9ef">break</span>
+		}
+		<span style="color:#66d9ef">continue</span>
+	}
+
+	<span style="color:#75715e">// Parse the raw bytes from struct representation
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// into the source struct definition
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">Read</span>(
+		<span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">NewBuffer</span>(<span style="color:#a6e22e">record</span>.<span style="color:#a6e22e">RawSample</span>),
+		<span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">LittleEndian</span>,
+		<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">event</span>,
+	)
+
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;failed to interpret binary data from raw sample&#34;</span>)
+		<span style="color:#66d9ef">continue</span>
+	}
+
+	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;The symbol %s had the first 50 stack bytes: %w\n&#34;</span>, <span style="color:#a6e22e">symbolIDToName</span>[<span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">event_id</span>], <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">stack_content</span>))
+}
+</code></pre></div><p><em>(Full code for this example can be found <a href="">here</a>)</em></p>
+<h2 id="filtering">Filtering</h2>
+<p>Many bpf-based projects will filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
+<pre tabindex="0"><code>SEC(&quot;kprobe/do_unlinkat&quot;)
+int kprobe__do_unlinkat(struct pt_regs *ctx)
+{
+    __u64 target_uid = bpf_get_attach_cookie(ctx);
+    __u64 uid = bpf_get_current_uid_gid();
+
+    if (target_uid != uid) {
+        return 0;
+    }
+
+    struct event *e;
+    e = bpf_ringbuf_reserve(&amp;events, sizeof(struct event), 0);
+    if (!e) {
+        return 0;
+    }
+    e-&gt;uid = uid;
+
+    bpf_ringbuf_submit(e, 0);
+    return 0;
+}
+</code></pre><h2 id="map-index-for-arbitrary-context-more-complex-filtering">Map index for arbitrary context (more complex filtering)</h2>
+<p>While the two examples above are interesting, there&rsquo;s really no limit to what you can do with cookies (except, of course, for the limitations of bpf itself; more on that in the next section).</p>
+<p>We can place arbitrary data structures in bpf maps from user space, then set the index of those structures as the bpf cookie, giving us way more context than a single u64 can provide. Here&rsquo;s an example similar to above, except with multiple specified filters:</p>
+<h4 id="passing-a-struct-via-cookie">&lsquo;Passing&rsquo; a struct via cookie:</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">indexInFilterMap</span> <span style="color:#66d9ef">uint64</span> = <span style="color:#ae81ff">1</span>
+	<span style="color:#a6e22e">filters</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">bpfFilters</span>{
+		<span style="color:#a6e22e">Uid</span>: <span style="color:#ae81ff">0</span>,
+		<span style="color:#a6e22e">Gid</span>: <span style="color:#ae81ff">0</span>,
+	}
+	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">FiltersMap</span>.<span style="color:#a6e22e">Update</span>(<span style="color:#a6e22e">indexInFilterMap</span>, <span style="color:#a6e22e">filters</span>, <span style="color:#a6e22e">ebpf</span>.<span style="color:#a6e22e">UpdateNoExist</span>)
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#e6db74">&#34;can&#39;t update filter map: &#34;</span>, <span style="color:#a6e22e">err</span>)
+	}
+
+	<span style="color:#a6e22e">_</span>, <span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">Kprobe</span>(<span style="color:#e6db74">&#34;do_unlinkat&#34;</span>, <span style="color:#a6e22e">objs</span>.<span style="color:#a6e22e">KprobeDoUnlinkat</span>, <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">link</span>.<span style="color:#a6e22e">KprobeOptions</span>{
+		<span style="color:#a6e22e">Cookie</span>: <span style="color:#a6e22e">indexInFilterMap</span>,
+	})
+	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatal</span>(<span style="color:#a6e22e">err</span>)
+	}
+</code></pre></div><p>And retrieving:</p>
+<pre tabindex="0"><code>struct filters {
+    int uid;
+    int gid;
+};
+
+struct bpf_map_def SEC(&quot;maps&quot;) filters_map = {
+	.type        = BPF_MAP_TYPE_HASH,
+	.key_size    = sizeof(u64),
+	.value_size  = sizeof(struct filters),
+	.max_entries = 100, 
+};
+
+
+SEC(&quot;kprobe/do_unlinkat&quot;)
+int kprobe__do_unlinkat(struct pt_regs *ctx)
+{
+
+	// Retrieve the index to find the filters struct via the cookie
+    __u64 map_index_for_filter = bpf_get_attach_cookie(ctx);
+
+	// Get the filters struct and make checks accordingly
+    struct filters* filters = (struct filters*)bpf_map_lookup_elem(&amp;filters_map, &amp;map_index_for_filter);
+    if (!filters) {
+        bpf_printk(&quot;could not find filter&quot;);
+        return 0;
+    }
+    __u64 giduid = bpf_get_current_uid_gid();
+    __u32 gid = giduid&gt;&gt;32;
+    __u32 uid = (__u32)giduid;
+    if (filters-&gt;uid != uid) {
+        bpf_printk(&quot;uid did not match&quot;);
+        return 0;
+    }
+    if (filters-&gt;gid != gid) {
+        bpf_printk(&quot;gid did not match&quot;);
+        return 0;
+    }
+	// etc...
+...
+}
+</code></pre><h3 id="conclusion">Conclusion</h3>
+<p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful across tail calls.</p>
+
+        
+        
+        </div>
+
+        <span class="copyright">copyright 2018 - 2023</span>
+
+    </body>
+    
+</html>

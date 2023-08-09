@@ -6,7 +6,17 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Jul 2022 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 09 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Attaching BPF Cookies to Tracing Programs</title>
+      <link>https://grantseltzer.github.io/blog/bpf-cookies/</link>
+      <pubDate>Wed, 09 Aug 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/bpf-cookies/</guid>
+      <description>BPF has a helper function called bpf_get_attach_cookie. It&amp;rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many use cases so i&amp;rsquo;ll be explaining how to use it, and going over a few examples from real code i&amp;rsquo;ve written.
+A cookie is just an unsigned 64-bit integer. That&amp;rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&amp;rsquo;s code using the go cilium/ebpf library to assign a cookie to a uprobe:</description>
+    </item>
+    
     <item>
       <title>Memory Execution Override With ebpf</title>
       <link>https://grantseltzer.github.io/talks/summercon2022/</link>
