@@ -174,11 +174,11 @@ func main() {
 			// Check if this entry is a function
 			if entry.Tag == dwarf.TagSubprogram {
 				
-				// Go through fields 
+				// Go through DWARF entry fields 
 				for _, field := range entry.Field {
 
 					if field.Attr == dwarf.AttrName {
-						fmt.Println(field.Val.(string))
+						fmt.Println(field.Val.(string)) // Name of the function
 					}
 				}
 			}
@@ -187,14 +187,14 @@ func main() {
 </code></pre><p>(Full program <a href="https://gist.github.com/grantseltzer/51c7c0827b95e9a1c07796d6b352076c">here</a>)</p>
 <p>All function parameters have their own entries and are placed in order right after the function&rsquo;s entry. They have the tag <code>TagFormalParameter</code>. We can read what datatype the parameter is by reading the <code>AttrType</code> field. All we need to do in that case would be to have a second <code>Reader</code> jump to the entry of the type definition. We would just continue reading entries while checking if they&rsquo;re function parameters. Like so:</p>
 <pre tabindex="0"><code>...
-		if !(readingAStruct &amp;&amp; entry.Tag == dwarf.TagFormalParameter) {
+		if !(readingAFunction &amp;&amp; entry.Tag == dwarf.TagFormalParameter) {
 			continue
 		}
 
 		for _, field := range entry.Field {
 
 			if field.Attr == dwarf.AttrName {
-				name = field.Val.(string)
+				name = field.Val.(string) // Name of the parameter
 			}
 
 			if field.Attr == dwarf.AttrType {
@@ -206,7 +206,7 @@ func main() {
 
 				for i := range typeEntry.Field {
 					if typeEntry.Field[i].Attr == dwarf.AttrName {
-						typeName = typeEntry.Field[i].Val.(string)
+						typeName = typeEntry.Field[i].Val.(string) // Name of the type of this parameter
 					}
 				}
 			}
