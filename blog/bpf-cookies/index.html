@@ -174,32 +174,32 @@ int uprobe_instrument(struct pt_regs *ctx)
     return 0;
 }
 </code></pre><h4 id="reading-events-off-the-ringbuffer-in-user-space">Reading events off the ringbuffer in user space:</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">for</span> {
-	<span style="color:#75715e">// Blocking wait for events off ringbuffer
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">record</span>, <span style="color:#a6e22e">err</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">reader</span>.<span style="color:#a6e22e">Read</span>()
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">errors</span>.<span style="color:#a6e22e">Is</span>(<span style="color:#a6e22e">err</span>, <span style="color:#a6e22e">ringbuf</span>.<span style="color:#a6e22e">ErrClosed</span>) {
-			<span style="color:#66d9ef">break</span>
+<pre tabindex="0"><code>for {
+	// Blocking wait for events off ringbuffer
+	record, err := reader.Read()
+	if err != nil {
+		if errors.Is(err, ringbuf.ErrClosed) {
+			break
 		}
-		<span style="color:#66d9ef">continue</span>
+		continue
 	}
 
-	<span style="color:#75715e">// Parse the raw bytes from struct representation
-</span><span style="color:#75715e"></span>	<span style="color:#75715e">// into the source struct definition
-</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">Read</span>(
-		<span style="color:#a6e22e">bytes</span>.<span style="color:#a6e22e">NewBuffer</span>(<span style="color:#a6e22e">record</span>.<span style="color:#a6e22e">RawSample</span>),
-		<span style="color:#a6e22e">binary</span>.<span style="color:#a6e22e">LittleEndian</span>,
-		<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">event</span>,
+	// Parse the raw bytes from struct representation
+	// into the source struct definition
+	err = binary.Read(
+		bytes.NewBuffer(record.RawSample),
+		binary.LittleEndian,
+		&amp;event,
 	)
 
-	<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
-		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;failed to interpret binary data from raw sample&#34;</span>)
-		<span style="color:#66d9ef">continue</span>
+	if err != nil {
+		log.Printf(&quot;failed to interpret binary data from raw sample&quot;)
+		continue
 	}
 
-	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;The symbol %s had the first 50 stack bytes: %w\n&#34;</span>, <span style="color:#a6e22e">symbolIDToName</span>[<span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">event_id</span>], <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">stack_content</span>))
+	fmt.Printf(&quot;The symbol %s had the first 50 stack bytes: %w\n&quot;, symbolIDToName[event.event_id], event.stack_content))
 }
-</code></pre></div><h2 id="filtering">Filtering</h2>
+</code></pre><h2 id="filtering">Filtering</h2>
 <p>Many bpf-based projects will filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
 <pre tabindex="0"><code>SEC(&quot;kprobe/do_unlinkat&quot;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
