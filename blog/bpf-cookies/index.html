@@ -128,6 +128,7 @@ int uprobe_instrument(struct pt_regs *ctx)
 }
 </code></pre><p>Cookies are useful because they allow you to provide context to your bpf program as to what it&rsquo;s attached to, or what logic it should follow. Without cookies, if you&rsquo;re sharing a single ringbuffer between multiple instances of the same bpf program, it&rsquo;s difficult to know which program the ringbuffer events came from in user space.</p>
 <h1 id="example-usage">Example usage</h1>
+<p>All code from this post can be found <a href="https://github.com/grantseltzer/bpf-cookie-examples/tree/main/cmd">here</a></p>
 <h2 id="event-context">Event Context</h2>
 <p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a u64 ID to each symbol&rsquo;s name.</p>
 <p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p>
@@ -198,8 +199,7 @@ int uprobe_instrument(struct pt_regs *ctx)
 
 	<span style="color:#a6e22e">fmt</span>.<span style="color:#a6e22e">Printf</span>(<span style="color:#e6db74">&#34;The symbol %s had the first 50 stack bytes: %w\n&#34;</span>, <span style="color:#a6e22e">symbolIDToName</span>[<span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">event_id</span>], <span style="color:#a6e22e">event</span>.<span style="color:#a6e22e">stack_content</span>))
 }
-</code></pre></div><p><em>(Full code for this example can be found <a href="">here</a>)</em></p>
-<h2 id="filtering">Filtering</h2>
+</code></pre></div><h2 id="filtering">Filtering</h2>
 <p>Many bpf-based projects will filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
 <pre tabindex="0"><code>SEC(&quot;kprobe/do_unlinkat&quot;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
