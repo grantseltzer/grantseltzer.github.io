@@ -112,7 +112,7 @@
         <h1 id="title">BPF Attach Cookies</h1>
         <h4>August 09, 2023</h4>
         <div id="text-content">
-        <p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many use cases so i&rsquo;ll be explaining how to use it, and going over a few examples from real code i&rsquo;ve written.</p>
+        <p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&rsquo;ll be exploring how to use it, and going over a few examples from real code i&rsquo;ve written.</p>
 <p>A cookie is just an unsigned 64-bit integer. That&rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&rsquo;s code using the go <code>cilium/ebpf</code> library to assign a cookie to a uprobe:</p>
 <pre tabindex="0"><code>l, err := executable.Uprobe(symbolName, bpfobject.UprobeProgram, &amp;link.UprobeOptions{
 	Cookie: uint64(3),
@@ -130,7 +130,7 @@ int uprobe_instrument(struct pt_regs *ctx)
 <h1 id="example-usage">Example usage</h1>
 <p>All code from this post can be found <a href="https://github.com/grantseltzer/bpf-cookie-examples/tree/main/cmd">here</a></p>
 <h2 id="event-context">Event Context</h2>
-<p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a u64 ID to each symbol&rsquo;s name.</p>
+<p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use different a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a unique u64 ID to each symbol&rsquo;s name.</p>
 <p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p>
 <h4 id="assigning-the-symbol-id-cookie-in-userspace">Assigning the symbol ID cookie in userspace:</h4>
 <pre tabindex="0"><code>symbolNamesToID := map[string]uint64{
@@ -200,14 +200,14 @@ int uprobe_instrument(struct pt_regs *ctx)
 	fmt.Printf(&quot;The symbol %s had the first 50 stack bytes: %w\n&quot;, symbolIDToName[event.event_id], event.stack_content))
 }
 </code></pre><h2 id="filtering">Filtering</h2>
-<p>Many bpf-based projects will filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
+<p>Many bpf-based projects filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
 <pre tabindex="0"><code>SEC(&quot;kprobe/do_unlinkat&quot;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
 {
-    __u64 target_uid = bpf_get_attach_cookie(ctx);
+    __u64 target_uid_cookie = bpf_get_attach_cookie(ctx);
     __u64 uid = bpf_get_current_uid_gid();
 
-    if (target_uid != uid) {
+    if (target_uid_cookie != uid) {
         return 0;
     }
 
@@ -222,7 +222,7 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
     return 0;
 }
 </code></pre><h2 id="map-index-for-arbitrary-context-more-complex-filtering">Map index for arbitrary context (more complex filtering)</h2>
-<p>While the two examples above are interesting, there&rsquo;s really no limit to what you can do with cookies (except, of course, for the limitations of bpf itself; more on that in the next section).</p>
+<p>While the two examples above are interesting, there&rsquo;s really no limit to what you can do with cookies (except, of course, for the limitations of bpf itself).</p>
 <p>We can place arbitrary data structures in bpf maps from user space, then set the index of those structures as the bpf cookie, giving us way more context than a single u64 can provide. Here&rsquo;s an example similar to above, except with multiple specified filters:</p>
 <h4 id="passing-a-struct-via-cookie">&lsquo;Passing&rsquo; a struct via cookie:</h4>
 <pre tabindex="0"><code>	var indexInFilterMap uint64 = 1
@@ -283,7 +283,7 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 ...
 }
 </code></pre><h3 id="conclusion">Conclusion</h3>
-<p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful across tail calls.</p>
+<p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful for maintaining context across tail calls.</p>
 
         
         

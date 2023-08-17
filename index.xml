@@ -13,7 +13,7 @@
       <pubDate>Wed, 09 Aug 2023 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/bpf-cookies/</guid>
-      <description>BPF has a helper function called bpf_get_attach_cookie. It&amp;rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many use cases so i&amp;rsquo;ll be explaining how to use it, and going over a few examples from real code i&amp;rsquo;ve written.
+      <description>BPF has a helper function called bpf_get_attach_cookie. It&amp;rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&amp;rsquo;ll be exploring how to use it, and going over a few examples from real code i&amp;rsquo;ve written.
 A cookie is just an unsigned 64-bit integer. That&amp;rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&amp;rsquo;s code using the go cilium/ebpf library to assign a cookie to a uprobe:</description>
     </item>
     
