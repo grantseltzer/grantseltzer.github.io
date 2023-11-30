@@ -165,10 +165,6 @@ func printSlice(x []int) {
 	fmt.Printf(&quot;%v\n&quot;, x)
 }
 
-func expandSlice(x []int) {
-	x = append(x, []int{9, 10, 11, 12)
-}
-
 func changeElement(x []int) {
 	x[0] = 99
 }
@@ -179,9 +175,6 @@ func main() {
 	doNothing(originalSlice)
 
 	changeElement(originalSlice)
-	printSlice(originalSlice)
-	
-	expandSlice(originalSlice)
 	printSlice(originalSlice)
 }
 </code></pre><p>Based on what we&rsquo;ve gone over so far, we would expect the function <code>changeElement()</code> to actually change the element at index 0 in the array that <code>originalSlice</code> points to. We&rsquo;re going to use dynamic instrumentation to hook both <code>doNothing()</code> and <code>changeElement()</code> to confirm this:</p>
@@ -249,7 +242,75 @@ func main() {
 }
 </code></pre><p>Running this program also confirms that the element in the original underlying array was in fact changed after running <code>changeElement()</code>. The note here is that despite go being pass by value (meaning the parameter <code>x</code> in <code>changeElement()</code> is a newly allocated slice), the field for the address is the same, and therefore affects the original similar to if it were pass by reference.</p>
 <p>The advantage of slices (as opposed to arrays) is that you can seemingly infinitely grow them. You&rsquo;d typically do this using <code>append</code>. The main thing you have to understand here is that if you append to a slice with a length equal to its capacity, Go will create a whole new array with double the capacity of the original one. Therefore the address field that points to the array will be overwriten. Further changes to the original array won&rsquo;t affect the new one (and the memory gets reclaimed).</p>
-<p>Be careful about passing slices into functions. Passing references to slices gets complicated very quickly, so it&rsquo;s best to not use them. If you&rsquo;re going to transform slices, it&rsquo;s probably best to pass slices into functions that return the resulting slice, and use that result from then on. Similar caution should be used when transforming slices in the seperate scopes of different goroutines.</p>
+<p>So repeating the same experiment except with an append occuring instead of changing an element will confirm a new address:</p>
+<pre tabindex="0"><code>func expandSlice(x []int) {
+	x = append(x, []int{9, 10, 11, 12}...)
+	doNothing(x)
+}
+</code></pre><pre tabindex="0"><code>{
+ &quot;ProbeID&quot;: &quot;main.expandSlice&quot;,
+ &quot;PID&quot;: 812027,
+ &quot;UID&quot;: 1000,
+ &quot;StackTrace&quot;: [
+  &quot;main.main (/home/vagrant/slice_demo/main.go:386)&quot;
+ ],
+ &quot;Argdata&quot;: [
+  {
+   &quot;Kind&quot;: &quot;slice&quot;,
+   &quot;Size&quot;: 30,
+   &quot;Fields&quot;: [
+    {
+     &quot;ValueStr&quot;: &quot;0x4000099BD0&quot;,
+     &quot;Kind&quot;: &quot;ptr&quot;,
+     &quot;Size&quot;: 8
+    },
+    {
+     &quot;ValueStr&quot;: &quot;3&quot;,
+     &quot;Kind&quot;: &quot;int&quot;,
+     &quot;Size&quot;: 8
+    },
+    {
+     &quot;ValueStr&quot;: &quot;3&quot;,
+     &quot;Kind&quot;: &quot;int&quot;,
+     &quot;Size&quot;: 8
+    }
+   ]
+  }
+ ]
+}
+{
+ &quot;ProbeID&quot;: &quot;main.doNothing&quot;,
+ &quot;PID&quot;: 812027,
+ &quot;UID&quot;: 1000,
+ &quot;StackTrace&quot;: [
+  &quot;main.expandSlice (/home/vagrant/slice_demo/main.go:372)&quot;
+ ],
+ &quot;Argdata&quot;: [
+  {
+   &quot;Kind&quot;: &quot;slice&quot;,
+   &quot;Size&quot;: 30,
+   &quot;Fields&quot;: [
+    {
+     &quot;ValueStr&quot;: &quot;0x400001E0C0&quot;,
+     &quot;Kind&quot;: &quot;ptr&quot;,
+     &quot;Size&quot;: 8
+    },
+    {
+     &quot;ValueStr&quot;: &quot;7&quot;,
+     &quot;Kind&quot;: &quot;int&quot;,
+     &quot;Size&quot;: 8
+    },
+    {
+     &quot;ValueStr&quot;: &quot;8&quot;,
+     &quot;Kind&quot;: &quot;int&quot;,
+     &quot;Size&quot;: 8
+    }
+   ]
+  }
+ ]
+}
+</code></pre><h3 id="conclusion">Conclusion</h3>
+<p>Be careful about passing slices into functions. Passing references to slices can also get complicated very quickly. If you&rsquo;re going to transform slices, it&rsquo;s probably best to pass slices into functions that return the resulting slice, and use that result from then on. Similar caution should be used when transforming slices in the seperate scopes of different goroutines.</p>
 
         
         
