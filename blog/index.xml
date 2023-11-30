@@ -6,7 +6,18 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Wed, 09 Aug 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Thu, 30 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>What you need to know about how Go slices work</title>
+      <link>https://grantseltzer.github.io/blog/slice-fun/</link>
+      <pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/slice-fun/</guid>
+      <description>I recently ran into a hard to find bug in my Go code when using slices. Since i&amp;rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten on how slices work.
+Take a look at the following Go code:
+x := []int{1,2,3} y := append([]int{}, x...) z := x We have three seperate slices.</description>
+    </item>
+    
     <item>
       <title>BPF Attach Cookies</title>
       <link>https://grantseltzer.github.io/blog/bpf-cookies/</link>
