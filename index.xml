@@ -6,7 +6,16 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Thu, 30 Nov 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 06 Dec 2023 00:00:00 +0000</lastBuildDate><atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Go Stack Traces from BPF</title>
+      <link>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</link>
+      <pubDate>Wed, 06 Dec 2023 00:00:00 +0000</pubDate>
+      
+      <guid>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</guid>
+      <description>In a few of my posts from a few years ago I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as i&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the Dynamic Instrumentation product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.</description>
+    </item>
+    
     <item>
       <title>How Go slices work</title>
       <link>https://grantseltzer.github.io/blog/how-go-slices-work/</link>
