@@ -112,12 +112,12 @@
         <h1 id="title">How Go slices work</h1>
         <h4>November 30, 2023</h4>
         <div id="text-content">
-        <p>I recently ran into a hard to find bug in my Go code when using slices. Since i&rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten on how slices work.</p>
+        <p>I recently ran into a hard to find bug in my Go code when using slices. Since I&rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten about slices work.</p>
 <p>Take a look at the following Go code:</p>
 <pre tabindex="0"><code>x := []int{1,2,3}
 y := append([]int{}, x...)
 z := x
-</code></pre><p>We have three seperate slices. What I want to briefly explore is the difference between y, and z. The difference has to do with how slices are implemented by Go. This can sometimes make for hard to track down bugs, so it&rsquo;s important to know.</p>
+</code></pre><p>We have three separate slices. What I want to briefly explore is the difference between y, and z. The difference has to do with how slices are implemented by Go. This can sometimes make it hard to track down bugs, so it&rsquo;s important to know.</p>
 <p>Try running the following code:</p>
 <pre tabindex="0"><code>package main
 
@@ -144,16 +144,16 @@ Z: [1 2 3]
 X: [6 2 3]
 Y: [5 2 3]
 Z: [6 2 3]
-</code></pre><p>You may think to print the address of the slices but you would see that they are totatly unique slices:</p>
+</code></pre><p>You may think to print the address of the slices but you would see that they are totally unique slices:</p>
 <pre tabindex="0"><code>...
 	fmt.Printf(&quot;%p %p\n&quot;, &amp;x, &amp;z)
 }
 </code></pre><pre tabindex="0"><code>0xc0000a0000 0xc0000a0018
-</code></pre><p>What gives? In order to understand what&rsquo;s going on, let&rsquo;s take a look at the definition of a slice. There&rsquo;s a full description on the go dev blog <a href="https://go.dev/blog/slices-intro">here</a> but this image sums it up:</p>
+</code></pre><p>What gives? In order to understand what&rsquo;s going on, lets take a look at the definition of a slice. There&rsquo;s a full description on the go dev blog <a href="https://go.dev/blog/slices-intro">here</a> but this image sums it up:</p>
 <p><img src="/slice-struct.png" alt="slices"></p>
 <p>Slices are implemented as structs under the hood. They have three fields. A pointer to an array (so the address of a location in memory in which each element is laid out consecutively), as well as the length and capacity of that array. This means that in the above example, even though the slices <code>x</code> and <code>z</code> are unique, the address of the underlying array has been copied over!</p>
 <h3 id="demonstration">Demonstration</h3>
-<p>In order to demonstrate, i&rsquo;m going to use a product i&rsquo;m building at Datadog. It&rsquo;s the Dynamic Instrumentation product for Go. It let&rsquo;s me hook specific functions and print the values of their parameters any time they&rsquo;re called.</p>
+<p>In order to demonstrate, I&rsquo;m going to use a product I&rsquo;m building at Datadog. It&rsquo;s the <a href="https://www.datadoghq.com/product/dynamic-instrumentation/">Dynamic Instrumentation</a> product for Go. It lets me hook specific functions and print the values of their parameters any time they&rsquo;re called.</p>
 <p>Take a look at this code:</p>
 <pre tabindex="0"><code>package main
 
@@ -241,7 +241,7 @@ func main() {
  ]
 }
 </code></pre><p>Running this program also confirms that the element in the original underlying array was in fact changed after running <code>changeElement()</code>. The note here is that despite go being pass by value (meaning the parameter <code>x</code> in <code>changeElement()</code> is a newly allocated slice), the field for the address is the same, and therefore affects the original similar to if it were pass by reference.</p>
-<p>The advantage of slices (as opposed to arrays) is that you can seemingly infinitely grow them. You&rsquo;d typically do this using <code>append</code>. The main thing you have to understand here is that if you append to a slice with a length equal to its capacity, Go will create a whole new array with double the capacity of the original one. Therefore the address field that points to the array will be overwriten. Further changes to the original array won&rsquo;t affect the new one (and the memory gets reclaimed).</p>
+<p>The advantage of slices (as opposed to arrays) is that you can seemingly infinitely grow them. You&rsquo;d typically do this using <code>append</code>. The main thing you have to understand here is that if you append to a slice with a length equal to its capacity, Go will create a whole new array with double the capacity of the original one. Therefore the address field that points to the array will be overwritten. Further changes to the original array won&rsquo;t affect the new one (and the memory gets reclaimed).</p>
 <p>So repeating the same experiment except with an append occuring instead of changing an element will confirm a new address:</p>
 <pre tabindex="0"><code>func expandSlice(x []int) {
 	x = append(x, []int{9, 10, 11, 12}...)
