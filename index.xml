@@ -22,9 +22,9 @@
       <pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/how-go-slices-work/</guid>
-      <description>I recently ran into a hard to find bug in my Go code when using slices. Since I&amp;rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten about slices work.
+      <description>I recently ran into a hard to find bug in my Go code when using slices. Since I&amp;rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten about how slices work.
 Take a look at the following Go code:
-x := []int{1,2,3} y := append([]int{}, x...) z := x We have three separate slices. What I want to briefly explore is the difference between y, and z.</description>
+x := []int{1,2,3} y := append([]int{}, x...) z := x We have three separate slices.</description>
     </item>
     
     <item>
