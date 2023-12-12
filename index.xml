@@ -13,7 +13,7 @@
       <pubDate>Wed, 06 Dec 2023 00:00:00 +0000</pubDate>
       
       <guid>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</guid>
-      <description>In a few of my posts from a few years ago I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the Dynamic Instrumentation product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.</description>
+      <description>In a couple of my posts from a few years ago (1, 2) I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the Dynamic Instrumentation product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.</description>
     </item>
     
     <item>
