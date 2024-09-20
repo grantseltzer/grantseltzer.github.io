@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -120,7 +120,7 @@
 <p><img src="/procfs/process_dir.png" alt="process_dir"></p>
 <p>Among these files you can find out information such as performance of the process, where the executable is located, resource limits, or namespace information. There&rsquo;s a lot to explore but here&rsquo;s some highlights:</p>
 <h2 id="b---procpidfd-b"><!-- raw HTML omitted --> - <code>/proc/[pid]/fd</code> <!-- raw HTML omitted --></h2>
-<p>A file descriptor is a process' handle on an open file. This directory contains symbolic links to open file descriptors that the process has. Most importantly you can find the file descriptors for <a href="/blog/standardized-streams-and-shells">standardized streams</a>. One use case for this is using <code>tail</code> to follow logs printed to standard error of a particular process (<code>tail -f /proc/[pid]/fd/2</code>)</p>
+<p>A file descriptor is a process&rsquo; handle on an open file. This directory contains symbolic links to open file descriptors that the process has. Most importantly you can find the file descriptors for <a href="/blog/standardized-streams-and-shells">standardized streams</a>. One use case for this is using <code>tail</code> to follow logs printed to standard error of a particular process (<code>tail -f /proc/[pid]/fd/2</code>)</p>
 <h2 id="b---procpidexe-and-procpidcmdline-b"><!-- raw HTML omitted --> - <code>/proc/[pid]/exe</code> and <code>/proc/[pid]/cmdline</code> <!-- raw HTML omitted --></h2>
 <p>The <code>exe</code> file is a symbolic link to the executable that spawned the process. This could be useful if you have a program that wants to re-execute itself. The <code>cmdline</code> file will tell you what arguments were passed at the command line to run that process.</p>
 <h2 id="b---procpidstat--procpidstatus-b"><!-- raw HTML omitted --> - <code>/proc/[pid]/stat</code> / <code>/proc/[pid]/status</code> <!-- raw HTML omitted --></h2>

@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -117,7 +117,7 @@
 <pre tabindex="0"><code>func (m *Module) BPFLoadObject() error {
 	ret := C.bpf_object__load(m.obj)
 	if ret != 0 {
-		return fmt.Errorf(&quot;failed to load BPF object&quot;)
+		return fmt.Errorf(&#34;failed to load BPF object&#34;)
 	}
 
 	return nil
@@ -130,7 +130,7 @@
 	bpfMap, errno := C.bpf_object__find_map_by_name(m.obj, cs)
 	C.free(unsafe.Pointer(cs))
 	if bpfMap == nil {
-		return nil, fmt.Errorf(&quot;failed to find BPF map %s: %w&quot;, mapName, errno)
+		return nil, fmt.Errorf(&#34;failed to find BPF map %s: %w&#34;, mapName, errno)
 	}
 
 	return &amp;BPFMap{
@@ -145,7 +145,7 @@
 <pre tabindex="0"><code>func (b *BPFMap) Resize(maxEntries uint32) error {
 	errC := C.bpf_map__set_max_entries(b.bpfMap, C.uint(maxEntries))
 	if errC != 0 {
-		return fmt.Errorf(&quot;failed to resize map %s to %v: %w&quot;, b.name, maxEntries, syscall.Errno(-errC))
+		return fmt.Errorf(&#34;failed to resize map %s to %v: %w&#34;, b.name, maxEntries, syscall.Errno(-errC))
 	}
 	return nil
 }

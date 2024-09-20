@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -136,19 +136,19 @@ func main() {
 <pre tabindex="0"><code>package main
 
 import (
-	&quot;fmt&quot;
-	&quot;log&quot;
-	&quot;net/http&quot;
+	&#34;fmt&#34;
+	&#34;log&#34;
+	&#34;net/http&#34;
 )
 
 //go:noinline
 func handlerFunction(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, &quot;Hi there from %s!&quot;, r.Host)
+	fmt.Fprintf(w, &#34;Hi there from %s!&#34;, r.Host)
 }
 
 func main() {
-	http.HandleFunc(&quot;/&quot;, handlerFunction)
-	log.Fatal(http.ListenAndServe(&quot;:8080&quot;, nil))
+	http.HandleFunc(&#34;/&#34;, handlerFunction)
+	log.Fatal(http.ListenAndServe(&#34;:8080&#34;, nil))
 }
 </code></pre><p>This is just a simple webserver that serves a polite greeting. Doing a <code>curl localhost:8080</code> or going to <code>localhost:8080</code> in your browser will hit the endpoint.</p>
 <p>We&rsquo;re going to use eBPF and uprobes to tell us every time the function <code>handlerFunction</code> is called, and therefore every time someone connects to our webserver.</p>
@@ -160,26 +160,26 @@ BPF_PERF_OUTPUT(events);
 
 inline int function_was_called(struct pt_regs *ctx) {
 
-   char x[29] = &quot;Hey, the handler was called!&quot;;
+   char x[29] = &#34;Hey, the handler was called!&#34;;
    events.perf_submit(ctx, &amp;x, sizeof(x));
    return 0;
 }
 </code></pre><p>Just a couple things to note here. First off, we need a way for the eBPF program to tell us that it was triggered (meaning the handler was called in the Go program that we&rsquo;re tracing). To accomplish this, we use a perf output buffer. We can send arbitrary data over it from eBPF, and read it in the Go program which loaded it. We create this table using the helper function <code>BPF_PERF_OUTPUT</code>, which takes one parameter, the name of the table we want to create. You can see it then being used with the call: <code>events.perf_submit(...)</code>. That call just sends the string that we have hardcoded through it.</p>
 <p>For now you can ignore the <code>pt_regs ctx</code> parameter, more on that in part two.</p>
 <p>Now let&rsquo;s write some Go code. We&rsquo;re going to use bcc to compile the above eBPF code, load it, and then listen for output.</p>
-<pre tabindex="0"><code>bpfModule := bcc.NewModule(eBPF_Text, []string{}) // We're going to store the eBPF program above in a string, named eBPF_Text
+<pre tabindex="0"><code>bpfModule := bcc.NewModule(eBPF_Text, []string{}) // We&#39;re going to store the eBPF program above in a string, named eBPF_Text
 
-uprobeFd, err := bpfModule.LoadUprobe(&quot;function_was_called&quot;)
+uprobeFd, err := bpfModule.LoadUprobe(&#34;function_was_called&#34;)
 if err != nil {
 	log.Fatal(err)
 }
 </code></pre><p>All we&rsquo;re doing above is creating a new module (<!-- raw HTML omitted -->not a kernel module<!-- raw HTML omitted -->) by passing in the text of our eBPF program which is kept in a string. We&rsquo;re then creating a new uprobe which we&rsquo;re going to attach the eBPF function <code>function_was_called</code>.</p>
-<pre tabindex="0"><code>err = bpfModule.AttachUprobe(pathToBinaryToTrace, &quot;main.handlerFunction&quot;, uprobeFd, -1)
+<pre tabindex="0"><code>err = bpfModule.AttachUprobe(pathToBinaryToTrace, &#34;main.handlerFunction&#34;, uprobeFd, -1)
 if err != nil {
 	log.Fatal(err)
 }
 </code></pre><p>Uprobes attach to userspace memory locations. In order to do this we give <code>AttachUprobe</code> a path to the binary that contains the symbol <code>&quot;main.handlerFunction&quot;</code>. This helper function will figure out the exact memory address within the binary for us. Whenever the binaries executable code section is mapped into memory, so will the uprobe.</p>
-<pre tabindex="0"><code>table := bcc.NewTable(bpfModule.TableId(&quot;events&quot;), bpfModule)
+<pre tabindex="0"><code>table := bcc.NewTable(bpfModule.TableId(&#34;events&#34;), bpfModule)
 
 outputChannel := make(chan []byte)
 

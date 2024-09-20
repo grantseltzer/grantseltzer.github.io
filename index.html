@@ -1,343 +1,439 @@
 <!DOCTYPE html>
 
 <html lang="en-us">
-    <head>
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-     
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-            html, body, div, span, h1, h2, h3, p, a, img, strong, ol, ul, li { margin: 0; padding: 0; border: 0; outline: 0; font-weight: inherit; font-style: inherit; font-size: 100%;	font-family: inherit; vertical-align: baseline; }
+<head>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
 
-            img {border: 0;}
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-            a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-			a:hover { font-style: italic; border-bottom: 5px solid yellow}
-            p {line-height: 1.3em}
-                
-            ul, ol {margin: 0 40px 0 20px; list-style-type: none}
-                ul li {margin: 0 0 0.8em; line-height: 1.3em}
+    <style>
+        html,
+        body,
+        div,
+        span,
+        h1,
+        h2,
+        h3,
+        p,
+        a,
+        img,
+        strong,
+        ol,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+            border: 0;
+            outline: 0;
+            font-weight: inherit;
+            font-style: inherit;
+            font-size: 100%;
+            font-family: inherit;
+            vertical-align: baseline;
+        }
 
-            h1 {margin: 10px auto; max-width: 1000px; font-size: 2.4em}
-            h3 {margin: 20px 40px 10px 20px; padding: 20px 0 0 0; border-top: 2px solid black; font-size: 1.6em}
+        img {
+            border: 0;
+        }
 
-            body {
-                font-size:18px;
-                font-family: Arial, Helvetica, sans-serif;
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
+
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
+
+        p {
+            line-height: 1.3em
+        }
+
+        ul,
+        ol {
+            margin: 0 40px 0 20px;
+            list-style-type: none
+        }
+
+        ul li {
+            margin: 0 0 0.8em;
+            line-height: 1.3em
+        }
+
+        h1 {
+            margin: 10px auto;
+            max-width: 1000px;
+            font-size: 2.4em
+        }
+
+        h3 {
+            margin: 20px 40px 10px 20px;
+            padding: 20px 0 0 0;
+            border-top: 2px solid black;
+            font-size: 1.6em
+        }
+
+        body {
+            font-size: 18px;
+            font-family: Arial, Helvetica, sans-serif;
+            padding-bottom: 100px;
+        }
+
+        #header {
+            width: 100%;
+            float: left;
+            padding: 10px 0;
+            text-align: center;
+            border-bottom: 2px solid black
+        }
+
+        #header h1#page-name {
+            padding-top: 25px;
+            font-size: 50px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 3px 3px 1px gray;
+        }
+
+        #header img {
+            padding-top: 20px;
+            float: none;
+            margin: 0 0px 0px 0;
+            max-width: 400px
+        }
+
+        #header span {
+            max-width: 1000px;
+            font-size: 1.2em;
+            margin: 0 auto;
+            padding: 10px 0 0 0;
+            display: block;
+            border-top: 2px solid black;
+            font-weight: bold;
+            text-align: center;
+            clear: both
+        }
+
+        h2#column-name {
+            padding-top: 15px;
+            padding-bottom: 15px;
+            font-size: 25px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px gray;
+        }
+
+
+        @media (min-width: 1000px) {
+            #full-container {
+                width: 85%;
+                margin: auto;
+            }
+
+            h2#column-name {
+                padding-left: 45px;
+            }
+
+            .column-container {
+                padding-left: 85px;
                 padding-bottom: 100px;
             }
-  
-            #header { width: 100%; float: left; padding: 10px 0; text-align: center; border-bottom: 2px solid black}
-                #header h1#page-name { padding-top: 25px; font-size: 50px; font-style: italic; font-weight: bold; text-shadow: 3px 3px 1px gray;}
-                #header img {padding-top: 20px; float: none; margin: 0 0px 0px 0; max-width: 400px}
-                #header span {max-width: 1000px; font-size: 1.2em; margin: 0 auto; padding: 10px 0 0 0; display: block; border-top: 2px solid black; font-weight: bold; text-align: center; clear: both}
-				
-			h2#column-name {padding-top: 15px; padding-bottom: 15px; font-size: 25px; font-style: italic; font-weight: bold; text-shadow: 1px 1px gray;}
-         
 
-			@media (min-width: 1000px) {
-				#full-container { width: 85%; margin: auto; }
-
-				h2#column-name { padding-left: 45px;}
-				.column-container { padding-left: 85px;  padding-bottom: 100px; }
-				.description { color: black; font-size:15px;}
-
-				#left-column, #middle-column, #right-column { height: 500px; float: left;}	
-				#left-column {width: 33%;}
-				#middle-column {width: 33%} 
-				#right-column {width: 33%} 
-			}
-
-            .sub {
-                color: grey;
+            .description {
+                color: black;
+                font-size: 15px;
             }
 
-        </style>
-        
-        <title>grant seltzer</title>
-    </head>
-    
-    <body>
-        <h1>linux, ebpf, go, security</h1>
-        <div id="header">                
-            <img id="crab" src="/crab.png" alt="AAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
-            <p>eye witness drawing of what grant may look like</p>
-            <h1 id="page-name">GRANT SELTZER</h1>
-        </div>
-        
-        <div id="full-container">
-            <div id="left-column">
-                <h2 id="column-name">Blog Posts</h2>
-                <div class="column-container">
-                    <ul>
-                        
-                            <li>
-                                <a href="/blog/go-stack-traces-bpf/">Building Go Stack Traces from BPF</a>
+            #left-column,
+            #middle-column,
+            #right-column {
+                height: 500px;
+                float: left;
+            }
 
-                                <p class="sub">December 06, 2023</p>
+            #left-column {
+                width: 33%;
+            }
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/how-go-slices-work/">How Go slices work</a>
+            #middle-column {
+                width: 33%
+            }
 
-                                <p class="sub">November 30, 2023</p>
+            #right-column {
+                width: 33%
+            }
+        }
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/bpf-cookies/">BPF Attach Cookies</a>
+        .sub {
+            color: grey;
+        }
+    </style>
 
-                                <p class="sub">August 09, 2023</p>
+    <title>grant seltzer</title>
+</head>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/bpf-concurrency/">BPF Map Concurrency Techniques</a>
+<body>
+    <h1>linux, ebpf, go, security</h1>
+    <div id="header">
+        <img id="crab" src="/CrabWatercolor.png" alt="AAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+        <p>eye witness drawing of what grant may look like</p>
+        <h1 id="page-name">GRANT SELTZER</h1>
+    </div>
 
-                                <p class="sub">June 16, 2022</p>
+    <div id="full-container">
+        <div id="left-column">
+            <h2 id="column-name">Blog Posts</h2>
+            <div class="column-container">
+                <ul>
+                    
+                    <li>
+                        <a href="/blog/bpf-concurrency/">BPF Map Concurrency Techniques</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/cgo-errors/">Handling errors with CGO</a>
+                        <p class="sub">June 16, 2022</p>
 
-                                <p class="sub">March 16, 2022</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/cgo-errors/">Handling errors with CGO</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/mailing-list-guide/">Basic Guide to Linux Mailing Lists</a>
+                        <p class="sub">March 16, 2022</p>
 
-                                <p class="sub">October 10, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/mailing-list-guide/">Basic Guide to Linux Mailing Lists</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/contribute-docs-libbpf/">The libbpf Documentation Site</a>
+                        <p class="sub">October 10, 2021</p>
 
-                                <p class="sub">October 10, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/contribute-docs-libbpf/">The libbpf Documentation Site</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/tracee-core/">Supporting CO:RE in Tracee</a>
+                        <p class="sub">October 10, 2021</p>
 
-                                <p class="sub">July 23, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/tracee-core/">Supporting CO:RE in Tracee</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/libbpf-beginners-part-one/">Getting started with bpf and libbpfgo</a>
+                        <p class="sub">July 23, 2021</p>
 
-                                <p class="sub">March 18, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/libbpf-beginners-part-one/">Getting started with bpf and libbpfgo</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/vmlinux-header/">What is vmlinux.h?</a>
+                        <p class="sub">March 18, 2021</p>
 
-                                <p class="sub">March 11, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/vmlinux-header/">What is vmlinux.h?</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/dwarf/">Parsing Go Binary DWARF Info</a>
+                        <p class="sub">March 11, 2021</p>
 
-                                <p class="sub">January 02, 2021</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/dwarf/">Parsing Go Binary DWARF Info</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/tracing-go-functions-with-ebpf-part-2/">Tracing Go Functions with eBPF Part 2</a>
+                        <p class="sub">January 02, 2021</p>
 
-                                <p class="sub">May 10, 2020</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/tracing-go-functions-with-ebpf-part-2/">Tracing Go Functions with eBPF Part 2</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/fermentation/">Fermentation Experimentation</a>
+                        <p class="sub">May 10, 2020</p>
 
-                                <p class="sub">March 05, 2020</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/fermentation/">Fermentation Experimentation</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/tracing-go-functions-with-ebpf-part-1/">Tracing Go Functions with eBPF Part 1</a>
+                        <p class="sub">March 05, 2020</p>
 
-                                <p class="sub">February 14, 2020</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/tracing-go-functions-with-ebpf-part-1/">Tracing Go Functions with eBPF Part 1</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/karn/">Using Karn for Seccomp Enforcement</a>
+                        <p class="sub">February 14, 2020</p>
 
-                                <p class="sub">December 11, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/karn/">Using Karn for Seccomp Enforcement</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/procfs/">Linux Procfs</a>
+                        <p class="sub">December 11, 2019</p>
 
-                                <p class="sub">October 02, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/procfs/">Linux Procfs</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/overlayfs/">Linux Overlayfs</a>
+                        <p class="sub">October 02, 2019</p>
 
-                                <p class="sub">September 18, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/overlayfs/">Linux Overlayfs</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/test-build-modes/">Debugging Go tests</a>
+                        <p class="sub">September 18, 2019</p>
 
-                                <p class="sub">August 15, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/test-build-modes/">Debugging Go tests</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/standardized-streams-and-shells/">Standardized Streams and Shells</a>
+                        <p class="sub">August 15, 2019</p>
 
-                                <p class="sub">May 21, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/standardized-streams-and-shells/">Standardized Streams and Shells</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/using-dynamic-libraries-in-static-go-binaries/">Using dynamic libraries in static Go binaries</a>
+                        <p class="sub">May 21, 2019</p>
 
-                                <p class="sub">April 09, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/using-dynamic-libraries-in-static-go-binaries/">Using dynamic libraries in static Go binaries</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/the-beauty-of-io-writer/">The Beauty of io.Writer</a>
+                        <p class="sub">April 09, 2019</p>
 
-                                <p class="sub">April 04, 2019</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/the-beauty-of-io-writer/">The Beauty of io.Writer</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/understanding-cgroups/">Understanding cgroups</a>
+                        <p class="sub">April 04, 2019</p>
 
-                                <p class="sub">November 20, 2018</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/understanding-cgroups/">Understanding cgroups</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                            <li>
-                                <a href="/blog/dissecting-go-binaries/">Dissecting Go Binaries</a>
+                        <p class="sub">November 20, 2018</p>
 
-                                <p class="sub">September 14, 2018</p>
+                        <p class="sub"></p>
+                    </li>
+                    
+                    <li>
+                        <a href="/blog/dissecting-go-binaries/">Dissecting Go Binaries</a>
 
-                                <p class="sub"></p>
-                            </li>
-                        
-                    </ul>
-                </div>
-            </div>
+                        <p class="sub">September 14, 2018</p>
 
-            <div id="middle-column">
-                <h2 id="column-name">Presentations</h2>
-                <div class="column-container">
-                    <ul>
-                        
-                        <li>
-                            <a href="/talks/summercon2022/">Memory Execution Override With ebpf</a>
-                            <p class="sub">Summercon 2022, July 08, 2022</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/ebpfdaycncf2021/">Portable BPF with CO:RE</a>
-                            <p class="sub">Cloud Native Computing Conference - eBPF Day 2021, October 11, 2021</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/gotime2/">Go Time #201</a>
-                            <p class="sub">eBPF and Go (Go Time episode #201), September 14, 2021</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/ebpfsummit2021/">Compile Once Run Everywhere, the eBPF Dream!</a>
-                            <p class="sub">eBPF Summit 2021, August 19, 2021</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/gopherconeu2021/">Tracing Go Programs with eBPF!</a>
-                            <p class="sub">Gophercon EU 2021, May 27, 2021</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/gophercon2020/">Tracing Go Programs with eBPF!</a>
-                            <p class="sub">Gophercon, November 13, 2020</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/gotime/">Go Time #159</a>
-                            <p class="sub">Go Time episode #159, November 10, 2020</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/hushcon2019/">The Problem with Sandboxing Solutions</a>
-                            <p class="sub">Hushcon Seattle, December 06, 2019</p>
-                        </li>
-                        
-                        <li>
-                            <a href="/talks/kubesec2019/">The Problem with Sandboxing Solutions</a>
-                            <p class="sub">Kubernetes Security Summit NA 2019, November 18, 2019</p>
-                        </li>
-                        
-                    </ul>
-                </div>
-            </div>
-
-            <div id="right-column">
-                <h2 id="column-name">Other</h2>
-                <div class="column-container">
-                    <ul>
-                        
-                        <li>
-                            <a href="/about/about/">About Me</a>
-                            <p></p>
-                        </li>
-                        
-                        <li><a href="https://github.com/grantseltzer/resume">Resume</a></li>
-                        <li><a href="/recipes/recipes/">recipes</a></li>
-                        <li><a href="https://www.github.com/grantseltzer">github</a></li>
-                        <li><a href="https://www.twitter.com/grantseltzer">twitter</a></li>
-                        <li><a href="http://ebpf.io/slack">ebpf slack</a></li>
-                        <li><a href="https://www.goodreads.com/user/show/50650128-grant-seltzer">goodreads</a></li>
-                        <li><a href="https://www.linkedin.com/in/grantseltzerrichman/">linkedin</a></li>
-                        <li>email: batman -AT- grant.pizza</li>
-                    </ul>
-                </div>
-                <img id="pixel_crab" src="/crab_pixel.png" alt="aaaaaaaaaaaaaaaaaaaaaaaaaaaaa">
-
+                        <p class="sub"></p>
+                    </li>
+                    
+                </ul>
             </div>
         </div>
-    </body>
+
+        <div id="middle-column">
+            <h2 id="column-name">Presentations</h2>
+            <div class="column-container">
+                <ul>
+                    
+                    <li>
+                        <a href="/talks/summercon2022/">Memory Execution Override With ebpf</a>
+                        <p class="sub">Summercon 2022, July 08, 2022</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/ebpfdaycncf2021/">Portable BPF with CO:RE</a>
+                        <p class="sub">Cloud Native Computing Conference - eBPF Day 2021, October 11, 2021</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/gotime2/">Go Time #201</a>
+                        <p class="sub">eBPF and Go (Go Time episode #201), September 14, 2021</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/ebpfsummit2021/">Compile Once Run Everywhere, the eBPF Dream!</a>
+                        <p class="sub">eBPF Summit 2021, August 19, 2021</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/gopherconeu2021/">Tracing Go Programs with eBPF!</a>
+                        <p class="sub">Gophercon EU 2021, May 27, 2021</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/gophercon2020/">Tracing Go Programs with eBPF!</a>
+                        <p class="sub">Gophercon, November 13, 2020</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/gotime/">Go Time #159</a>
+                        <p class="sub">Go Time episode #159, November 10, 2020</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/hushcon2019/">The Problem with Sandboxing Solutions</a>
+                        <p class="sub">Hushcon Seattle, December 06, 2019</p>
+                    </li>
+                    
+                    <li>
+                        <a href="/talks/kubesec2019/">The Problem with Sandboxing Solutions</a>
+                        <p class="sub">Kubernetes Security Summit NA 2019, November 18, 2019</p>
+                    </li>
+                    
+                </ul>
+            </div>
+        </div>
+
+        <div id="right-column">
+            <h2 id="column-name">Other</h2>
+            <div class="column-container">
+                <ul>
+                    
+                    <li>
+                        <a href="/about/about/">About Me</a>
+                        <p></p>
+                    </li>
+                    
+                    <li><a href="https://github.com/grantseltzer/resume">Resume</a></li>
+                    <li><a href="/recipes/recipes/">recipes</a></li>
+                    <li><a href="https://www.github.com/grantseltzer">github</a></li>
+                    <li><a href="https://www.twitter.com/grantseltzer">twitter</a></li>
+                    <li><a href="http://ebpf.io/slack">ebpf slack</a></li>
+                    <li><a href="https://www.goodreads.com/user/show/50650128-grant-seltzer">goodreads</a></li>
+                    <li><a href="https://www.linkedin.com/in/grantseltzerrichman/">linkedin</a></li>
+                    <li>email: batman -AT- grant.pizza</li>
+                </ul>
+            </div>
+            <img id="pixel_crab" src="/crab_pixel.png" alt="aaaaaaaaaaaaaaaaaaaaaaaaaaaaa">
+
+        </div>
+    </div>
+</body>
+
 </html>

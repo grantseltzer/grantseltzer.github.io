@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -126,51 +126,50 @@
 	__uint(max_entries, 1);
 	__type(key, __u32);
 	__type(value, __u64);
-} percpu_counter SEC(&quot;.maps&quot;);
+} percpu_counter SEC(&#34;.maps&#34;);
 </code></pre><div style="text-align: center;">
     <em>
 Defining the per-cpu array
 </em>
 </div>
 <p>Note that this only has 1 entry. This is because we only need it for a single counter. However, each CPU will have its own version of this single entry. Therefore, on my machine (which has an 8 core CPU), it technically has 8 entries. To demonstrate this, I ran <code>bpftool map dump name percpu_counter</code> to show the layout of the underlying structure:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">[{
-        <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#ae81ff">0</span>,
-        <span style="color:#f92672">&#34;values&#34;</span>: [{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">0</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">1</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">2</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">3</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">4</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">5</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">6</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            },{
-                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">7</span>,
-                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
-            }
-        ]
-    }
-]
-
-</code></pre></div><div style="text-align: center;">
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>[{
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;key&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;values&#34;</span>: [{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">0</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">1</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">2</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">3</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">4</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">5</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">6</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            },{
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;cpu&#34;</span>: <span style="color:#ae81ff">7</span>,
+</span></span><span style="display:flex;"><span>                <span style="color:#f92672">&#34;value&#34;</span>: <span style="color:#ae81ff">0</span>
+</span></span><span style="display:flex;"><span>            }
+</span></span><span style="display:flex;"><span>        ]
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>]
+</span></span></code></pre></div><div style="text-align: center;">
     <em>
 Underlying layout of the per-cpu array defined above
 </em>
 </div>
 <p>Using this map in BPF is the same as a normal BPF array:</p>
-<pre tabindex="0"><code>SEC(&quot;fentry/__x64_sys_mmap&quot;)
+<pre tabindex="0"><code>SEC(&#34;fentry/__x64_sys_mmap&#34;)
 int mmap_fentry(struct pt_regs *ctx)
 {
     __u32 key = 0;
@@ -210,7 +209,7 @@ struct {
 	__uint(max_entries, 1);
 	__type(key, u32);
 	__type(value, struct map_locked_value);
-} counters_hash_map SEC(&quot;.maps&quot;);
+} counters_hash_map SEC(&#34;.maps&#34;);
 </code></pre><p>In this case, we only have one value. Let&rsquo;s say we use this as a counter for tracking lost events in a ringbuffer. Take note that we use <code>bpf_spin_lock()</code> and <code>bpf_spin_unlock()</code> around editing of the counter:</p>
 <pre tabindex="0"><code>...
     int *event;
@@ -243,9 +242,9 @@ struct {
 	__uint(max_entries, 1);
 	__type(key, u32);
 	__type(value, int);
-} counter_hash_map SEC(&quot;.maps&quot;);
+} counter_hash_map SEC(&#34;.maps&#34;);
 
-SEC(&quot;fentry/__x64_sys_mmap&quot;)
+SEC(&#34;fentry/__x64_sys_mmap&#34;)
 int mmap_fentry(struct pt_regs *ctx)
 {
     int *counter;
@@ -257,7 +256,7 @@ int mmap_fentry(struct pt_regs *ctx)
     }
 
     __atomic_add_fetch(counter, 1, 0);
-    bpf_printk(&quot;Counter: %d\n&quot;, *counter);
+    bpf_printk(&#34;Counter: %d\n&#34;, *counter);
 }
 </code></pre><p>See <a href="https://llvm.org/docs/Atomics.html">official documentation</a> for proper usage.</p>
 

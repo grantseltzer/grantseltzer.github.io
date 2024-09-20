@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -117,12 +117,12 @@
 <p>As the unofficial backronym for DWARF (Debugging With Attributed Record Formats) purports, the format is used by debugging tools to gather useful information such as data types or memory offsets. There&rsquo;s a ton of information that you can leverage for reverse engineering, debugging, or learning about systems programming. The Go standard library conveniently includes the <a href="https://golang.org/pkg/debug/dwarf/">debug/dwarf</a> package for reading this information.</p>
 <p>Let&rsquo;s build a program for parsing the DWARF out of any ELF binary and see what useful information we can find.</p>
 <pre tabindex="0"><code>import (
-	&quot;debug/elf&quot;
-	&quot;log&quot;
+	&#34;debug/elf&#34;
+	&#34;log&#34;
 )
 
 func main() {
-	elfFile, err := elf.Open(&quot;/path/to/binary&quot;)
+	elfFile, err := elf.Open(&#34;/path/to/binary&#34;)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -140,7 +140,6 @@ func main() {
 		// Inspect the entry
 	}
 }
-
 </code></pre><p>First we use the <code>debug/elf</code> package to open up the file. Next we pull out the DWARF data, and create the package&rsquo;s notion of &lsquo;Reader&rsquo;. The reader lets us parse the individual entries of the DWARF in sequence.</p>
 <p>Now what can we do with each of these entries? Let&rsquo;s take a look at the definition of the <code>Entry</code> type and then go through it:</p>
 <pre tabindex="0"><code>type Entry struct {
@@ -167,18 +166,18 @@ func main() {
 			// Read all entries in sequence
 			entry, err := entryReader.Next()
 			if err == io.EOF {
-				// We've reached the end of DWARF entries
+				// We&#39;ve reached the end of DWARF entries
 				break 
 			}
 
 			// Check if this entry is a function
 			if entry.Tag == dwarf.TagSubprogram {
 				
-				// Go through DWARF entry fields 
+				// Go through fields 
 				for _, field := range entry.Field {
 
 					if field.Attr == dwarf.AttrName {
-						fmt.Println(field.Val.(string)) // Name of the function
+						fmt.Println(field.Val.(string))
 					}
 				}
 			}
@@ -187,14 +186,14 @@ func main() {
 </code></pre><p>(Full program <a href="https://gist.github.com/grantseltzer/51c7c0827b95e9a1c07796d6b352076c">here</a>)</p>
 <p>All function parameters have their own entries and are placed in order right after the function&rsquo;s entry. They have the tag <code>TagFormalParameter</code>. We can read what datatype the parameter is by reading the <code>AttrType</code> field. All we need to do in that case would be to have a second <code>Reader</code> jump to the entry of the type definition. We would just continue reading entries while checking if they&rsquo;re function parameters. Like so:</p>
 <pre tabindex="0"><code>...
-		if !(readingAFunction &amp;&amp; entry.Tag == dwarf.TagFormalParameter) {
+		if !(readingAStruct &amp;&amp; entry.Tag == dwarf.TagFormalParameter) {
 			continue
 		}
 
 		for _, field := range entry.Field {
 
 			if field.Attr == dwarf.AttrName {
-				name = field.Val.(string) // Name of the parameter
+				name = field.Val.(string)
 			}
 
 			if field.Attr == dwarf.AttrType {
@@ -206,13 +205,13 @@ func main() {
 
 				for i := range typeEntry.Field {
 					if typeEntry.Field[i].Attr == dwarf.AttrName {
-						typeName = typeEntry.Field[i].Val.(string) // Name of the type of this parameter
+						typeName = typeEntry.Field[i].Val.(string)
 					}
 				}
 			}
 		}
 
-		fmt.Printf(&quot;\t%s %s\n&quot;, name, typeName)
+		fmt.Printf(&#34;\t%s %s\n&#34;, name, typeName)
 ...
 </code></pre><p>(Full program <a href="https://gist.github.com/grantseltzer/7e30682b215567976298dc8a2cc4d92f">here</a>)</p>
 <p>Compiling this binary and running it on itself we can see all of our functions, plus of course all the runtime dependencies that Go packs into our binaries as well:</p>

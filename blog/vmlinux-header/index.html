@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -120,7 +120,7 @@ A version of this post was also uploaded to Aqua's blog <a href="https://blog.aq
 </p>
 </div>
 <p>If you&rsquo;ve been reading much bpf code recently, you&rsquo;ve probably seen this:</p>
-<pre tabindex="0"><code>#include &quot;vmlinux.h&quot;
+<pre tabindex="0"><code>#include &#34;vmlinux.h&#34;
 </code></pre><p><code>vmlinux.h</code> is generated code. it contains all of the type definitions that your running Linux kernel uses in it&rsquo;s own source code. This is an important concept to wrap your head around so let me explain.</p>
 <p>When you build Linux one of the output artifacts is a file called <code>vmlinux</code>. It&rsquo;s also typically packaged with major distributions. This is an <a href="https://en.wikipedia.org/wiki/Executable_and_Linkable_Format">ELF</a> binary that contains the compiled kernel inside it.</p>
 <p>There&rsquo;s a tool, aptly named bpftool, that is maintained within the Linux source repository. It has a feature to read the <code>vmlinux</code> file and generate a <code>vmlinux.h</code> file. Since it contains every type-definition that the installed kernel uses, it&rsquo;s a very large header file.</p>
