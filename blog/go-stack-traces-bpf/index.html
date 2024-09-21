@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -124,16 +124,16 @@ func stack_B() {
 }
 
 func stack_C() {
-    print(&quot;hello!&quot;)
+    print(&#34;hello!&#34;)
 }
 
 func main() {
     stack_A()
 }
 </code></pre><p>If we want a stack trace on invocations of <code>stack_C()</code> it would look something like this:</p>
-<pre tabindex="0"><code>  &quot;main.stack_B (/home/vagrant/StackTraceExample/main.go:8)&quot;,
-  &quot;main.stack_A (/home/vagrant/StackTraceExample/main.go:3)&quot;,
-  &quot;main.main (/home/vagrant/StackTraceExample/main.go:45)&quot;
+<pre tabindex="0"><code>  &#34;main.stack_B (/home/vagrant/StackTraceExample/main.go:8)&#34;,
+  &#34;main.stack_A (/home/vagrant/StackTraceExample/main.go:3)&#34;,
+  &#34;main.main (/home/vagrant/StackTraceExample/main.go:45)&#34;
 </code></pre><h3 id="stack-unwinding">Stack Unwinding</h3>
 <p>The process we&rsquo;ll use for getting a basic stack trace is a simple and well documented set of steps. The basic principle is that we&rsquo;re going to collect program counters (locations of machine code) as we traverse through pointers that the Go compiler saves throughout the flow of execution.</p>
 <p>When a function is called, a new &ldquo;stack frame&rdquo; is allocated. This basically means that a section of the program&rsquo;s stack is allocated to accommodate local variables in the new function.</p>
@@ -149,7 +149,7 @@ func main() {
 
 __u64 bp = ctx-&gt;regs[29];
 bpf_probe_read(&amp;bp, sizeof(__u64), (void*)bp); // dereference bp to get current stack frame
-__u64 ret_addr = ctx-&gt;regs[30];                // when bpf prog enters, the return address hasn't yet been written to the stack
+__u64 ret_addr = ctx-&gt;regs[30];                // when bpf prog enters, the return address hasn&#39;t yet been written to the stack
 
 int i;
 for (i = 0; i &lt; STACK_DEPTH_LIMIT; i++)
@@ -167,30 +167,30 @@ for (i = 0; i &lt; STACK_DEPTH_LIMIT; i++)
 <pre tabindex="0"><code>...
     elfFile, err := elf.Open(fileName)
     if err != nil {
-        return fmt.Errorf(&quot;couldn't open elf file: %w&quot;, err)
+        return fmt.Errorf(&#34;couldn&#39;t open elf file: %w&#34;, err)
     }
 
     var symbolTable *gosym.Table
 
-    addr := elfFile.Section(&quot;.text&quot;).Addr
+    addr := elfFile.Section(&#34;.text&#34;).Addr
 
-    lineTableData, err := elfFile.Section(&quot;.gopclntab&quot;).Data()
+    lineTableData, err := elfFile.Section(&#34;.gopclntab&#34;).Data()
     if err != nil {
-        return fmt.Errorf(&quot;couldn't read go line table: %w&quot;, err)
+        return fmt.Errorf(&#34;couldn&#39;t read go line table: %w&#34;, err)
     }
     
     lineTable := gosym.NewLineTable(lineTableData, addr)
 
-    symtab := elfFile.Section(&quot;.gosymtab&quot;)
+    symtab := elfFile.Section(&#34;.gosymtab&#34;)
 
     symTableData, err := symtab.Data()
     if err != nil {
-        return fmt.Errorf(&quot;couldn't read go symbol table: %w&quot;, err)
+        return fmt.Errorf(&#34;couldn&#39;t read go symbol table: %w&#34;, err)
     }
 
     symbolTable, err = gosym.NewTable(symTableData, lineTable)
     if err != nil {
-        return fmt.Errorf(&quot;couldn't read go symbol and line tables: %w&quot;, err)
+        return fmt.Errorf(&#34;couldn&#39;t read go symbol and line tables: %w&#34;, err)
     }
 ...
 </code></pre><p>After this, we can use this new gosym.Table to resolve the program counters into symbols. Here&rsquo;s a simple example:</p>
@@ -206,7 +206,7 @@ func stack_B() {
 
 //go:noinline
 func stack_C() {
-    print(&quot;hello!&quot;)
+    print(&#34;hello!&#34;)
 }
 
 func main() {
@@ -214,15 +214,15 @@ func main() {
 }
 </code></pre><p>Collecting a stack trace for a bpf program attached to <code>stack_C</code> would look like something this:</p>
 <pre tabindex="0"><code>{
- &quot;ProbeID&quot;: &quot;stack_C&quot;,
- &quot;PID&quot;: 848497,
- &quot;UID&quot;: 1000,
- &quot;StackTrace&quot;: [
-  &quot;main.stack_B (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:317)&quot;,
-  &quot;main.stack_A (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:312)&quot;,
-  &quot;main.main (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:388)&quot;
+ &#34;ProbeID&#34;: &#34;stack_C&#34;,
+ &#34;PID&#34;: 848497,
+ &#34;UID&#34;: 1000,
+ &#34;StackTrace&#34;: [
+  &#34;main.stack_B (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:317)&#34;,
+  &#34;main.stack_A (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:312)&#34;,
+  &#34;main.main (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:388)&#34;
  ],
- &quot;Argdata&quot;: []
+ &#34;Argdata&#34;: []
 }
 </code></pre><h3 id="inlined-functions">Inlined Functions</h3>
 <p>You may notice in the above sample code the <code>go:noinline</code> pragmas above the small functions. The Go compiler will inline routines where possible for performance optimization. This provides a challenge for developers of things like debuggers or profilers. For the sake of the Dynamic Instrumentation product, we want to be able to show our users a full stack trace regardless of if functions are inlined or not.</p>
@@ -248,7 +248,7 @@ func inline_me_3() {
 
 //go:noinline
 func not_inlined() {
-    print(&quot;hello!&quot;)
+    print(&#34;hello!&#34;)
 }
 
 func main() {
@@ -256,33 +256,33 @@ func main() {
 }
 </code></pre><pre tabindex="0"><code>
 0x000118b8:   DW_TAG_subprogram
-                DW_AT_name      (&quot;main.call_inlined_func_chain&quot;)
+                DW_AT_name      (&#34;main.call_inlined_func_chain&#34;)
                 DW_AT_low_pc    (0x000000000009d670)
                 DW_AT_high_pc   (0x000000000009d6b0)
                 DW_AT_frame_base        (DW_OP_call_frame_cfa)
-                DW_AT_decl_file (&quot;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&quot;)
+                DW_AT_decl_file (&#34;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&#34;)
                 DW_AT_decl_line (325)
                 DW_AT_external  (0x01)
 
 0x000118ef:     DW_TAG_inlined_subroutine
-                  DW_AT_abstract_origin (0x0000000000010689 &quot;main.inline_me_1&quot;)
+                  DW_AT_abstract_origin (0x0000000000010689 &#34;main.inline_me_1&#34;)
                   DW_AT_low_pc  (0x000000000009d68c)
                   DW_AT_high_pc (0x000000000009d698)
-                  DW_AT_call_file       (&quot;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&quot;)
+                  DW_AT_call_file       (&#34;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&#34;)
                   DW_AT_call_line       (326)
 
 0x0001190a:       DW_TAG_inlined_subroutine
-                    DW_AT_abstract_origin       (0x00000000000106a0 &quot;main.inline_me_2&quot;)
+                    DW_AT_abstract_origin       (0x00000000000106a0 &#34;main.inline_me_2&#34;)
                     DW_AT_low_pc        (0x000000000009d690)
                     DW_AT_high_pc       (0x000000000009d698)
-                    DW_AT_call_file     (&quot;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&quot;)
+                    DW_AT_call_file     (&#34;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&#34;)
                     DW_AT_call_line     (330)
 
 0x00011925:         DW_TAG_inlined_subroutine
-                      DW_AT_abstract_origin     (0x00000000000106b7 &quot;main.inline_me_3&quot;)
+                      DW_AT_abstract_origin     (0x00000000000106b7 &#34;main.inline_me_3&#34;)
                       DW_AT_low_pc      (0x000000000009d694)
                       DW_AT_high_pc     (0x000000000009d698)
-                      DW_AT_call_file   (&quot;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&quot;)
+                      DW_AT_call_file   (&#34;/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go&#34;)
                       DW_AT_call_line   (334)
 </code></pre><p>You&rsquo;ll notice that every high program counter (DW_AT_high_pc) of the inlined subroutines are the same, and it fits within the range of program counters of <code>main.call_inlined_func_chain</code>. With this in mind, we can collect the high program counters of all inlined subroutines in the binary beforehand and use this for reference when resolving program counters.</p>
 <p>Here&rsquo;s how it works:</p>
@@ -328,9 +328,9 @@ func main() {
 
                 symName, lineNumber, err := parseInlinedEntry(DwarfReader, rawProgramCounters[i], entries[n])
                 if err != nil {
-                    return []string{}, fmt.Errorf(&quot;could not get inlined entries: %w&quot;, err)
+                    return []string{}, fmt.Errorf(&#34;could not get inlined entries: %w&#34;, err)
                 }
-                stackTrace = append(stackTrace, fmt.Sprintf(&quot;%s (%s:%d) [inlined in %s]&quot;, symName, inlinedFileName, lineNumber, inlinedFunction.Name))
+                stackTrace = append(stackTrace, fmt.Sprintf(&#34;%s (%s:%d) [inlined in %s]&#34;, symName, inlinedFileName, lineNumber, inlinedFunction.Name))
             }
         }
 
@@ -338,7 +338,7 @@ func main() {
         if fn == nil {
             continue
         }
-        stackTrace = append(stackTrace, fmt.Sprintf(&quot;%s (%s:%d)&quot;, fn.Name, fileName, lineNumber))
+        stackTrace = append(stackTrace, fmt.Sprintf(&#34;%s (%s:%d)&#34;, fn.Name, fileName, lineNumber))
     }
 ...
 
@@ -353,7 +353,7 @@ func parseInlinedEntry(reader *dwarf.Reader, pc uint64, e *dwarf.Entry) (name st
             reader.Seek(offset)
             entry, err := reader.Next()
             if err != nil {
-                return &quot;&quot;, -1, fmt.Errorf(&quot;could not read inlined function origin: %w&quot;, err)
+                return &#34;&#34;, -1, fmt.Errorf(&#34;could not read inlined function origin: %w&#34;, err)
             }
             for j := range entry.Field {
                 if entry.Field[j].Attr == dwarf.AttrName {
@@ -371,17 +371,17 @@ func parseInlinedEntry(reader *dwarf.Reader, pc uint64, e *dwarf.Entry) (name st
 }
 </code></pre><p>Putting this all together, we can see a stack trace of the <code>main.not_inlined</code> function:</p>
 <pre tabindex="0"><code>{
- &quot;ProbeID&quot;: &quot;not_inlined&quot;,
- &quot;PID&quot;: 870479,
- &quot;UID&quot;: 1000,
- &quot;StackTrace&quot;: [
-  &quot;main.inline_me_3 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:334) [inlined in main.call_inlined_func_chain]&quot;,
-  &quot;main.inline_me_2 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:330) [inlined in main.call_inlined_func_chain]&quot;,
-  &quot;main.inline_me_1 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:326) [inlined in main.call_inlined_func_chain]&quot;,
-  &quot;main.call_inlined_func_chain (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:327)&quot;,
-  &quot;main.main (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:390)&quot;
+ &#34;ProbeID&#34;: &#34;not_inlined&#34;,
+ &#34;PID&#34;: 870479,
+ &#34;UID&#34;: 1000,
+ &#34;StackTrace&#34;: [
+  &#34;main.inline_me_3 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:334) [inlined in main.call_inlined_func_chain]&#34;,
+  &#34;main.inline_me_2 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:330) [inlined in main.call_inlined_func_chain]&#34;,
+  &#34;main.inline_me_1 (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:326) [inlined in main.call_inlined_func_chain]&#34;,
+  &#34;main.call_inlined_func_chain (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:327)&#34;,
+  &#34;main.main (/home/vagrant/go-dynamic-instrumentation/cmd/sample_program/main.go:390)&#34;
  ],
- &quot;Argdata&quot;: []
+ &#34;Argdata&#34;: []
 }
 </code></pre><h3 id="conclusion">Conclusion</h3>
 <p>It&rsquo;s relatively straightforward to unwind the stack and populate a stack trace, including inlined functions with the help of DWARF. This all is just a small feature of Datadog&rsquo;s Dynamic Instrumentation product which just went into general availability. Currently it&rsquo;s available for Java, .Net, and Python code. I&rsquo;m of course working on the Go implementation which is not yet available. I&rsquo;ll be sure to write more blog posts in the coming months about progress there!</p>

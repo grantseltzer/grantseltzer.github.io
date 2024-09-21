@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -121,7 +121,7 @@ z := x
 <p>Try running the following code:</p>
 <pre tabindex="0"><code>package main
 
-import &quot;fmt&quot;
+import &#34;fmt&#34;
 
 func main() {
 
@@ -129,12 +129,12 @@ func main() {
 	y := append([]int{}, x...)
 	z := x
 
-	fmt.Printf(&quot;X: %v\nY: %v\nZ: %v\n&quot;, x, y, z)
+	fmt.Printf(&#34;X: %v\nY: %v\nZ: %v\n&#34;, x, y, z)
 
 	y[0] = 5
 	z[1] = 15
 
-	fmt.Printf(&quot;\nX: %v\nY: %v\nZ: %v\n&quot;, x, y, z)
+	fmt.Printf(&#34;\nX: %v\nY: %v\nZ: %v\n&#34;, x, y, z)
 }
 </code></pre><p>You&rsquo;ll see that the change to z[1] also affected x[1], but the change to y[0] did not have any affect on x[0]:</p>
 <pre tabindex="0"><code>$~ go run main.go
@@ -148,7 +148,7 @@ Y: [5 2 3]
 Z: [1 15 3]
 </code></pre><p>You may think to print the address of the slices but you would see that they are totally unique slices:</p>
 <pre tabindex="0"><code>...
-	fmt.Printf(&quot;%p %p\n&quot;, &amp;x, &amp;z)
+	fmt.Printf(&#34;%p %p\n&#34;, &amp;x, &amp;z)
 }
 </code></pre><pre tabindex="0"><code>0xc0000a0000 0xc0000a0018
 </code></pre><p>What gives? In order to understand what&rsquo;s going on, lets take a look at the definition of a slice. There&rsquo;s a full description on the go dev blog <a href="https://go.dev/blog/slices-intro">here</a> but this image sums it up:</p>
@@ -159,12 +159,12 @@ Z: [1 15 3]
 <p>Take a look at this code:</p>
 <pre tabindex="0"><code>package main
 
-import &quot;fmt&quot;
+import &#34;fmt&#34;
 
 func doNothing(x []int) {}
 
 func printSlice(x []int) {
-	fmt.Printf(&quot;%v\n&quot;, x)
+	fmt.Printf(&#34;%v\n&#34;, x)
 }
 
 func changeElement(x []int) {
@@ -181,62 +181,62 @@ func main() {
 }
 </code></pre><p>Based on what we&rsquo;ve gone over so far, we would expect the function <code>changeElement()</code> to actually change the element at index 0 in the array that <code>originalSlice</code> points to. We&rsquo;re going to use dynamic instrumentation to hook both <code>doNothing()</code> and <code>changeElement()</code> to confirm this:</p>
 <pre tabindex="0"><code>{
- &quot;ProbeID&quot;: &quot;doNothing&quot;,
- &quot;PID&quot;: 758847,
- &quot;UID&quot;: 1000,
- &quot;StackTrace&quot;: [
-  &quot;main.main (/home/vagrant/slice_demo/main.go:384)&quot;
+ &#34;ProbeID&#34;: &#34;doNothing&#34;,
+ &#34;PID&#34;: 758847,
+ &#34;UID&#34;: 1000,
+ &#34;StackTrace&#34;: [
+  &#34;main.main (/home/vagrant/slice_demo/main.go:384)&#34;
  ],
- &quot;Argdata&quot;: [
+ &#34;Argdata&#34;: [
   {
-   &quot;Kind&quot;: &quot;slice&quot;,
-   &quot;Size&quot;: 30,
-   &quot;Fields&quot;: [
+   &#34;Kind&#34;: &#34;slice&#34;,
+   &#34;Size&#34;: 30,
+   &#34;Fields&#34;: [
     {
-     &quot;ValueStr&quot;: &quot;0x4000016138&quot;,
-     &quot;Kind&quot;: &quot;ptr&quot;,
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;0x4000016138&#34;,
+     &#34;Kind&#34;: &#34;ptr&#34;,
+     &#34;Size&#34;: 8
     },
     {
-     &quot;ValueStr&quot;: &quot;3&quot;, // Length
-     &quot;Kind&quot;: &quot;int&quot;,
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;3&#34;, // Length
+     &#34;Kind&#34;: &#34;int&#34;,
+     &#34;Size&#34;: 8
     },
     {
-     &quot;ValueStr&quot;: &quot;3&quot;, // Capacity
-     &quot;Kind&quot;: &quot;int&quot;,
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;3&#34;, // Capacity
+     &#34;Kind&#34;: &#34;int&#34;,
+     &#34;Size&#34;: 8
     }
    ]
   }
  ]
 }
 {
- &quot;ProbeID&quot;: &quot;changeElement&quot;,
- &quot;PID&quot;: 758847,
- &quot;UID&quot;: 1000,
- &quot;StackTrace&quot;: [
-  &quot;main.main (/home/vagrant/slice_demo/main.go:385)&quot;
+ &#34;ProbeID&#34;: &#34;changeElement&#34;,
+ &#34;PID&#34;: 758847,
+ &#34;UID&#34;: 1000,
+ &#34;StackTrace&#34;: [
+  &#34;main.main (/home/vagrant/slice_demo/main.go:385)&#34;
  ],
- &quot;Argdata&quot;: [
+ &#34;Argdata&#34;: [
   {
-   &quot;Kind&quot;: &quot;slice&quot;,
-   &quot;Size&quot;: 30,
-   &quot;Fields&quot;: [
+   &#34;Kind&#34;: &#34;slice&#34;,
+   &#34;Size&#34;: 30,
+   &#34;Fields&#34;: [
     {
-     &quot;ValueStr&quot;: &quot;0x4000016138&quot;,
-     &quot;Kind&quot;: &quot;ptr&quot;,
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;0x4000016138&#34;,
+     &#34;Kind&#34;: &#34;ptr&#34;,
+     &#34;Size&#34;: 8
     },
     {
-     &quot;ValueStr&quot;: &quot;3&quot;,
-     &quot;Kind&quot;: &quot;int&quot;,  // Length
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;3&#34;,
+     &#34;Kind&#34;: &#34;int&#34;,  // Length
+     &#34;Size&#34;: 8
     },
     {
-     &quot;ValueStr&quot;: &quot;3&quot;, // Capacity
-     &quot;Kind&quot;: &quot;int&quot;,
-     &quot;Size&quot;: 8
+     &#34;ValueStr&#34;: &#34;3&#34;, // Capacity
+     &#34;Kind&#34;: &#34;int&#34;,
+     &#34;Size&#34;: 8
     }
    ]
   }
@@ -253,7 +253,7 @@ func main() {
 func main() {
 	a := []int{1, 2, 3}
 	expandAndChangeSlice(a)
-	fmt.Printf(&quot;%v\n&quot;, a)
+	fmt.Printf(&#34;%v\n&#34;, a)
 }
 </code></pre><pre tabindex="0"><code>$~ go run main.go
 

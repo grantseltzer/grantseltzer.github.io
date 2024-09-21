@@ -3,7 +3,7 @@
     <head>
 
         <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.92.2" /> 
+        <meta name="generator" content="Hugo 0.134.3"> 
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -119,11 +119,11 @@
 })
 </code></pre><p>In this case, for no real reason, I&rsquo;m assigning the value 3 as the cookie.</p>
 <p>Then, in the bpf program, I can get that value using the <code>bpf_get_attach_cookie</code> helper:</p>
-<pre tabindex="0"><code>SEC(&quot;uprobe/instrument&quot;)
+<pre tabindex="0"><code>SEC(&#34;uprobe/instrument&#34;)
 int uprobe_instrument(struct pt_regs *ctx)
 {
     __u64 cookie_value = bpf_get_attach_cookie(ctx);
-    bpf_printk(&quot;%d\n&quot;, cookie_value);  // prints &quot;3&quot;  
+    bpf_printk(&#34;%d\n&#34;, cookie_value);  // prints &#34;3&#34;  
     return 0;
 }
 </code></pre><p>Cookies are useful because they allow you to provide context to your bpf program as to what it&rsquo;s attached to, or what logic it should follow. Without cookies, if you&rsquo;re sharing a single ringbuffer between multiple instances of the same bpf program, it&rsquo;s difficult to know which program the ringbuffer events came from in user space.</p>
@@ -134,8 +134,8 @@ int uprobe_instrument(struct pt_regs *ctx)
 <p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p>
 <h4 id="assigning-the-symbol-id-cookie-in-userspace">Assigning the symbol ID cookie in userspace:</h4>
 <pre tabindex="0"><code>symbolNamesToID := map[string]uint64{
-	&quot;main.foobar&quot;: 1,
-	&quot;main.bazbuz&quot;: 2,
+	&#34;main.foobar&#34;: 1,
+	&#34;main.bazbuz&#34;: 2,
 }
 
 for symName, symID := range symbolNamesToID {
@@ -154,7 +154,7 @@ for symName, symID := range symbolNamesToID {
 };
 const struct event *unused __attribute__((unused));
 
-SEC(&quot;uprobe/instrument&quot;)
+SEC(&#34;uprobe/instrument&#34;)
 int uprobe_instrument(struct pt_regs *ctx)
 {
     // Get the event ID from the cookie
@@ -166,7 +166,7 @@ int uprobe_instrument(struct pt_regs *ctx)
         return 0;
     }
 
-	// Send an event over the ringbuffer containing the event's ID, and stack content
+	// Send an event over the ringbuffer containing the event&#39;s ID, and stack content
     event-&gt;event_id = event_id;
     bpf_probe_read(&amp;event-&gt;stack_content, 50, ctx-&gt;sp);
     bpf_ringbuf_submit(e, 0);
@@ -193,15 +193,15 @@ int uprobe_instrument(struct pt_regs *ctx)
 	)
 
 	if err != nil {
-		log.Printf(&quot;failed to interpret binary data from raw sample&quot;)
+		log.Printf(&#34;failed to interpret binary data from raw sample&#34;)
 		continue
 	}
 
-	fmt.Printf(&quot;The symbol %s had the first 50 stack bytes: %w\n&quot;, symbolIDToName[event.event_id], event.stack_content))
+	fmt.Printf(&#34;The symbol %s had the first 50 stack bytes: %w\n&#34;, symbolIDToName[event.event_id], event.stack_content))
 }
 </code></pre><h2 id="filtering">Filtering</h2>
 <p>Many bpf-based projects filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
-<pre tabindex="0"><code>SEC(&quot;kprobe/do_unlinkat&quot;)
+<pre tabindex="0"><code>SEC(&#34;kprobe/do_unlinkat&#34;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
 {
     __u64 target_uid_cookie = bpf_get_attach_cookie(ctx);
@@ -232,10 +232,10 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 	}
 	err = objs.FiltersMap.Update(indexInFilterMap, filters, ebpf.UpdateNoExist)
 	if err != nil {
-		log.Fatal(&quot;can't update filter map: &quot;, err)
+		log.Fatal(&#34;can&#39;t update filter map: &#34;, err)
 	}
 
-	_, err = link.Kprobe(&quot;do_unlinkat&quot;, objs.KprobeDoUnlinkat, &amp;link.KprobeOptions{
+	_, err = link.Kprobe(&#34;do_unlinkat&#34;, objs.KprobeDoUnlinkat, &amp;link.KprobeOptions{
 		Cookie: indexInFilterMap,
 	})
 	if err != nil {
@@ -247,7 +247,7 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
     int gid;
 };
 
-struct bpf_map_def SEC(&quot;maps&quot;) filters_map = {
+struct bpf_map_def SEC(&#34;maps&#34;) filters_map = {
 	.type        = BPF_MAP_TYPE_HASH,
 	.key_size    = sizeof(u64),
 	.value_size  = sizeof(struct filters),
@@ -255,7 +255,7 @@ struct bpf_map_def SEC(&quot;maps&quot;) filters_map = {
 };
 
 
-SEC(&quot;kprobe/do_unlinkat&quot;)
+SEC(&#34;kprobe/do_unlinkat&#34;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
 {
 
@@ -265,18 +265,18 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 	// Get the filters struct and make checks accordingly
     struct filters* filters = (struct filters*)bpf_map_lookup_elem(&amp;filters_map, &amp;map_index_for_filter);
     if (!filters) {
-        bpf_printk(&quot;could not find filter&quot;);
+        bpf_printk(&#34;could not find filter&#34;);
         return 0;
     }
     __u64 giduid = bpf_get_current_uid_gid();
     __u32 gid = giduid&gt;&gt;32;
     __u32 uid = (__u32)giduid;
     if (filters-&gt;uid != uid) {
-        bpf_printk(&quot;uid did not match&quot;);
+        bpf_printk(&#34;uid did not match&#34;);
         return 0;
     }
     if (filters-&gt;gid != gid) {
-        bpf_printk(&quot;gid did not match&quot;);
+        bpf_printk(&#34;gid did not match&#34;);
         return 0;
     }
 	// etc...

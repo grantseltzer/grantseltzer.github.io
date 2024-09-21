@@ -6,8 +6,29 @@
     <description>Recent content on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Fri, 08 Jul 2022 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 06 Dec 2023 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Building Go Stack Traces from BPF</title>
+      <link>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</link>
+      <pubDate>Wed, 06 Dec 2023 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</guid>
+      <description>&lt;p&gt;In a couple of my posts from a few years ago (&lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;1&lt;/a&gt;, &lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2&#34;&gt;2&lt;/a&gt;) I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the &lt;a href=&#34;https://www.datadoghq.com/product/dynamic-instrumentation/&#34;&gt;Dynamic Instrumentation&lt;/a&gt; product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>How Go slices work</title>
+      <link>https://grantseltzer.github.io/blog/how-go-slices-work/</link>
+      <pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/blog/how-go-slices-work/</guid>
+      <description>&lt;p&gt;I recently ran into a hard to find bug in my Go code when using slices. Since I&amp;rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten about how slices work.&lt;/p&gt;&#xA;&lt;p&gt;Take a look at the following Go code:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x := []int{1,2,3}&#xA;y := append([]int{}, x...)&#xA;z := x&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We have three separate slices. What I want to briefly explore is the difference between y, and z. The difference has to do with how slices are implemented by Go. This can sometimes make it hard to track down bugs, so it&amp;rsquo;s important to know.&lt;/p&gt;</description>
+    </item>
+    <item>
+      <title>BPF Attach Cookies</title>
+      <link>https://grantseltzer.github.io/blog/bpf-cookies/</link>
+      <pubDate>Wed, 09 Aug 2023 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/blog/bpf-cookies/</guid>
+      <description>&lt;p&gt;BPF has a helper function called &lt;code&gt;bpf_get_attach_cookie&lt;/code&gt;. It&amp;rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&amp;rsquo;ll be exploring how to use it, and going over a few examples from real code i&amp;rsquo;ve written.&lt;/p&gt;&#xA;&lt;p&gt;A cookie is just an unsigned 64-bit integer. That&amp;rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&amp;rsquo;s code using the go &lt;code&gt;cilium/ebpf&lt;/code&gt; library to assign a cookie to a uprobe:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Memory Execution Override With ebpf</title>
       <link>https://grantseltzer.github.io/talks/summercon2022/</link>
@@ -230,7 +251,21 @@
       <link>https://grantseltzer.github.io/recipes/recipes/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       <guid>https://grantseltzer.github.io/recipes/recipes/</guid>
-      <description>&lt;p&gt;Recipes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../miami-rolls&#34;&gt;Miami Rolls&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../bialys&#34;&gt;Bialys&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+      <description>&lt;p&gt;Recipes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../miami-rolls&#34;&gt;Miami Rolls&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../bialys&#34;&gt;Bialys&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../split-pea&#34;&gt;Split Pea Soup&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://grantseltzer.github.io/recipes/rye-bread/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/recipes/rye-bread/</guid>
+      <description></description>
+    </item>
+    <item>
+      <title></title>
+      <link>https://grantseltzer.github.io/recipes/split-pea/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/recipes/split-pea/</guid>
+      <description>&lt;h1 id=&#34;split-pea-soup&#34;&gt;Split Pea Soup&lt;/h1&gt;&#xA;&lt;h2 id=&#34;ingredients&#34;&gt;Ingredients&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 cups green split peas&#xA;7 cups vegetable broth&#xA;1 cup coconut milk&#xA;1 cup dried potato flakes&#xA;2 large yellow onions&#xA;2 tbs minced garlic&#xA;2 tbs diced fresh ginger&#xA;1 bunch of parsely&#xA;3 tbs olive oil&#xA;&#xA;1 tbs herbs de provence&#xA;2 tbs curry herb blend&#xA;1 tbs salt&#xA;2 tbs carraway seed&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;instructions&#34;&gt;Instructions&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Chop the yellow onions. Mince the garlic. Dice the ginger. Chop the parsely.&lt;/p&gt;</description>
     </item>
     <item>
       <title>About Me</title>
