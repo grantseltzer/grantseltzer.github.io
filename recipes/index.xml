@@ -2,44 +2,44 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Recipes on GrantSeltzer</title>
-    <link>http://localhost:1313/recipes/</link>
+    <link>https://grantseltzer.github.io/recipes/</link>
     <description>Recent content in Recipes on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/recipes/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://grantseltzer.github.io/recipes/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title></title>
-      <link>http://localhost:1313/recipes/bialys/</link>
+      <link>https://grantseltzer.github.io/recipes/bialys/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/recipes/bialys/</guid>
+      <guid>https://grantseltzer.github.io/recipes/bialys/</guid>
       <description>&lt;h1 id=&#34;bialys&#34;&gt;Bialys&lt;/h1&gt;&#xA;&lt;p&gt;Bialys are a traditional roll that are fundamental to Ashkenazi Jewsish cuisine. They were a staple at bakeries in New York throughout the 20th century but are hard to find outside of areas with large Ashkenazi populations. Bagels simply get all the glory.&lt;/p&gt;&#xA;&lt;p&gt;Whereas bagels are supposed to be tough and chewy, Bialys are soft, light, and have an even airy crumb structure. Instead of having a hole, they have a divet in the center which has caramelized onions.&lt;/p&gt;</description>
     </item>
     <item>
       <title></title>
-      <link>http://localhost:1313/recipes/miami-rolls/</link>
+      <link>https://grantseltzer.github.io/recipes/miami-rolls/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/recipes/miami-rolls/</guid>
+      <guid>https://grantseltzer.github.io/recipes/miami-rolls/</guid>
       <description>&lt;h1 id=&#34;miami-rolls--challah&#34;&gt;Miami rolls + Challah&lt;/h1&gt;&#xA;&lt;p&gt;Miami rolls are a challah based onion pocket roll. They&amp;rsquo;re very soft, sweet, flavorful, and delicious. Pretty traditional to jewish bakeries in New York. I worked at a bakery all throughout high school and these were my favorite things there. When they closed down in 2020 I tried to get the recipe but the owner wouldn&amp;rsquo;t share it with me. Through 15+ iterations I have engineered a recipe that is exactly how I remember them. This recipe is truly worth sharing to keep the tradition of them alive considering so many classic New York bakeries continue to go out of business. I have no clue why they&amp;rsquo;re named Miami rolls.&lt;/p&gt;</description>
     </item>
     <item>
       <title></title>
-      <link>http://localhost:1313/recipes/recipes/</link>
+      <link>https://grantseltzer.github.io/recipes/recipes/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/recipes/recipes/</guid>
+      <guid>https://grantseltzer.github.io/recipes/recipes/</guid>
       <description>&lt;p&gt;Recipes:&lt;/p&gt;&#xA;&lt;ul&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../miami-rolls&#34;&gt;Miami Rolls&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../bialys&#34;&gt;Bialys&lt;/a&gt;&lt;/li&gt;&#xA;&lt;li&gt;&lt;a href=&#34;../split-pea&#34;&gt;Split Pea Soup&lt;/a&gt;&lt;/li&gt;&#xA;&lt;/ul&gt;</description>
     </item>
     <item>
       <title></title>
-      <link>http://localhost:1313/recipes/rye-bread/</link>
+      <link>https://grantseltzer.github.io/recipes/rye-bread/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/recipes/rye-bread/</guid>
+      <guid>https://grantseltzer.github.io/recipes/rye-bread/</guid>
       <description></description>
     </item>
     <item>
       <title></title>
-      <link>http://localhost:1313/recipes/split-pea/</link>
+      <link>https://grantseltzer.github.io/recipes/split-pea/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/recipes/split-pea/</guid>
+      <guid>https://grantseltzer.github.io/recipes/split-pea/</guid>
       <description>&lt;h1 id=&#34;split-pea-soup&#34;&gt;Split Pea Soup&lt;/h1&gt;&#xA;&lt;h2 id=&#34;ingredients&#34;&gt;Ingredients&lt;/h2&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;2 cups green split peas&#xA;7 cups vegetable broth&#xA;1 cup coconut milk&#xA;1 cup dried potato flakes&#xA;2 large yellow onions&#xA;2 tbs minced garlic&#xA;2 tbs diced fresh ginger&#xA;1 bunch of parsely&#xA;3 tbs olive oil&#xA;&#xA;1 tbs herbs de provence&#xA;2 tbs curry herb blend&#xA;1 tbs salt&#xA;2 tbs carraway seed&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;h2 id=&#34;instructions&#34;&gt;Instructions&lt;/h2&gt;&#xA;&lt;ol&gt;&#xA;&lt;li&gt;&#xA;&lt;p&gt;Chop the yellow onions. Mince the garlic. Dice the ginger. Chop the parsely.&lt;/p&gt;</description>
     </item>
   </channel>

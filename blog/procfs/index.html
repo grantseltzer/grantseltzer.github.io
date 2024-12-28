@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Linux Procfs</h1>
-        <h4>October 02, 2019</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Linux Procfs</h1>
+    <h4>October 02, 2019</h4>
+    <div id="text-content">
         <p>I love the procfs because it provides an intuitive and easy to use interface for interacting with the kernel. In the same way you&rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.</p>
 <p>A procfs is mounted at <code>/proc</code> by default. If you go into <code>/proc</code> you&rsquo;ll see something like this:</p>
 <p><img src="/procfs/toplevel.png" alt="toplevel"></p>
@@ -133,12 +149,12 @@
 <p>The directories and files in <code>/proc</code> don&rsquo;t actually exist on disk. The procfs is the kernel representing the proceses on your system <!-- raw HTML omitted -->as if<!-- raw HTML omitted --> they were files. Whenever a process requests files in the procfs, the kernel responds with the contents of the theoretical file.</p>
 <p>Now if only Apple would enable procfs on Macos&hellip;</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

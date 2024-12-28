@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Understanding cgroups</h1>
-        <h4>November 20, 2018</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Understanding cgroups</h1>
+    <h4>November 20, 2018</h4>
+    <div id="text-content">
         <!-- raw HTML omitted -->
 <p>Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&rsquo;t want a google chrome process (or it&rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that. They are an extremely powerful tool by which you can guarentee limits on performance, but understanding how they work and how to use them can be a little daunting.</p>
 <p>There are 12 different types of cgroups available in Linux. Each of them corresponds to a resource that processes use, such as the <!-- raw HTML omitted -->memory<!-- raw HTML omitted --> cgroup.</p>
@@ -165,12 +181,12 @@
 <!-- raw HTML omitted -->Setting the period and quota of a cgroup by passing flags for a docker container<!-- raw HTML omitted --></p>
 <p>While I didn&rsquo;t cover every different kind of cgroup, or even go deep into how the CPU cgroup is implemented, I hope this gives any necessary understanding about one of my favorite features of the kernel! Thanks so much for reading, please feel free to reach out for question or comment!</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

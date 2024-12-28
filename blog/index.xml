@@ -2,171 +2,171 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Blogs on GrantSeltzer</title>
-    <link>http://localhost:1313/blog/</link>
+    <link>https://grantseltzer.github.io/blog/</link>
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Wed, 06 Dec 2023 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/blog/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Building Go Stack Traces from BPF</title>
-      <link>http://localhost:1313/blog/go-stack-traces-bpf/</link>
+      <link>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</link>
       <pubDate>Wed, 06 Dec 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/go-stack-traces-bpf/</guid>
-      <description>&lt;p&gt;In a couple of my posts from a few years ago (&lt;a href=&#34;http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;1&lt;/a&gt;, &lt;a href=&#34;http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-2&#34;&gt;2&lt;/a&gt;) I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the &lt;a href=&#34;https://www.datadoghq.com/product/dynamic-instrumentation/&#34;&gt;Dynamic Instrumentation&lt;/a&gt; product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.&lt;/p&gt;</description>
+      <guid>https://grantseltzer.github.io/blog/go-stack-traces-bpf/</guid>
+      <description>&lt;p&gt;In a couple of my posts from a few years ago (&lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;1&lt;/a&gt;, &lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2&#34;&gt;2&lt;/a&gt;) I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&amp;rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the &lt;a href=&#34;https://www.datadoghq.com/product/dynamic-instrumentation/&#34;&gt;Dynamic Instrumentation&lt;/a&gt; product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.&lt;/p&gt;</description>
     </item>
     <item>
       <title>How Go slices work</title>
-      <link>http://localhost:1313/blog/how-go-slices-work/</link>
+      <link>https://grantseltzer.github.io/blog/how-go-slices-work/</link>
       <pubDate>Thu, 30 Nov 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/how-go-slices-work/</guid>
+      <guid>https://grantseltzer.github.io/blog/how-go-slices-work/</guid>
       <description>&lt;p&gt;I recently ran into a hard to find bug in my Go code when using slices. Since I&amp;rsquo;ve been using Go for over 8 years now, I figured this is something that others will run into and want to share what I had forgotten about how slices work.&lt;/p&gt;&#xA;&lt;p&gt;Take a look at the following Go code:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;x := []int{1,2,3}&#xA;y := append([]int{}, x...)&#xA;z := x&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;We have three separate slices. What I want to briefly explore is the difference between y, and z. The difference has to do with how slices are implemented by Go. This can sometimes make it hard to track down bugs, so it&amp;rsquo;s important to know.&lt;/p&gt;</description>
     </item>
     <item>
       <title>BPF Attach Cookies</title>
-      <link>http://localhost:1313/blog/bpf-cookies/</link>
+      <link>https://grantseltzer.github.io/blog/bpf-cookies/</link>
       <pubDate>Wed, 09 Aug 2023 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/bpf-cookies/</guid>
+      <guid>https://grantseltzer.github.io/blog/bpf-cookies/</guid>
       <description>&lt;p&gt;BPF has a helper function called &lt;code&gt;bpf_get_attach_cookie&lt;/code&gt;. It&amp;rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&amp;rsquo;ll be exploring how to use it, and going over a few examples from real code i&amp;rsquo;ve written.&lt;/p&gt;&#xA;&lt;p&gt;A cookie is just an unsigned 64-bit integer. That&amp;rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&amp;rsquo;s code using the go &lt;code&gt;cilium/ebpf&lt;/code&gt; library to assign a cookie to a uprobe:&lt;/p&gt;</description>
     </item>
     <item>
       <title>BPF Map Concurrency Techniques</title>
-      <link>http://localhost:1313/blog/bpf-concurrency/</link>
+      <link>https://grantseltzer.github.io/blog/bpf-concurrency/</link>
       <pubDate>Thu, 16 Jun 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/bpf-concurrency/</guid>
+      <guid>https://grantseltzer.github.io/blog/bpf-concurrency/</guid>
       <description>&lt;p&gt;There are times when developing your BPF projects when you need to ensure safe access to shared memory. You may have a counter that you&amp;rsquo;re updating from various different BPF programs and reading in userspace. You may also be updating map values from both userspace and from BPF. In this post i&amp;rsquo;ll demonstrate a couple different techniques for handing these scenarios safely.&lt;/p&gt;&#xA;&lt;h2 id=&#34;per-cpu-maps&#34;&gt;Per-cpu maps&lt;/h2&gt;&#xA;&lt;p&gt;Per-cpu maps are types of maps where each possible CPU has its own copy of underlying memory. Since BPF programs can&amp;rsquo;t be preempted, when you access a value inside one of these maps from your BPF program, you know that it&amp;rsquo;s the only program touching that value. The userspace program can &lt;em&gt;read&lt;/em&gt; these values at any time safely.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Handling errors with CGO</title>
-      <link>http://localhost:1313/blog/cgo-errors/</link>
+      <link>https://grantseltzer.github.io/blog/cgo-errors/</link>
       <pubDate>Wed, 16 Mar 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/cgo-errors/</guid>
+      <guid>https://grantseltzer.github.io/blog/cgo-errors/</guid>
       <description>&lt;p&gt;One of the main projects that I work on is &lt;a href=&#34;https://github.com/aquasecurity/libbpfgo&#34;&gt;libbpfgo&lt;/a&gt;. This is a Go wrapper around &lt;a href=&#34;https://github.com/libbpf/libbpf&#34;&gt;libbpf&lt;/a&gt;, a userspace library for dealing with bpf objects. The wrapper uses CGO to reference individual functions and data types in libbpf, which is written in C.&lt;/p&gt;&#xA;&lt;p&gt;For example, &lt;code&gt;BPFLoadObject()&lt;/code&gt; is a libbpfgo API function which calls &lt;code&gt;bpf_object__load()&lt;/code&gt;, a libbpf API function.&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;func (m *Module) BPFLoadObject() error {&#xA;&#x9;ret := C.bpf_object__load(m.obj)&#xA;&#x9;if ret != 0 {&#xA;&#x9;&#x9;return fmt.Errorf(&amp;#34;failed to load BPF object&amp;#34;)&#xA;&#x9;}&#xA;&#xA;&#x9;return nil&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;The goal for libbpfgo is to fully implement the libbpf API (&lt;a href=&#34;https://libbpf.readthedocs.io/en/latest/api.html&#34;&gt;which is pretty big&lt;/a&gt;). One complication with this is that libbpf has very inconsistent error handling. Some APIs will return an integer error code directly, some will return a NULL pointer and set the error code in errno, some will return an error code inside of a pointer, and some return an error code which is also in errno. As a result of trying to maintain libbpfgo&amp;rsquo;s error handling sanity, I&amp;rsquo;ve picked up some lessons on how you can use CGO to your advantage.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Basic Guide to Linux Mailing Lists</title>
-      <link>http://localhost:1313/blog/mailing-list-guide/</link>
+      <link>https://grantseltzer.github.io/blog/mailing-list-guide/</link>
       <pubDate>Sun, 10 Oct 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/mailing-list-guide/</guid>
+      <guid>https://grantseltzer.github.io/blog/mailing-list-guide/</guid>
       <description>&lt;p&gt;The Linux kernel is the biggest open source project in existence. It has tens of thousands of contributors from all around the world, from many different companies and communities.&lt;/p&gt;&#xA;&lt;p&gt;Linux development does not happen in a single github repository, and likely never will. Instead there are many forks of the linux kernel. Development happens in these forks for very specific subsystems, only a fraction of the overall code. Contributors submit relevant patches to the &amp;lsquo;mailing list&amp;rsquo; that is used for each of these forks. The fork maintainers review these patches, and at regular intervals submit groups of patches &amp;lsquo;upstream&amp;rsquo; to more generalized forks. All these patches eventually make their way up to the &amp;lsquo;mainline&amp;rsquo; kernel which a single maintainer presides over. Eventually the forks pull down the changes from other downstream forks.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The libbpf Documentation Site</title>
-      <link>http://localhost:1313/blog/contribute-docs-libbpf/</link>
+      <link>https://grantseltzer.github.io/blog/contribute-docs-libbpf/</link>
       <pubDate>Sun, 10 Oct 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/contribute-docs-libbpf/</guid>
+      <guid>https://grantseltzer.github.io/blog/contribute-docs-libbpf/</guid>
       <description>&lt;p&gt;libbpf is the standard implementation of the userspace library for loading and interacting with bpf programs. It defines the bpf ELF file format and CO-RE features. It&amp;rsquo;s a crucial part of the bpf ecosystem and is soon approaching its first major release. With this in mind, it&amp;rsquo;s important to have proper documentation.&lt;/p&gt;&#xA;&lt;p&gt;Introducing &lt;a href=&#34;https://libbpf.readthedocs.org&#34;&gt;libbpf.readthedocs.org&lt;/a&gt;. By going to the &lt;a href=&#34;https://libbpf.readthedocs.io/en/latest/api.html&#34;&gt;API docs&lt;/a&gt; you can see that each libbpf API function, type, enum and macro are listed. This is generated from the libbpf header files. Comments can be placed in code above the relevant API code and displayed on the documentation site.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Supporting CO:RE in Tracee</title>
-      <link>http://localhost:1313/blog/tracee-core/</link>
+      <link>https://grantseltzer.github.io/blog/tracee-core/</link>
       <pubDate>Fri, 23 Jul 2021 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/tracee-core/</guid>
+      <guid>https://grantseltzer.github.io/blog/tracee-core/</guid>
       <description>&lt;p&gt;If you&amp;rsquo;re used to developing software in a high level language like Go or Java you likely haven&amp;rsquo;t thought about supporting different operating system versions. Sure you want to be able to run on Linux, Macos, or Windows, but that&amp;rsquo;s abstracted away for you.&lt;/p&gt;&#xA;&lt;p&gt;When developing eBPF software you must think about hundreds of Linux kernel versions. When your eBPF programs are reading in kernel data structure fields, there&amp;rsquo;s no guarantee of backwards compatibility or stable APIs. Take a look at this example:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Getting started with bpf and libbpfgo</title>
-      <link>http://localhost:1313/blog/libbpf-beginners-part-one/</link>
+      <link>https://grantseltzer.github.io/blog/libbpf-beginners-part-one/</link>
       <pubDate>Thu, 18 Mar 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/libbpf-beginners-part-one/</guid>
-      <description>&lt;p&gt;In my &lt;a href=&#34;http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;previous posts&lt;/a&gt; on the subject of bpf I used a project called BCC to compile, load, and interact with my bpf programs. I, and many other developers, have recently heard about a better way to build ebpf projects called &lt;a href=&#34;https://github.com/libbpf/libbpf&#34;&gt;libbpf&lt;/a&gt;. There are a few good resources to use when developing libbpf based programs but getting started can still be a quite overwhelming. The goal of this post is to provide a simple and effective explanation of what libbpf is and how to start using it.&lt;/p&gt;</description>
+      <guid>https://grantseltzer.github.io/blog/libbpf-beginners-part-one/</guid>
+      <description>&lt;p&gt;In my &lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;previous posts&lt;/a&gt; on the subject of bpf I used a project called BCC to compile, load, and interact with my bpf programs. I, and many other developers, have recently heard about a better way to build ebpf projects called &lt;a href=&#34;https://github.com/libbpf/libbpf&#34;&gt;libbpf&lt;/a&gt;. There are a few good resources to use when developing libbpf based programs but getting started can still be a quite overwhelming. The goal of this post is to provide a simple and effective explanation of what libbpf is and how to start using it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>What is vmlinux.h?</title>
-      <link>http://localhost:1313/blog/vmlinux-header/</link>
+      <link>https://grantseltzer.github.io/blog/vmlinux-header/</link>
       <pubDate>Thu, 11 Mar 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/blog/vmlinux-header/</guid>
+      <guid>https://grantseltzer.github.io/blog/vmlinux-header/</guid>
       <description>&lt;div style=&#34;color: gray; font-style: italic; font-size: smaller;&#34;&gt;&#xA;    &lt;p&gt;&#xA;&#xA;A version of this post was also uploaded to Aqua&#39;s blog &lt;a href=&#34;https://blog.aquasec.com/vmlinux.h-ebpf-programs&#34;&gt;here&lt;/a&gt;&#xA;&#xA;&lt;/p&gt;&#xA;&lt;/div&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve been reading much bpf code recently, you&amp;rsquo;ve probably seen this:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;#include &amp;#34;vmlinux.h&amp;#34;&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;&lt;code&gt;vmlinux.h&lt;/code&gt; is generated code. it contains all of the type definitions that your running Linux kernel uses in it&amp;rsquo;s own source code. This is an important concept to wrap your head around so let me explain.&lt;/p&gt;&#xA;&lt;p&gt;When you build Linux one of the output artifacts is a file called &lt;code&gt;vmlinux&lt;/code&gt;. It&amp;rsquo;s also typically packaged with major distributions. This is an &lt;a href=&#34;https://en.wikipedia.org/wiki/Executable_and_Linkable_Format&#34;&gt;ELF&lt;/a&gt; binary that contains the compiled kernel inside it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Parsing Go Binary DWARF Info</title>
-      <link>http://localhost:1313/blog/dwarf/</link>
+      <link>https://grantseltzer.github.io/blog/dwarf/</link>
       <pubDate>Sat, 02 Jan 2021 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/dwarf/</guid>
-      <description>&lt;p&gt;In my very first blog post, &lt;a href=&#34;http://localhost:1313/blog/dissecting-go-binaries&#34;&gt;Dissecting Go Binaries&lt;/a&gt;, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, &lt;a href=&#34;https://github.com/grantseltzer/weaver&#34;&gt;weaver&lt;/a&gt;, has me exploring a related object file format that Go leverages, &lt;a href=&#34;http://dwarfstd.org/&#34;&gt;DWARF&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program. Entries of a DWARF file are organized in a tree structure where each node can have children and siblings. For example, an entry node that describes a function would have children that describe the parameters. An entry node that describes a struct would have children that describe the fields of it.&lt;/p&gt;</description>
+      <guid>https://grantseltzer.github.io/blog/dwarf/</guid>
+      <description>&lt;p&gt;In my very first blog post, &lt;a href=&#34;https://grantseltzer.github.io/blog/dissecting-go-binaries&#34;&gt;Dissecting Go Binaries&lt;/a&gt;, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, &lt;a href=&#34;https://github.com/grantseltzer/weaver&#34;&gt;weaver&lt;/a&gt;, has me exploring a related object file format that Go leverages, &lt;a href=&#34;http://dwarfstd.org/&#34;&gt;DWARF&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program. Entries of a DWARF file are organized in a tree structure where each node can have children and siblings. For example, an entry node that describes a function would have children that describe the parameters. An entry node that describes a struct would have children that describe the fields of it.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tracing Go Functions with eBPF Part 2</title>
-      <link>http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-2/</link>
+      <link>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2/</link>
       <pubDate>Sun, 10 May 2020 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-2/</guid>
-      <description>&lt;p&gt;In &lt;a href=&#34;http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;part 1&lt;/a&gt; of this series we learned about how to attach uprobes and eBPF programs to specific functions in Go programs. We went through an example where we attached our probe to the handler of a webserver. Everytime the probe was triggered we simply printed out a log saying that the handler was called. This could be adapted to record metrics, perhaps using counters instead of log lines.&lt;/p&gt;&#xA;&lt;p&gt;In this post we&amp;rsquo;re going to delve a bit deeper. We&amp;rsquo;re going to use the capabilities that eBPF has for traversing through the memory of the program we&amp;rsquo;re tracing.&lt;/p&gt;</description>
+      <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-2/</guid>
+      <description>&lt;p&gt;In &lt;a href=&#34;https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1&#34;&gt;part 1&lt;/a&gt; of this series we learned about how to attach uprobes and eBPF programs to specific functions in Go programs. We went through an example where we attached our probe to the handler of a webserver. Everytime the probe was triggered we simply printed out a log saying that the handler was called. This could be adapted to record metrics, perhaps using counters instead of log lines.&lt;/p&gt;&#xA;&lt;p&gt;In this post we&amp;rsquo;re going to delve a bit deeper. We&amp;rsquo;re going to use the capabilities that eBPF has for traversing through the memory of the program we&amp;rsquo;re tracing.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Fermentation Experimentation</title>
-      <link>http://localhost:1313/blog/fermentation/</link>
+      <link>https://grantseltzer.github.io/blog/fermentation/</link>
       <pubDate>Thu, 05 Mar 2020 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/fermentation/</guid>
+      <guid>https://grantseltzer.github.io/blog/fermentation/</guid>
       <description>&lt;p&gt;In the past year I&amp;rsquo;ve decided that I haven&amp;rsquo;t perpetuated enough Brooklyn stereotypes and have taken up fermentation as a hobby. This post goes through a few of the experiments that I&amp;rsquo;ve run with varying success.&lt;/p&gt;&#xA;&lt;p&gt;My set up is pretty basic. I have a small cabinet/closet in the corner of my kitchen that i&amp;rsquo;ve designated as the &lt;!-- raw HTML omitted --&gt;&amp;lsquo;fermentation station&amp;rsquo;&lt;!-- raw HTML omitted --&gt;. I have a thermometer but it mostly stays at room temperature. In the winter it gets warmer as it sits directly in front of a radiator which is always on. I also affixed a curtain to avoid direct sunlight as the setup is next to a window.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Tracing Go Functions with eBPF Part 1</title>
-      <link>http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-1/</link>
+      <link>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</link>
       <pubDate>Fri, 14 Feb 2020 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/tracing-go-functions-with-ebpf-part-1/</guid>
+      <guid>https://grantseltzer.github.io/blog/tracing-go-functions-with-ebpf-part-1/</guid>
       <description>&lt;p&gt;eBPF is a virtual machine, similar in concept to the JVM, except it&amp;rsquo;s inside the Linux kernel. It lets you write C-like code, compile it, and load the byte code into the kernel. You can then attach hooks to your loaded eBPF program to trigger it to run. Those hooks could be things like system calls, &lt;a href=&#34;https://lwn.net/Articles/132196/&#34;&gt;kprobes&lt;/a&gt;, or  &lt;a href=&#34;https://www.kernel.org/doc/ols/2007/ols2007v1-pages-215-224.pdf&#34;&gt;uprobes&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;There&amp;rsquo;s many use cases for eBPF. Considering eBPF programs have full system visibility there are very few limits on what you can do. You can write an eBPF program which logs every time certain files are modified. You use eBPF to profile performance of your other programs. You can implement host-based networking rules, or use it for &lt;a href=&#34;https://www.youtube.com/watch?v=yrrxFZfyEsw&#34;&gt;writing malware&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Using Karn for Seccomp Enforcement</title>
-      <link>http://localhost:1313/blog/karn/</link>
+      <link>https://grantseltzer.github.io/blog/karn/</link>
       <pubDate>Wed, 11 Dec 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/karn/</guid>
+      <guid>https://grantseltzer.github.io/blog/karn/</guid>
       <description>&lt;p&gt;&lt;a href=&#34;https://github.com/grantseltzer/karn&#34;&gt;Karn&lt;/a&gt; aims to provide for Linux what &lt;a href=&#34;https://developer.apple.com/library/archive/documentation/Miscellaneous/Reference/EntitlementKeyReference/Chapters/AboutEntitlements.html&#34;&gt;entitlements&lt;/a&gt; provide for iOS, or what &lt;a href=&#34;https://man.openbsd.org/pledge.2&#34;&gt;pledge&lt;/a&gt; provides for OpenBSD. It does this by translating a high level set of intuitive &amp;rsquo;entitlements&amp;rsquo; into complex seccomp profiles.&lt;/p&gt;&#xA;&lt;p&gt;For example, A developer using Karn can simply specify that their application needs to make network connections, or exec other processes and karn will handle granting it permission to do those things (and nothing else!).&lt;/p&gt;&#xA;&lt;p&gt;So, how does it work?&lt;/p&gt;</description>
     </item>
     <item>
       <title>Linux Procfs</title>
-      <link>http://localhost:1313/blog/procfs/</link>
+      <link>https://grantseltzer.github.io/blog/procfs/</link>
       <pubDate>Wed, 02 Oct 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/procfs/</guid>
-      <description>&lt;p&gt;I love the procfs because it provides an intuitive and easy to use interface for interacting with the kernel. In the same way you&amp;rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.&lt;/p&gt;&#xA;&lt;p&gt;A procfs is mounted at &lt;code&gt;/proc&lt;/code&gt; by default. If you go into &lt;code&gt;/proc&lt;/code&gt; you&amp;rsquo;ll see something like this:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;http://localhost:1313/procfs/toplevel.png&#34; alt=&#34;toplevel&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;You&amp;rsquo;ll notice a lot of the directories that are just named by numbers. There is one for each individual process. The directory names correspond to the process ID. One directory for each process.&lt;/p&gt;</description>
+      <guid>https://grantseltzer.github.io/blog/procfs/</guid>
+      <description>&lt;p&gt;I love the procfs because it provides an intuitive and easy to use interface for interacting with the kernel. In the same way you&amp;rsquo;d normally use the command line for exploring files, you can control and find out information about currently running processes. All without the need for system calls.&lt;/p&gt;&#xA;&lt;p&gt;A procfs is mounted at &lt;code&gt;/proc&lt;/code&gt; by default. If you go into &lt;code&gt;/proc&lt;/code&gt; you&amp;rsquo;ll see something like this:&lt;/p&gt;&#xA;&lt;p&gt;&lt;img src=&#34;https://grantseltzer.github.io/procfs/toplevel.png&#34; alt=&#34;toplevel&#34;&gt;&lt;/p&gt;&#xA;&lt;p&gt;You&amp;rsquo;ll notice a lot of the directories that are just named by numbers. There is one for each individual process. The directory names correspond to the process ID. One directory for each process.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Linux Overlayfs</title>
-      <link>http://localhost:1313/blog/overlayfs/</link>
+      <link>https://grantseltzer.github.io/blog/overlayfs/</link>
       <pubDate>Wed, 18 Sep 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/overlayfs/</guid>
+      <guid>https://grantseltzer.github.io/blog/overlayfs/</guid>
       <description>&lt;p&gt;Remember back to when your teacher in grade school would write on sheets of clear plastic, stack them, and display them with an overhead projector? That is exactly how &lt;code&gt;overlayfs&lt;/code&gt; works&amp;hellip; except with filesystems.&lt;/p&gt;&#xA;&lt;p&gt;Overlay filesystems allow you to take multiple directory trees and view them as if they were merged together. The added benefit is that changes in the merged view do not affect the underlying directories. There are many use cases for this, mostly related to containers, but more on that at the end.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Debugging Go tests</title>
-      <link>http://localhost:1313/blog/test-build-modes/</link>
+      <link>https://grantseltzer.github.io/blog/test-build-modes/</link>
       <pubDate>Thu, 15 Aug 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/test-build-modes/</guid>
+      <guid>https://grantseltzer.github.io/blog/test-build-modes/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;I recently was working on debugging a unit test I wrote in Go. I couldn&amp;rsquo;t figure out why one of my test cases was causing a runtime error that never happened when running my actual program. I was using a runtime directive so I suspected there may be some difference between doing a &lt;code&gt;go test&lt;/code&gt; and a &lt;code&gt;go run&lt;/code&gt;. I was looking through Go build mode &lt;a href=&#34;https://golang.org/cmd/go/#hdr-Build_modes&#34;&gt;documentation&lt;/a&gt; while wondering if I could step through it with a debugger. Lo and behold you can compile your tests into an ELF executable!&lt;/p&gt;</description>
     </item>
     <item>
       <title>Standardized Streams and Shells</title>
-      <link>http://localhost:1313/blog/standardized-streams-and-shells/</link>
+      <link>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</link>
       <pubDate>Tue, 21 May 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/standardized-streams-and-shells/</guid>
+      <guid>https://grantseltzer.github.io/blog/standardized-streams-and-shells/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Every well known operating system has a concept of standardized streams. These consist of standard input, output, and error. As their name purports, they are the standard places for proccesses to read input, and send output. They&amp;rsquo;re a crucial concept that allows various running processes to easily communicate.&lt;/p&gt;&#xA;&lt;p&gt;Standardized streams enable you to string together multiple commands with a pipe (&lt;code&gt;|&lt;/code&gt;) in your shell like this:&lt;/p&gt;</description>
     </item>
     <item>
       <title>Using dynamic libraries in static Go binaries</title>
-      <link>http://localhost:1313/blog/using-dynamic-libraries-in-static-go-binaries/</link>
+      <link>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</link>
       <pubDate>Tue, 09 Apr 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/using-dynamic-libraries-in-static-go-binaries/</guid>
+      <guid>https://grantseltzer.github.io/blog/using-dynamic-libraries-in-static-go-binaries/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Go has many little known features that allow you to give instructions to the compiler, linker, and other parts of the toolchain using special comments. Dave Cheney wrote an excellent post on them &lt;a href=&#34;https://dave.cheney.net/2018/01/08/gos-hidden-pragmas&#34;&gt;here&lt;/a&gt;. One such &amp;lsquo;pragma&amp;rsquo; as Cheney calls them is  &lt;code&gt;//go:cgo_import_dynamic&lt;/code&gt;. This is a linker directive. It tells the linker to pull in a specific function from a dynamic library such as libc.&lt;/p&gt;&#xA;&lt;p&gt;Let&amp;rsquo;s check out an example from my &lt;a href=&#34;https://go-review.googlesource.com/c/go/+/166297&#34;&gt;recent contribution&lt;/a&gt; to the runtime package.&lt;/p&gt;</description>
     </item>
     <item>
       <title>The Beauty of io.Writer</title>
-      <link>http://localhost:1313/blog/the-beauty-of-io-writer/</link>
+      <link>https://grantseltzer.github.io/blog/the-beauty-of-io-writer/</link>
       <pubDate>Thu, 04 Apr 2019 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/the-beauty-of-io-writer/</guid>
+      <guid>https://grantseltzer.github.io/blog/the-beauty-of-io-writer/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;A perfect example of a properly designed Go interface is &lt;code&gt;io.Writer&lt;/code&gt;:&lt;/p&gt;&#xA;&lt;pre tabindex=&#34;0&#34;&gt;&lt;code&gt;type Writer interface {&#xA;    Write(p []byte) (n int, err error)&#xA;}&#xA;&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;It is short, simple, and powerful. The &lt;code&gt;Write&lt;/code&gt; method takes a very generic slice of bytes and writes it to &lt;!-- raw HTML omitted --&gt;something&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;&#xA;&lt;p&gt;In Rob Pike&amp;rsquo;s &lt;a href=&#34;https://youtu.be/PAAkCSZUG1c?t=317&#34;&gt;Go Proverbs talk&lt;/a&gt; he talks about how in Go, interfaces are not declared to be satisfied, they&amp;rsquo;re satisfied implicitly. An interface should be a way of classifying types, not a blueprint for declaring them. In practical terms, an interface should not at all care about how it&amp;rsquo;s  implemented.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Understanding cgroups</title>
-      <link>http://localhost:1313/blog/understanding-cgroups/</link>
+      <link>https://grantseltzer.github.io/blog/understanding-cgroups/</link>
       <pubDate>Tue, 20 Nov 2018 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/understanding-cgroups/</guid>
+      <guid>https://grantseltzer.github.io/blog/understanding-cgroups/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Control groups (or cgroups) are a feature of the Linux kernel by which groups of processes can be monitored and have their resources limited. For example, if you don&amp;rsquo;t want a google chrome process (or it&amp;rsquo;s many child processes) to exceed a gigabyte of RAM or 30% total CPU usage, cgroups would let you do that. They are an extremely powerful tool by which you can guarentee limits on performance, but understanding how they work and how to use them can be a little daunting.&lt;/p&gt;</description>
     </item>
     <item>
       <title>Dissecting Go Binaries</title>
-      <link>http://localhost:1313/blog/dissecting-go-binaries/</link>
+      <link>https://grantseltzer.github.io/blog/dissecting-go-binaries/</link>
       <pubDate>Fri, 14 Sep 2018 03:32:37 +0000</pubDate>
-      <guid>http://localhost:1313/blog/dissecting-go-binaries/</guid>
+      <guid>https://grantseltzer.github.io/blog/dissecting-go-binaries/</guid>
       <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t worry, most of us aren&amp;rsquo;t. You don&amp;rsquo;t have to read any assembly for the purpose of this post, although it may make it more interesting. For an introduction to x86 assembly I highly recommend &lt;a href=&#34;https://www.nayuki.io/page/a-fundamental-introduction-to-x86-assembly-programming&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
   </channel>

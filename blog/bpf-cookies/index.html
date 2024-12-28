@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">BPF Attach Cookies</h1>
-        <h4>August 09, 2023</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">BPF Attach Cookies</h1>
+    <h4>August 09, 2023</h4>
+    <div id="text-content">
         <p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&rsquo;ll be exploring how to use it, and going over a few examples from real code i&rsquo;ve written.</p>
 <p>A cookie is just an unsigned 64-bit integer. That&rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&rsquo;s code using the go <code>cilium/ebpf</code> library to assign a cookie to a uprobe:</p>
 <pre tabindex="0"><code>l, err := executable.Uprobe(symbolName, bpfobject.UprobeProgram, &amp;link.UprobeOptions{
@@ -285,12 +301,12 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 </code></pre><h3 id="conclusion">Conclusion</h3>
 <p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful for maintaining context across tail calls.</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

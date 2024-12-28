@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Tracing Go Functions with eBPF Part 2</h1>
-        <h4>May 10, 2020</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Tracing Go Functions with eBPF Part 2</h1>
+    <h4>May 10, 2020</h4>
+    <div id="text-content">
         <p>In <a href="/blog/tracing-go-functions-with-ebpf-part-1">part 1</a> of this series we learned about how to attach uprobes and eBPF programs to specific functions in Go programs. We went through an example where we attached our probe to the handler of a webserver. Everytime the probe was triggered we simply printed out a log saying that the handler was called. This could be adapted to record metrics, perhaps using counters instead of log lines.</p>
 <p>In this post we&rsquo;re going to delve a bit deeper. We&rsquo;re going to use the capabilities that eBPF has for traversing through the memory of the program we&rsquo;re tracing.</p>
 <h2 id="arguments">Arguments</h2>
@@ -270,12 +286,12 @@ inline int get_arguments(struct pt_regs *ctx) {
 </code></pre><p><!-- raw HTML omitted -->Full code for this example <a href="https://gist.github.com/grantseltzer/76468d7e9ab4644170d15d1a4ae39d99">here</a><!-- raw HTML omitted --></p>
 <p>For an example of how this process can be generalized checkout my project, <a href="https://github.com/grantseltzer/weaver">weaver</a>, which calculates offsets in Go code and generates eBPF code using a text template.</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

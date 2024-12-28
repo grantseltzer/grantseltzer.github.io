@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Linux Overlayfs</h1>
-        <h4>September 18, 2019</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Linux Overlayfs</h1>
+    <h4>September 18, 2019</h4>
+    <div id="text-content">
         <p>Remember back to when your teacher in grade school would write on sheets of clear plastic, stack them, and display them with an overhead projector? That is exactly how <code>overlayfs</code> works&hellip; except with filesystems.</p>
 <p>Overlay filesystems allow you to take multiple directory trees and view them as if they were merged together. The added benefit is that changes in the merged view do not affect the underlying directories. There are many use cases for this, mostly related to containers, but more on that at the end.</p>
 <p>Let&rsquo;s look at an example:</p>
@@ -138,12 +154,12 @@
 <p>Overlayfs is used so that multiple containers can share the same base image. The root file system of the image is stored somewhere on disk. An overlayfs is created for each running container where the bottom layer is the image rootfs and the top layer is mounted into the container.</p>
 <p>You can also use it in other ways. I like to create an overlay mount of my home directory and mount it into containers so that I have an environment that looks like my home but any changes won&rsquo;t persist once I close the container. This is useful for installing programs that I think may break my dependencies.</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

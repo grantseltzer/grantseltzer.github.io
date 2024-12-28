@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Parsing Go Binary DWARF Info</h1>
-        <h4>January 02, 2021</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Parsing Go Binary DWARF Info</h1>
+    <h4>January 02, 2021</h4>
+    <div id="text-content">
         <p>In my very first blog post, <a href="/blog/dissecting-go-binaries">Dissecting Go Binaries</a>, I began to explore ELF files. That is the default format of executable binaries that Go produces on unix-like operating systems like Linux and MacOS. My most recent project, <a href="https://github.com/grantseltzer/weaver">weaver</a>, has me exploring a related object file format that Go leverages, <a href="http://dwarfstd.org/">DWARF</a>.</p>
 <p>The DWARF specification is, of course, not Go specific. The DWARF object file specification describes the functions, variables, and types of a compiled program. Entries of a DWARF file are organized in a tree structure where each node can have children and siblings. For example, an entry node that describes a function would have children that describe the parameters. An entry node that describes a struct would have children that describe the fields of it.</p>
 <p>As the unofficial backronym for DWARF (Debugging With Attributed Record Formats) purports, the format is used by debugging tools to gather useful information such as data types or memory offsets. There&rsquo;s a ton of information that you can leverage for reverse engineering, debugging, or learning about systems programming. The Go standard library conveniently includes the <a href="https://golang.org/pkg/debug/dwarf/">debug/dwarf</a> package for reading this information.</p>
@@ -235,12 +251,12 @@ main.main
 </code></pre><p>If you try running this yourself you&rsquo;ll also notice that you can get return types and their names as well. Those have the attribute <code>AttrVarParam</code>.</p>
 <p>There is a lot to cover and a lot of possibilities that you can use this information for, far more than I can fit into a single blog post. As part of refactoring <a href="github.com/grantseltzer/weaver">weaver</a> i&rsquo;m writing a higher level package for querying type information from binaries, so please keep an eye out!</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

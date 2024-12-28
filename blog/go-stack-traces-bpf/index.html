@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 
-    <head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
-        <meta charset="utf-8">
-        <meta name="generator" content="Hugo 0.134.3"> 
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
-        <style>
-
-        body { margin: 0; }
+    <style>
+        body {
+            margin: 0;
+        }
 
         #title {
             font-family: "Open Sans", sans-serif;
@@ -40,7 +41,7 @@
             line-height: 25px;
             overflow: scroll;
         }
-        
+
         code {
             font-family: monospace;
             margin: 0 .2rem;
@@ -71,13 +72,14 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
-        @media (min-width: 1000px){
+        @media (min-width: 1000px) {
             #talk-content {
                 display: block;
                 text-align: center;
                 font-family: "Open Sans", sans-serif;
                 font-size: 20px;
             }
+
             img {
                 display: block;
                 margin-left: auto;
@@ -96,22 +98,36 @@
                 height: auto;
             }
         }
-        a { text-decoration: none; color: black; font-weight: bold; line-height: 1.3em; }
-        a:hover { font-style: italic; border-bottom: 5px solid yellow }
-        .copyright { padding-top: 50px; display: block; text-align: center; }
 
-        </style>
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
 
-    </head>
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
 
-    <body>
-        <div id="topbar">
-            <a id="homelink" href="/">GSR</a>
-        </div>
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
 
-        <h1 id="title">Building Go Stack Traces from BPF</h1>
-        <h4>December 06, 2023</h4>
-        <div id="text-content">
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Building Go Stack Traces from BPF</h1>
+    <h4>December 06, 2023</h4>
+    <div id="text-content">
         <p>In a couple of my posts from a few years ago (<a href="/blog/tracing-go-functions-with-ebpf-part-1">1</a>, <a href="/blog/tracing-go-functions-with-ebpf-part-2">2</a>) I explored the idea of attaching bpf programs to Go functions via uprobes. The second post dived into how to extract values of parameters. This can be seen as part 3 of the series as I&rsquo;m going to demonstrate how to get a stack trace from bpf code. The work described in this post is in contribution to my work at Datadog on the <a href="https://www.datadoghq.com/product/dynamic-instrumentation/">Dynamic Instrumentation</a> product, allowing users to hook specific functions and get snapshots of parameter values and stack traces.</p>
 <p>The purpose of a stack trace is simple. When a function is called, we want to know the order of execution of every function/line that lead to the function invocation. You can see an example of a stack trace everytime a panic occurs in Go, which are helpful to find offending code.</p>
 <p>Take the following code as an example,</p>
@@ -386,12 +402,12 @@ func parseInlinedEntry(reader *dwarf.Reader, pc uint64, e *dwarf.Entry) (name st
 </code></pre><h3 id="conclusion">Conclusion</h3>
 <p>It&rsquo;s relatively straightforward to unwind the stack and populate a stack trace, including inlined functions with the help of DWARF. This all is just a small feature of Datadog&rsquo;s Dynamic Instrumentation product which just went into general availability. Currently it&rsquo;s available for Java, .Net, and Python code. I&rsquo;m of course working on the Go implementation which is not yet available. I&rsquo;ll be sure to write more blog posts in the coming months about progress there!</p>
 
-        
-        
-        </div>
 
-        <span class="copyright">copyright 2018 - 2023</span>
+        
+    </div>
 
-    </body>
-    
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
 </html>

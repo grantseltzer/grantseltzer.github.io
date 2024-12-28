@@ -2,73 +2,73 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Talks on GrantSeltzer</title>
-    <link>http://localhost:1313/talks/</link>
+    <link>https://grantseltzer.github.io/talks/</link>
     <description>Recent content in Talks on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 08 Jul 2022 00:00:00 +0000</lastBuildDate>
-    <atom:link href="http://localhost:1313/talks/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://grantseltzer.github.io/talks/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Memory Execution Override With ebpf</title>
-      <link>http://localhost:1313/talks/summercon2022/</link>
+      <link>https://grantseltzer.github.io/talks/summercon2022/</link>
       <pubDate>Fri, 08 Jul 2022 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/summercon2022/</guid>
+      <guid>https://grantseltzer.github.io/talks/summercon2022/</guid>
       <description></description>
     </item>
     <item>
       <title>Portable BPF with CO:RE</title>
-      <link>http://localhost:1313/talks/ebpfdaycncf2021/</link>
+      <link>https://grantseltzer.github.io/talks/ebpfdaycncf2021/</link>
       <pubDate>Mon, 11 Oct 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/ebpfdaycncf2021/</guid>
+      <guid>https://grantseltzer.github.io/talks/ebpfdaycncf2021/</guid>
       <description>&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;&#xA;      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/BF42-cl-8B0?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&#xA;      &gt;&lt;/iframe&gt;&#xA;    &lt;/div&gt;</description>
     </item>
     <item>
       <title>Go Time #201</title>
-      <link>http://localhost:1313/talks/gotime2/</link>
+      <link>https://grantseltzer.github.io/talks/gotime2/</link>
       <pubDate>Tue, 14 Sep 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/gotime2/</guid>
+      <guid>https://grantseltzer.github.io/talks/gotime2/</guid>
       <description>&lt;audio data-theme=&#34;day&#34; data-src=&#34;https://changelog.com/gotime/201/embed&#34; src=&#34;https://cdn.changelog.com/uploads/gotime/201/go-time-201.mp3&#34; preload=&#34;none&#34; class=&#34;changelog-episode&#34; controls&gt;&lt;/audio&gt;&lt;p&gt;&lt;a href=&#34;https://changelog.com/gotime/201&#34;&gt;Listen on &lt;a href=&#34;https://changelog.com/&#34;&gt;Changelog.com&lt;/a&gt;&lt;/p&gt;&lt;script async src=&#34;//cdn.changelog.com/embed.js&#34;&gt;&lt;/script&gt;</description>
     </item>
     <item>
       <title>Compile Once Run Everywhere, the eBPF Dream!</title>
-      <link>http://localhost:1313/talks/ebpfsummit2021/</link>
+      <link>https://grantseltzer.github.io/talks/ebpfsummit2021/</link>
       <pubDate>Thu, 19 Aug 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/ebpfsummit2021/</guid>
+      <guid>https://grantseltzer.github.io/talks/ebpfsummit2021/</guid>
       <description>&lt;p&gt;Skip to 3:11:00 for my talk (or watch the whole thing, it was a great conference!)&lt;/p&gt;&#xA;&#xA;&#xA;    &#xA;    &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;&#xA;      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/ZNtVedFsD-k?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&#xA;      &gt;&lt;/iframe&gt;&#xA;    &lt;/div&gt;</description>
     </item>
     <item>
       <title>Tracing Go Programs with eBPF!</title>
-      <link>http://localhost:1313/talks/gopherconeu2021/</link>
+      <link>https://grantseltzer.github.io/talks/gopherconeu2021/</link>
       <pubDate>Thu, 27 May 2021 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/gopherconeu2021/</guid>
+      <guid>https://grantseltzer.github.io/talks/gopherconeu2021/</guid>
       <description>&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;&#xA;      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/JxZL6ZEBBEg?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&#xA;      &gt;&lt;/iframe&gt;&#xA;    &lt;/div&gt;</description>
     </item>
     <item>
       <title>Tracing Go Programs with eBPF!</title>
-      <link>http://localhost:1313/talks/gophercon2020/</link>
+      <link>https://grantseltzer.github.io/talks/gophercon2020/</link>
       <pubDate>Fri, 13 Nov 2020 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/gophercon2020/</guid>
+      <guid>https://grantseltzer.github.io/talks/gophercon2020/</guid>
       <description>&lt;p&gt;Code can be found &lt;a href=&#34;https://www.github.com/grantseltzer/&#34;&gt;here&lt;/a&gt;&lt;/p&gt;&#xA;&#xA;&#xA;    &#xA;    &lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;&#xA;      &lt;iframe allow=&#34;accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share&#34; allowfullscreen=&#34;allowfullscreen&#34; loading=&#34;eager&#34; referrerpolicy=&#34;strict-origin-when-cross-origin&#34; src=&#34;https://www.youtube.com/embed/OxLmd7szevI?autoplay=0&amp;controls=1&amp;end=0&amp;loop=0&amp;mute=0&amp;start=0&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; title=&#34;YouTube video&#34;&#xA;      &gt;&lt;/iframe&gt;&#xA;    &lt;/div&gt;</description>
     </item>
     <item>
       <title>Go Time #159</title>
-      <link>http://localhost:1313/talks/gotime/</link>
+      <link>https://grantseltzer.github.io/talks/gotime/</link>
       <pubDate>Tue, 10 Nov 2020 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/gotime/</guid>
+      <guid>https://grantseltzer.github.io/talks/gotime/</guid>
       <description>&lt;audio data-theme=&#34;day&#34; data-src=&#34;https://changelog.com/gotime/159/embed&#34; src=&#34;https://cdn.changelog.com/uploads/gotime/159/go-time-159.mp3&#34; preload=&#34;none&#34; class=&#34;changelog-episode&#34; controls&gt;&lt;/audio&gt;&lt;p&gt;&lt;a href=&#34;https://changelog.com/gotime/159&#34;&gt;Listen on &lt;a href=&#34;https://changelog.com/&#34;&gt;Changelog.com&lt;/a&gt;&lt;/p&gt;&lt;script async src=&#34;//cdn.changelog.com/embed.js&#34;&gt;&lt;/script&gt;</description>
     </item>
     <item>
       <title>The Problem with Sandboxing Solutions</title>
-      <link>http://localhost:1313/talks/hushcon2019/</link>
+      <link>https://grantseltzer.github.io/talks/hushcon2019/</link>
       <pubDate>Fri, 06 Dec 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/hushcon2019/</guid>
+      <guid>https://grantseltzer.github.io/talks/hushcon2019/</guid>
       <description></description>
     </item>
     <item>
       <title>The Problem with Sandboxing Solutions</title>
-      <link>http://localhost:1313/talks/kubesec2019/</link>
+      <link>https://grantseltzer.github.io/talks/kubesec2019/</link>
       <pubDate>Mon, 18 Nov 2019 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/talks/kubesec2019/</guid>
+      <guid>https://grantseltzer.github.io/talks/kubesec2019/</guid>
       <description></description>
     </item>
   </channel>

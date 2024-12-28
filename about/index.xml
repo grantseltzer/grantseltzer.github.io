@@ -2,16 +2,16 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Abouts on GrantSeltzer</title>
-    <link>http://localhost:1313/about/</link>
+    <link>https://grantseltzer.github.io/about/</link>
     <description>Recent content in Abouts on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="http://localhost:1313/about/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="https://grantseltzer.github.io/about/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>About Me</title>
-      <link>http://localhost:1313/about/about/</link>
+      <link>https://grantseltzer.github.io/about/about/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>http://localhost:1313/about/about/</guid>
+      <guid>https://grantseltzer.github.io/about/about/</guid>
       <description>&lt;p&gt;My name is Grant Seltzer Richman. I currently work at Datadog. I have worked as a software engineer at &lt;a href=&#34;https://www.aquasec.com/&#34;&gt;Aqua&lt;/a&gt;, &lt;a href=&#34;https://www.hioscar.com/&#34;&gt;Oscar Health&lt;/a&gt;, &lt;a href=&#34;https://capsule8.com/&#34;&gt;Capsule8&lt;/a&gt;, and &lt;a href=&#34;https://www.redhat.com/en&#34;&gt;Red Hat&lt;/a&gt;. My interests include systems programming, cycling, triathlon, security, video games, baseball, and reading. I mostly will be writing blog posts about linux, security, and various hobbies.&lt;/p&gt;&#xA;&lt;p&gt;Feel free to reach out if you want to say hi!&lt;/p&gt;</description>
     </item>
   </channel>
