@@ -132,27 +132,27 @@
 <p>If you&rsquo;ve been writing bpf programs for a long time or have been looking at outdated examples then you&rsquo;re probably familiar with using the <code>static</code> modifier and <code>__always_inline</code> macro.</p>
 <p>Prior to kernel 4.16 (Release Apr 2018), all functions in a bpf program in fact needed to be inlined. Starting with this release you could do what&rsquo;s called <a href="https://docs.cilium.io/en/stable/reference-guides/bpf/architecture/#bpf-to-bpf-calls">bpf to bpf function calls</a>. However, I didn&rsquo;t realize this until recently (while developing for a 5.15 kernel&hellip;). As any bpf developer would know, documentation is sparse and it&rsquo;s hard to know when things change. Therefore, I&rsquo;d like to explore what inlining does for your program and how preventing function inlining for it expands the capability of bpf programs.</p>
 <p>Let&rsquo;s take a look at a simple bpf program:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __always_inline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_map_value</span>() {
-</span></span><span style="display:flex;"><span>    __u32 key <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    __u64 <span style="color:#f92672">*</span>val <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_map_lookup_elem</span>(<span style="color:#f92672">&amp;</span>value_map, <span style="color:#f92672">&amp;</span>key);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>val) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;val: %d&#34;</span>, val);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
-</span></span><span style="display:flex;"><span>    __u64 val <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    __u32 key <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_map_update_elem</span>(<span style="color:#f92672">&amp;</span>value_map, <span style="color:#f92672">&amp;</span>key, <span style="color:#f92672">&amp;</span>val, <span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>We are using the <code>__always_inline</code> macro, and as such each <code>print_map_value()</code> function call is going to be replaced by the full body of <code>print_map_value()</code>. So our bpf program will end up having 3 copies of the same set of instructions one after another.</p>
+<pre tabindex="0"><code>static __always_inline int print_map_value() {
+    __u32 key = 0;
+    __u64 *val = bpf_map_lookup_elem(&amp;value_map, &amp;key);
+    if (!val) {
+        return 1;
+    }
+    bpf_printk(&#34;val: %d&#34;, val);
+    return 0;
+}
+
+SEC(&#34;uprobe/foobar&#34;)
+int foobar(struct pt_regs *ctx) {
+    __u64 val = 1;
+    __u32 key = 0;
+    bpf_map_update_elem(&amp;value_map, &amp;key, &amp;val, 0);
+    print_map_value();
+    print_map_value();
+    print_map_value();
+    return 0;
+}
+</code></pre><p>We are using the <code>__always_inline</code> macro, and as such each <code>print_map_value()</code> function call is going to be replaced by the full body of <code>print_map_value()</code>. So our bpf program will end up having 3 copies of the same set of instructions one after another.</p>
 <p>You can verify this by compiling the program and using <code>llvm-objdump -d &lt;object_file&gt;</code>.</p>
 <p>Demonstrating inlining is not the purpose of this post though. The purpose is to discuss how this affects the number of instructions counted by the verifier.</p>
 <p>I&rsquo;m going to run the above program once compiled through the verifier <em>(via a <a href="https://github.com/DataDog/datadog-agent/tree/main/pkg/ebpf/verifier/calculator">tool</a> my coworkers wrote)</em> and determine how many instructions the verifier counts:</p>
@@ -164,19 +164,19 @@ Max States per Instruction: 0
 Peak States: 4  
 Total States: 4  
 </code></pre><p>Now let&rsquo;s adapt our code to discourage inlining:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_map_value</span>() {
-</span></span><span style="display:flex;"><span>    ...
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
-</span></span><span style="display:flex;"><span>    ...
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Running it through the same tool:</p>
+<pre tabindex="0"><code>static __noinline int print_map_value() {
+    ...
+}
+
+SEC(&#34;uprobe/foobar&#34;)
+int foobar(struct pt_regs *ctx) {
+    ...
+    print_map_value();
+    print_map_value();
+    print_map_value();
+    return 0;
+}
+</code></pre><p>Running it through the same tool:</p>
 <pre tabindex="0"><code>Filename/Program: foo/foobar
 Stack Usage: 12
 Instructions Processed: 64
@@ -191,50 +191,50 @@ Total States: 6
 <p>The benefit of a global function is that it is only verified once independently of its invocations. Meaning that even if a global function is called 100 times, it&rsquo;s only verified once (unless it&rsquo;s also inlined). This is hugely beneficial in many applications for the sake of staying under the verifier complexity threshold.</p>
 <p>Conversely, the challenge this presents is that global functions have to check the values of their parameters. If a function isn&rsquo;t called many times this can therefore increases the counted complexity of a program. There are also limitations on the types of parameters or returns of global functions. See <a href="https://docs.ebpf.io/linux/concepts/functions/#pointers-in-global-functions">documentation</a> for more detail.</p>
 <p>Let&rsquo;s take a look at the same example code, first with the static modifier:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_dereferenced_value</span>(__u32<span style="color:#f92672">*</span> foo_ptr) {
-</span></span><span style="display:flex;"><span>    __u32 foo;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        foo <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>foo_ptr;
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo+i = %d&#34;</span>, foo<span style="color:#f92672">+</span>i);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
-</span></span><span style="display:flex;"><span>    __u32 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    __u32 <span style="color:#f92672">*</span>b <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b) {
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_dereferenced_value</span>(b);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Since <code>print_dereferenced_value()</code> is static, the verifier knows that dereferencing *foo_ptr is safe, since it was already checked before the function was called.</p>
+<pre tabindex="0"><code>static __noinline int print_dereferenced_value(__u32* foo_ptr) {
+    __u32 foo;
+    int i;
+    for (i = 0; i &lt; 100; i++) {
+        foo = *foo_ptr;
+        bpf_printk(&#34;foo+i = %d&#34;, foo+i);
+    }
+    return 0;
+}
+
+SEC(&#34;uprobe/foobar&#34;)
+int foobar(struct pt_regs *ctx) {
+    __u32 a = 1;
+    __u32 *b = &amp;a;
+    if (!b) {
+        return 1;
+    }
+    print_dereferenced_value(b);
+    return 0;
+}
+</code></pre><p>Since <code>print_dereferenced_value()</code> is static, the verifier knows that dereferencing *foo_ptr is safe, since it was already checked before the function was called.</p>
 <p>By removing static, thus making print_dereferenced_value global would result in a verifier rejection for invalid memory access. As such we&rsquo;ll edit our function for safety and remove the check from the top level &lsquo;main&rsquo; function:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>__noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_dereferenced_value</span>(__u32<span style="color:#f92672">*</span> foo_ptr) {
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>foo_ptr) {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo ptr is nil&#34;</span>);
-</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    __u32 foo;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        foo <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>foo_ptr;
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo+i = %d&#34;</span>, foo<span style="color:#f92672">+</span>i);
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
-</span></span><span style="display:flex;"><span>    __u32 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
-</span></span><span style="display:flex;"><span>    __u32 <span style="color:#f92672">*</span>b <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
-</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_dereferenced_value</span>(b);
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Now let&rsquo;s look at the complexity comparison:</p>
+<pre tabindex="0"><code>__noinline int print_dereferenced_value(__u32* foo_ptr) {
+    if (!foo_ptr) {
+        bpf_printk(&#34;foo ptr is nil&#34;);
+        return -1;
+    }
+    __u32 foo;
+    int i;
+    for (i = 0; i &lt; 100; i++) {
+        foo = *foo_ptr;
+        bpf_printk(&#34;foo+i = %d&#34;, foo+i);
+    }
+    return 0;
+}
+
+SEC(&#34;uprobe/foobar&#34;)
+int foobar(struct pt_regs *ctx) {
+    __u32 a = 1;
+    __u32 *b = &amp;a;
+    print_dereferenced_value(b);
+    return 0;
+}
+</code></pre><p>Now let&rsquo;s look at the complexity comparison:</p>
 <p>Static:</p>
 <pre tabindex="0"><code>- Filename/Program: foo/foobar
 - Stack Usage: 4
@@ -252,11 +252,11 @@ Total States: 6
 - Peak States: 18
 - Total States: 18
 </code></pre><p>Again, the instruction count got marginally worse! However, we knew this would happen as we had to add extra instructions for checking if pointer is nil. The complexity benefit to global functions can be seen over multiple invocations:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
-</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">print_dereferenced_value</span>(b);
-</span></span><span style="display:flex;"><span>    }
-</span></span></code></pre></div><p>Static:</p>
+<pre tabindex="0"><code>    int i;
+    for(i = 0; i &lt; 100; i++) {
+        print_dereferenced_value(b);
+    }
+</code></pre><p>Static:</p>
 <pre tabindex="0"><code>- Filename/Program: foo/foobar
 - Stack Usage: 4
 - Instructions Processed: 161305
