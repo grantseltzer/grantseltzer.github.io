@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="generator" content="Hugo 0.147.3">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -153,7 +153,7 @@
 <p>This could be a controversial one. The seccomp man page and community typically encourages creating an allowlist. This means specifying what system calls are allowed, and denying all others by default. This would protect you in the case that a new system call is introduced in a newer kernel which is potentially dangerous.</p>
 <p>However, I feel this is too much of an ask for most users. The lift to profile an application is heavy, and fragile. Non-profiling techniques include static analysis which isn&rsquo;t effective.</p>
 <p>Missing a needed system call is way too common of an occurrence. If the generated profile breaks user&rsquo;s applications they aren&rsquo;t going to give Karn another chance. The added benefit from denying large swaths of dangerous system calls is so great that it&rsquo;s worth the small risk of missing one if it&rsquo;ll actually be used.</p>
-<h2 id="bget-startedb"><!-- raw HTML omitted -->Get Started!<!-- raw HTML omitted --></h2>
+<h2 id="get-started"><!-- raw HTML omitted -->Get Started!<!-- raw HTML omitted --></h2>
 <p>For more hands on documentation check out the <a href="https://github.com/grantseltzer/karn/blob/master/docs/quickstart.md">quickstart</a> over on github. Feel free to reach out on twitter to discuss, or if i&rsquo;ve convinced you to give Karn a try I encourage you to create issues or make a contribution! Above all, I hope you keep in mind the balance worth striking between effective and usable security.</p>
 
 

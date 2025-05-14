@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="generator" content="Hugo 0.147.3">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -129,7 +129,6 @@
     <h4>September 14, 2018</h4>
     <div id="text-content">
         <!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
 <p>Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.</p>
 <p>If you&rsquo;re not up to snuff on reading x86_64 assembly, don&rsquo;t worry, most of us aren&rsquo;t. You don&rsquo;t have to read any assembly for the purpose of this post, although it may make it more interesting. For an introduction to x86 assembly I highly recommend <a href="https://www.nayuki.io/page/a-fundamental-introduction-to-x86-assembly-programming">this article</a>.</p>
 <p>So, what is disassembly?</p>
@@ -139,7 +138,6 @@
 <p><img src="/dissecting/DisassemblerDiagram.png" alt="Disassembly"></p>
 <p>Thankfully Go has a fantastic standard toolchain that lets you play with this process. You can see the assembly code before it gets turned into 1’s and 0’s by compiling your program with the following command: <!-- raw HTML omitted --><code>go build -gcflags -S program.go</code>.<!-- raw HTML omitted --> If you already have a compiled program and want to see the assembly code you can disassemble it with <!-- raw HTML omitted --><code>go tool objdump binaryFile</code><!-- raw HTML omitted -->.</p>
 <p>We could end this post right here but I think it&rsquo;d be a lot more interesting to build a disassembler ourselves. Let&rsquo;s do that.</p>
-<!-- raw HTML omitted -->
 <p>First of all, in order to build a disassembler we need to know what all of the binary machine code translates to in assembly instructions. To do this we must have a reference for all assembly instructions for the architecture of the compiled binary. If you&rsquo;re not familiar with this task you wouldn&rsquo;t think it&rsquo;d be so difficult. However, there are multiple micro-architectures, assembly syntaxes, sparsely-documented instructions, and encoding schemes that change over time. If you want more analysis on why this is difficult I enjoy <a href="https://stefanheule.com/blog/how-many-x86-64-instructions-are-there-anyway/">this article</a>.</p>
 <p>Thankfully all of the heavy lifting has been done for us by the authors and maintainers of <a href="http://www.capstone-engine.org/">Capstone</a>, a disassembly framework. Capstone is widely accepted as the standard to use for writing disassembly tools. Reimplementing it would be quite a daunting, albeit educational, task so we won&rsquo;t be doing that as part of this post. Using Capstone in Go is as simple as importing its cleverly named Go bindings, <a href="https://github.com/bnagy/gapstone">gapstone</a>:</p>
 <script src="https://gist.github.com/grantseltzer/85452bdb369315a79beb619c5544e2a9.js"></script>
@@ -154,7 +152,6 @@
 <pre tabindex="0"><code>$~ go run main.go
 0x0:	mov		rcx, qword ptr fs:[0xfffffffffffffff8]
 </code></pre><p>With these tools our only real task is to extract the relevant raw bytes from the binary file and feed it through Capstone&rsquo;s engine.</p>
-<!-- raw HTML omitted -->
 <p>When you compile a Go program on your laptop the outputted binary will likely default to a 64-bit ELF (or <code>Executable Linkable Format</code>). The ELF is organized into various sections that each have a unique purpose such as storing version information, program metadata, or executable code. The ELF is a widely accepted standard for binary files and as such Go has a <code>debug/elf</code> package for easily interacting with them. There are many intricacies to the <a href="http://man7.org/linux/man-pages/man5/elf.5.html">ELF format specification</a> but for the sake of disassembly we really only care about two sections. We care about the symbol table section and the text section. Let&rsquo;s take a look:</p>
 <p><img src="/dissecting/ELF_64.png" alt="ELF64"></p>
 <p>First let&rsquo;s define the term <strong>symbol</strong>. This is any name identifiable object in our code. Variables, functions, types, and constants are all symbols. The Go compiler compiles each symbol and stores reference information about it in the <strong>symbol table</strong>. We can see in the <code>debug/elf</code> package&rsquo;s definition of <code>Symbol</code> that each entry in the symbol table contains the symbol&rsquo;s name, size, memory offset, and type:</p>

@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.147.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px) {
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
+
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
+
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Global bpf Functions</h1>
+    <h4>May 11, 2025</h4>
+    <div id="text-content">
+        <p>The <a href="https://docs.ebpf.io/linux/concepts/verifier/">bpf verifier</a> is tasked with ensuring that bpf programs that are loaded will predictably halt and run safely. It follows all branches of bpf instructions, counting each instruction as another permutation of the program&rsquo;s state. As it counts, there&rsquo;s a limit of 1 million instructions.</p>
+<p>If you&rsquo;ve been writing bpf programs for a long time or have been looking at outdated examples then you&rsquo;re probably familiar with using the <code>static</code> modifier and <code>__always_inline</code> macro.</p>
+<p>Prior to kernel 4.16 (Release Apr 2018), all functions in a bpf program in fact needed to be inlined. Starting with this release you could do what&rsquo;s called <a href="https://docs.cilium.io/en/stable/reference-guides/bpf/architecture/#bpf-to-bpf-calls">bpf to bpf function calls</a>. However, I didn&rsquo;t realize this until recently (while developing for a 5.15 kernel&hellip;). As any bpf developer would know, documentation is sparse and it&rsquo;s hard to know when things change. Therefore, I&rsquo;d like to explore what inlining does for your program and how preventing function inlining for it expands the capability of bpf programs.</p>
+<p>Let&rsquo;s take a look at a simple bpf program:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __always_inline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_map_value</span>() {
+</span></span><span style="display:flex;"><span>    __u32 key <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    __u64 <span style="color:#f92672">*</span>val <span style="color:#f92672">=</span> <span style="color:#a6e22e">bpf_map_lookup_elem</span>(<span style="color:#f92672">&amp;</span>value_map, <span style="color:#f92672">&amp;</span>key);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>val) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;val: %d&#34;</span>, val);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
+</span></span><span style="display:flex;"><span>    __u64 val <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    __u32 key <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">bpf_map_update_elem</span>(<span style="color:#f92672">&amp;</span>value_map, <span style="color:#f92672">&amp;</span>key, <span style="color:#f92672">&amp;</span>val, <span style="color:#ae81ff">0</span>);
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>We are using the <code>__always_inline</code> macro, and as such each <code>print_map_value()</code> function call is going to be replaced by the full body of <code>print_map_value()</code>. So our bpf program will end up having 3 copies of the same set of instructions one after another.</p>
+<p>You can verify this by compiling the program and using <code>llvm-objdump -d &lt;object_file&gt;</code>.</p>
+<p>Demonstrating inlining is not the purpose of this post though. The purpose is to discuss how this affects the number of instructions counted by the verifier.</p>
+<p>I&rsquo;m going to run the above program once compiled through the verifier <em>(via a <a href="https://github.com/DataDog/datadog-agent/tree/main/pkg/ebpf/verifier/calculator">tool</a> my coworkers wrote)</em> and determine how many instructions the verifier counts:</p>
+<pre tabindex="0"><code>Filename/Program: foo/foobar  
+Stack Usage: 28  
+Instructions Processed: 56  
+Instructions Processed Limit: 1000000  
+Max States per Instruction: 0  
+Peak States: 4  
+Total States: 4  
+</code></pre><p>Now let&rsquo;s adapt our code to discourage inlining:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_map_value</span>() {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
+</span></span><span style="display:flex;"><span>    ...
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_map_value</span>();
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Running it through the same tool:</p>
+<pre tabindex="0"><code>Filename/Program: foo/foobar
+Stack Usage: 12
+Instructions Processed: 64
+Instructions Processed Limit: 1000000
+Max States per Instruction: 0
+Peak States: 6
+Total States: 6
+</code></pre><p>The instruction count got worse! The verifier still has to count each instruction as a possible state. Forcing functions to not be inlined means that we&rsquo;re adding instructions for setting up and tearing down a stack for each frame.</p>
+<p>However, the stack usage improved! The stack gets cleared when each function call returns, so this is an important consideration.</p>
+<h3 id="static-vs-global-functions">Static vs Global Functions</h3>
+<p>As you see above we&rsquo;ve modified our helper function <code>print_map_value()</code> with the <code>static</code> keyword. Static functions maintain the verifier context of the function which called them. If a variable that is known to be of a certain range is passed to a static function, that range is still known. Conversely, if a function is not static (therefore global), then this context is not kept and the range and validity of passed variables is not kept. This has both benefit and detriment.</p>
+<p>The benefit of a global function is that it is only verified once independently of its invocations. Meaning that even if a global function is called 100 times, it&rsquo;s only verified once (unless it&rsquo;s also inlined). This is hugely beneficial in many applications for the sake of staying under the verifier complexity threshold.</p>
+<p>Conversely, the challenge this presents is that global functions have to check the values of their parameters. If a function isn&rsquo;t called many times this can therefore increases the counted complexity of a program. There are also limitations on the types of parameters or returns of global functions. See <a href="https://docs.ebpf.io/linux/concepts/functions/#pointers-in-global-functions">documentation</a> for more detail.</p>
+<p>Let&rsquo;s take a look at the same example code, first with the static modifier:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span><span style="color:#66d9ef">static</span> __noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_dereferenced_value</span>(__u32<span style="color:#f92672">*</span> foo_ptr) {
+</span></span><span style="display:flex;"><span>    __u32 foo;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        foo <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>foo_ptr;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo+i = %d&#34;</span>, foo<span style="color:#f92672">+</span>i);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
+</span></span><span style="display:flex;"><span>    __u32 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    __u32 <span style="color:#f92672">*</span>b <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>b) {
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_dereferenced_value</span>(b);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Since <code>print_dereferenced_value()</code> is static, the verifier knows that dereferencing *foo_ptr is safe, since it was already checked before the function was called.</p>
+<p>By removing static, thus making print_dereferenced_value global would result in a verifier rejection for invalid memory access. As such we&rsquo;ll edit our function for safety and remove the check from the top level &lsquo;main&rsquo; function:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>__noinline <span style="color:#66d9ef">int</span> <span style="color:#a6e22e">print_dereferenced_value</span>(__u32<span style="color:#f92672">*</span> foo_ptr) {
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>foo_ptr) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo ptr is nil&#34;</span>);
+</span></span><span style="display:flex;"><span>        <span style="color:#66d9ef">return</span> <span style="color:#f92672">-</span><span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    __u32 foo;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span> (i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        foo <span style="color:#f92672">=</span> <span style="color:#f92672">*</span>foo_ptr;
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">bpf_printk</span>(<span style="color:#e6db74">&#34;foo+i = %d&#34;</span>, foo<span style="color:#f92672">+</span>i);
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#a6e22e">SEC</span>(<span style="color:#e6db74">&#34;uprobe/foobar&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">foobar</span>(<span style="color:#66d9ef">struct</span> pt_regs <span style="color:#f92672">*</span>ctx) {
+</span></span><span style="display:flex;"><span>    __u32 a <span style="color:#f92672">=</span> <span style="color:#ae81ff">1</span>;
+</span></span><span style="display:flex;"><span>    __u32 <span style="color:#f92672">*</span>b <span style="color:#f92672">=</span> <span style="color:#f92672">&amp;</span>a;
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">print_dereferenced_value</span>(b);
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> <span style="color:#ae81ff">0</span>;
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Now let&rsquo;s look at the complexity comparison:</p>
+<p>Static:</p>
+<pre tabindex="0"><code>- Filename/Program: foo/foobar
+- Stack Usage: 4
+- Instructions Processed: 1612
+- Instructions Processed limit: 1000000
+- Max States per Instruction: 4
+- Peak States: 109
+- Total States: 109
+</code></pre><p>Global:</p>
+<pre tabindex="0"><code>- Filename/Program: foo/foobar
+- Stack Usage: 4
+- Instructions Processed: 1629
+- Instructions Processed limit: 1000000
+- Max States per Instruction: 4
+- Peak States: 18
+- Total States: 18
+</code></pre><p>Again, the instruction count got marginally worse! However, we knew this would happen as we had to add extra instructions for checking if pointer is nil. The complexity benefit to global functions can be seen over multiple invocations:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c" data-lang="c"><span style="display:flex;"><span>    <span style="color:#66d9ef">int</span> i;
+</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">for</span>(i <span style="color:#f92672">=</span> <span style="color:#ae81ff">0</span>; i <span style="color:#f92672">&lt;</span> <span style="color:#ae81ff">100</span>; i<span style="color:#f92672">++</span>) {
+</span></span><span style="display:flex;"><span>        <span style="color:#a6e22e">print_dereferenced_value</span>(b);
+</span></span><span style="display:flex;"><span>    }
+</span></span></code></pre></div><p>Static:</p>
+<pre tabindex="0"><code>- Filename/Program: foo/foobar
+- Stack Usage: 4
+- Instructions Processed: 161305
+- Instructions Processed limit: 1000000
+- Max States per Instruction: 4
+- Peak States: 1555
+- Total States: 1555
+</code></pre><p>Global:</p>
+<pre tabindex="0"><code>- Filename/Program: foo/foobar
+- Stack Usage: 4
+- Instructions Processed: 2427
+- Instructions Processed limit: 1000000
+- Max States per Instruction: 4
+- Peak States: 32
+- Total States: 32
+</code></pre><p>Now we see the improvement! In this case we&rsquo;re only using instructions towards the complexity limit for the sake of making a function call, no matter how big that function is.</p>
+<p>The verifier really only cares that a program will halt, it doesn&rsquo;t set a complexity limit for the sake of setting a limit. As such, if it knows that a function independently will always halt, calling it a limited number of times will not affect its quality of doing so.</p>
+
+
+        
+    </div>
+
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
+</html>
