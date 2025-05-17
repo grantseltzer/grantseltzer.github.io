@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 11 May 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://grantseltzer.github.io/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>Global bpf Functions</title>
-      <link>https://grantseltzer.github.io/blog/inlining/</link>
+      <title>Global No-Inline BPF Functions</title>
+      <link>https://grantseltzer.github.io/blog/global-noinline/</link>
       <pubDate>Sun, 11 May 2025 00:00:00 +0000</pubDate>
-      <guid>https://grantseltzer.github.io/blog/inlining/</guid>
+      <guid>https://grantseltzer.github.io/blog/global-noinline/</guid>
       <description>&lt;p&gt;The &lt;a href=&#34;https://docs.ebpf.io/linux/concepts/verifier/&#34;&gt;bpf verifier&lt;/a&gt; is tasked with ensuring that bpf programs that are loaded will predictably halt and run safely. It follows all branches of bpf instructions, counting each instruction as another permutation of the program&amp;rsquo;s state. As it counts, there&amp;rsquo;s a limit of 1 million instructions.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;ve been writing bpf programs for a long time or have been looking at outdated examples then you&amp;rsquo;re probably familiar with using the &lt;code&gt;static&lt;/code&gt; modifier and &lt;code&gt;__always_inline&lt;/code&gt; macro.&lt;/p&gt;</description>
     </item>
     <item>
