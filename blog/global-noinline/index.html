@@ -184,7 +184,7 @@ Instructions Processed Limit: 1000000
 Max States per Instruction: 0
 Peak States: 6
 Total States: 6
-</code></pre><p>The instruction count got worse! The verifier still has to count each instruction as a possible state. Forcing functions to not be inlined means that we&rsquo;re adding instructions for setting up and tearing down a stack for each frame.</p>
+</code></pre><p>The instruction count got worse! The verifier still has to count each instruction as a possible state. Forcing functions to not be inlined also means that we&rsquo;re adding a call instruction to the outer calling function. Sometimes there will also be more instructions to spill caller registers.</p>
 <p>However, the stack usage improved! The stack gets cleared when each function call returns, so at least there&rsquo;s that.</p>
 <h3 id="static-vs-global-functions">Static vs Global Functions</h3>
 <p>As you see above we&rsquo;ve modified our helper function <code>print_map_value()</code> with the <code>static</code> keyword. Static functions maintain the verifier context of the function which called them. If a variable that is known to be of a certain range is passed to a static function, that range is still known. This means the verifier can&rsquo;t trust that a static function will run the same way every time it&rsquo;s called, and therefore must be verified for each invocation.</p>
@@ -274,6 +274,7 @@ int foobar(struct pt_regs *ctx) {
 - Total States: 32
 </code></pre><p>Now we see the improvement! In this case we&rsquo;re only using instructions towards the complexity limit for the sake of making a function call, no matter how big that function is.</p>
 <p>The verifier really only cares that a program will halt, it doesn&rsquo;t set a complexity limit for the sake of setting a limit. As such, if it knows that a function independently will always halt, calling it a limited number of times will not affect its quality of doing so.</p>
+<p>While this helps us as bpf developers get through verifier restrictions, there is a notable trade off of global functions which is that it can lead to programs that are less efficient. This is because you need to re-check the properties of arguments for each function call. Even though they don&rsquo;t increase the instruction count from the verifier&rsquo;s perspective, they do still get run and therefore add runtime overhead every time the function is called. Use this knowledge to your advantage, and be aware of all the trade-offs.</p>
 
 
         
