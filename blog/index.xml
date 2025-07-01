@@ -6,8 +6,15 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 11 May 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 21 Jun 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Replacing procfs with bpf</title>
+      <link>https://grantseltzer.github.io/blog/bpf-iter/</link>
+      <pubDate>Sat, 21 Jun 2025 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/blog/bpf-iter/</guid>
+      <description>&lt;p&gt;The &lt;a href=&#34;https://man7.org/linux/man-pages/man5/proc.5.html&#34;&gt;proc file system&lt;/a&gt; provides to users information about the processes on a running linux system via a file system interface. The directory structure is organized such that every process has its own directory. The files in the directory are useful for finding out permissions, state, open files, and more. I wrote a &lt;a href=&#34;https://www.grant.pizza/blog/procfs/&#34;&gt;small post&lt;/a&gt; about it in 2019.&lt;/p&gt;&#xA;&lt;p&gt;Commonly used utilities like &lt;code&gt;ps&lt;/code&gt; and &lt;code&gt;top&lt;/code&gt; work by iterating over every directory in the procfs and reading the files like &lt;code&gt;stat&lt;/code&gt; and &lt;code&gt;status&lt;/code&gt;. The files themselves &lt;a href=&#34;https://docs.kernel.org/filesystems/vfs.html&#34;&gt;aren&amp;rsquo;t real files&lt;/a&gt;, so reading each of these files doesn&amp;rsquo;t involve reading from disk at all. However, performance wise, reading of each file &lt;em&gt;does&lt;/em&gt; pay the cost of the system calls used as if they were disk backed. A simple strace on my system shows that for each process ps calls 7 system calls (newfstatat x3, openat, read, close).&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Global No-Inline BPF Functions</title>
       <link>https://grantseltzer.github.io/blog/global-noinline/</link>
@@ -174,7 +181,7 @@
       <link>https://grantseltzer.github.io/blog/dissecting-go-binaries/</link>
       <pubDate>Fri, 14 Sep 2018 03:32:37 +0000</pubDate>
       <guid>https://grantseltzer.github.io/blog/dissecting-go-binaries/</guid>
-      <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t worry, most of us aren&amp;rsquo;t. You don&amp;rsquo;t have to read any assembly for the purpose of this post, although it may make it more interesting. For an introduction to x86 assembly I highly recommend &lt;a href=&#34;https://www.nayuki.io/page/a-fundamental-introduction-to-x86-assembly-programming&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;</description>
+      <description>&lt;!-- raw HTML omitted --&gt;&#xA;&lt;!-- raw HTML omitted --&gt;&#xA;&lt;p&gt;Assembly code cannot lie. By reading assembly we become as close as possible to knowing what’s being run on our computer chips. This is exactly why disassembly is important! If you have a binary with malicious intentions, disassembling it will expose them. If you can&amp;rsquo;t figure out a performance bottleneck in your code, you can disassemble it for clarity.&lt;/p&gt;&#xA;&lt;p&gt;If you&amp;rsquo;re not up to snuff on reading x86_64 assembly, don&amp;rsquo;t worry, most of us aren&amp;rsquo;t. You don&amp;rsquo;t have to read any assembly for the purpose of this post, although it may make it more interesting. For an introduction to x86 assembly I highly recommend &lt;a href=&#34;https://www.nayuki.io/page/a-fundamental-introduction-to-x86-assembly-programming&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;</description>
     </item>
   </channel>
 </rss>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="generator" content="Hugo 0.134.3">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+        }
+
+        #title {
+            font-family: "Open Sans", sans-serif;
+            padding-top: 100px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 0;
+            margin-bottom: 0;
+            font-size: 50px;
+            border-top: solid;
+        }
+
+        #text-content {
+            padding-left: 30px;
+            float: center;
+            width: 75%;
+            font-family: "Open Sans", sans-serif;
+            font-size: 20px;
+            line-height: 40px;
+        }
+
+        pre code {
+            padding: 1rem 1.5rem;
+            border-radius: 4px;
+            display: block;
+            border: 3px solid white;
+            color: black;
+            line-height: 25px;
+            overflow: scroll;
+        }
+
+        code {
+            font-family: monospace;
+            margin: 0 .2rem;
+            font-size: 100%;
+            background: #F1F1F1;
+            border: 1px solid #d1d1d1;
+            white-space: pre;
+            overflow: scroll;
+        }
+
+        #topbar {
+            position: fixed;
+            border-top: solid;
+            border-bottom: solid;
+            border-bottom-width: 2px;
+            border-bottom-style: ridge;
+            width: 100%;
+            opacity: 0.9;
+            background-color: rgb(255, 255, 255);
+        }
+
+        #homelink {
+            padding-top: 25px;
+            font-size: 30px;
+            font-style: italic;
+            font-weight: bold;
+            text-shadow: 1px 1px 1px grey;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        @media (min-width: 1000px) {
+            #talk-content {
+                display: block;
+                text-align: center;
+                font-family: "Open Sans", sans-serif;
+                font-size: 20px;
+            }
+
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 70%;
+                height: auto;
+            }
+        }
+
+        @media (max-width: 999px) {
+            img {
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+                width: 90%;
+                height: auto;
+            }
+        }
+
+        a {
+            text-decoration: none;
+            color: black;
+            font-weight: bold;
+            line-height: 1.3em;
+        }
+
+        a:hover {
+            font-style: italic;
+            border-bottom: 5px solid yellow
+        }
+
+        .copyright {
+            padding-top: 50px;
+            display: block;
+            text-align: center;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="topbar">
+        <a id="homelink" href="/">GSR</a>
+    </div>
+
+    <h1 id="title">Replacing procfs with bpf</h1>
+    <h4>June 21, 2025</h4>
+    <div id="text-content">
+        <p>The <a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc file system</a> provides to users information about the processes on a running linux system via a file system interface. The directory structure is organized such that every process has its own directory. The files in the directory are useful for finding out permissions, state, open files, and more. I wrote a <a href="https://www.grant.pizza/blog/procfs/">small post</a> about it in 2019.</p>
+<p>Commonly used utilities like <code>ps</code> and <code>top</code> work by iterating over every directory in the procfs and reading the files like <code>stat</code> and <code>status</code>. The files themselves <a href="https://docs.kernel.org/filesystems/vfs.html">aren&rsquo;t real files</a>, so reading each of these files doesn&rsquo;t involve reading from disk at all. However, performance wise, reading of each file <em>does</em> pay the cost of the system calls used as if they were disk backed. A simple strace on my system shows that for each process ps calls 7 system calls (newfstatat x3, openat, read, close).</p>
+<p>I bring up performance because there&rsquo;s another convenient way of gathering this information which is far more performant. It&rsquo;s called the task bpf iterator.</p>
+<h3 id="bpf-iterators">bpf iterators</h3>
+<p><em>From <a href="https://docs.kernel.org/bpf/bpf_iterators.html">kernel docs</a>:</em></p>
+<pre tabindex="0"><code>A BPF iterator is a type of BPF program that allows users to iterate over specific types of kernel objects. Unlike traditional BPF tracing programs that allow users to define callbacks that are invoked at particular points of execution in the kernel, BPF iterators allow users to define callbacks that should be executed for every entry in a variety of kernel data structures.
+</code></pre><p>There&rsquo;s one such bpf iterator already implemented for the <code>task_struct</code>, the kernel&rsquo;s representation of a process. We can write a bpf program which, when manually activated, gets called on each <code>task_struct</code>. So instead of iterating over each directory in procfs, we can write a bpf program that iterates over each task. This means one activation of the iterator, and not switching between kernel/user contexts for every single process by using lots of system calls.</p>
+<p>Here&rsquo;s an example task bpf iterator program:</p>
+<pre tabindex="0"><code>SEC(&#34;iter/task&#34;)
+int ps(struct bpf_iter__task *ctx)
+{
+	struct seq_file *seq = ctx-&gt;meta-&gt;seq;
+	struct task_struct *task = ctx-&gt;task;
+	if (task == NULL) {
+		return 0;
+	}
+	// Only process thread group leaders (to dedepulicate threads)
+	if (task-&gt;group_leader != task) {
+		return 0;
+	}
+
+	info_t info = {
+		.pid = task-&gt;tgid,
+		.ppid = task-&gt;parent-&gt;tgid,
+		.uid = task-&gt;cred-&gt;uid.val,
+		.gid = task-&gt;cred-&gt;gid.val,
+	};
+
+	long err = bpf_probe_read_kernel_str(info.comm, sizeof(info.comm), (void *)task-&gt;comm);
+	if (err &lt; 0) {
+		bpf_printk(&#34;could not read kernel str comm: %ld&#34;, err);
+		return 0;
+	}
+	err = bpf_seq_write(seq, &amp;info, sizeof(info));
+	if (err &lt; 0) {
+		bpf_printk(&#34;could not seq write: %ld&#34;, err);
+		return 0;
+	}
+	return 0;
+}
+</code></pre><p>The kernel docs linked above do a good job explaining about the sequence file structure so I won&rsquo;t break it down line by line. The only thing you need in order to understand what this program is doing is that it&rsquo;s called on each task tracked by the running kernel. On each invocation, <code>ctx-&gt;task</code> references the target task.</p>
+<p>In the simple example above we populate a struct with relevant fields (pid, ppid, uid, gid, comm) and write it as binary data to a sequential file.</p>
+<h3 id="user-space">User space</h3>
+<p>A nice thing about the design of bpf iterators is that they&rsquo;re triggered on demand. When you load a bpf iterator, making a <code>read</code> system call on the resulting file descriptor will cause the bpf iterator to trigger. The result of the read call will be the combined sequential output of the bpf program.</p>
+<p>In the case of our bpf program above, the resulting output data will be the binary data of each populated <code>info_t</code>. Here&rsquo;s code in Go that loads, reads, and decodes this data:</p>
+<pre tabindex="0"><code>...
+    // Load the compiled bpf object
+	collection, err := ebpf.LoadCollection(&#34;task.bpf.o&#34;)
+	if err != nil {
+		log.Fatalf(&#34;Failed to load module: %v&#34;, err)
+	}
+
+	// Get the iterator program from the loaded object
+	taskDump, ok := collection.Programs[&#34;ps&#34;]
+	if !ok {
+		log.Fatal(&#34;no task dump&#34;)
+	}
+
+	// Attach the iterator program
+	iter, err = link.AttachIter(link.IterOptions{
+		Program: taskDump,
+	})
+	if err != nil {
+		log.Fatalf(&#34;Failed to load module: %v&#34;, err)
+	}
+
+	// Open the iterator to get an io.ReadCloser
+	reader, err := iter.Open()
+	if err != nil {
+		log.Fatalf(&#34;Failed to open iterator: %v&#34;, err)
+	}
+
+	wholeBuffer := []byte{}
+	tempBuf := make([]byte, 1024)
+
+	for {
+		// Read from the reader
+		n, err := reader.Read(tempBuf)
+		if err != nil &amp;&amp; err != io.EOF {
+			log.Printf(&#34;Failed to read: %v&#34;, err)
+			break
+		}
+		if err == io.EOF {
+			break
+		}
+		wholeBuffer = append(wholeBuffer, tempBuf[:n]...)
+	}
+
+	// Decode the binary data into a Go struct with same framing as info_t
+	infos := ProcsInfo{}
+	infoSize := int(unsafe.Sizeof(Info{}))
+	for i := 0; i &lt; len(wholeBuffer); i += infoSize {
+		if i+infoSize &lt;= len(wholeBuffer) {
+			info := (*Info)(unsafe.Pointer(&amp;wholeBuffer[i]))
+			infos[int(info.pid)] = info
+		}
+	}
+
+	// Print result
+	for pid, info := range p {
+		fmt.Printf(&#34;PID: %d, PPID: %d, UID: %d, GID: %d, Comm: %s\n&#34;, pid, info.ppid, info.uid, info.gid, info.comm)
+	}
+</code></pre><p>Output:</p>
+<pre tabindex="0"><code>[*] sudo ./bpf-iter-test                                                                                                                
+
+PID: 50, PPID: 2, UID: 0, GID: 0, Comm: kworker/R-kinte
+PID: 776901, PPID: 2, UID: 0, GID: 0, Comm: kworker/1:3
+PID: 883945, PPID: 294281, UID: 1000, GID: 1000, Comm: node
+PID: 33, PPID: 2, UID: 0, GID: 0, Comm: cpuhp/3
+PID: 85, PPID: 2, UID: 0, GID: 0, Comm: kworker/R-charg
+...
+</code></pre><h3 id="why-bpf-is-faster">Why BPF is Faster</h3>
+<p>The performance difference comes from several key factors:</p>
+<p><strong>System Call Overhead</strong>: Traditional procfs reading requires multiple system calls per process (stat, open, read, close). With 1000 processes, that&rsquo;s 4000+ system calls. BPF iterators use just one system call regardless of process count.</p>
+<p><strong>Context Switching</strong>: Each system call involves expensive user-to-kernel context switches. BPF iterators eliminate this per-process overhead by running entirely in kernel space until completion.</p>
+<p><strong>Direct Data Access</strong>: BPF programs access kernel data structures directly, avoiding the filesystem abstraction layer that procfs uses. This eliminates file system overhead and buffer copying.</p>
+<p><strong>Batch Processing</strong>: Instead of processing one process at a time, the BPF iterator processes all tasks in a single kernel operation, improving CPU cache efficiency and reducing overall latency.</p>
+<h3 id="pinning">pinning</h3>
+<p>Another possible improvement is to pin the bpf iterator program to a file. This approach is particularly useful for monitoring systems that need to run as non-root users but still need access to process information.</p>
+<p>Here&rsquo;s how to pin the iterator:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-go" data-lang="go"><span style="display:flex;"><span><span style="color:#75715e">// After attaching the iterator
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#a6e22e">err</span> = <span style="color:#a6e22e">iter</span>.<span style="color:#a6e22e">Pin</span>(<span style="color:#e6db74">&#34;/sys/fs/bpf/my_task_iter&#34;</span>)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> <span style="color:#a6e22e">err</span> <span style="color:#f92672">!=</span> <span style="color:#66d9ef">nil</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Fatalf</span>(<span style="color:#e6db74">&#34;Failed to pin iterator: %v&#34;</span>, <span style="color:#a6e22e">err</span>)
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><p>Once pinned, any user with permissions to read this file can read the data with <code>cat /sys/fs/bpf/my_task_iter</code>.</p>
+<h1 id="comparison">Comparison</h1>
+<h3 id="benchmarks">Benchmarks</h3>
+<p>I ran benchmarks on current code in the datadog-agent which reads the relevant data from procfs as described at the beginning of this post. I then implemented benchmarks for capturing the same data with bpf. The performance results were a major improvement.</p>
+<p>On a linux system with around 250 Procs it took the procfs implemention 5.45 ms vs 75.6 us for bpf (<strong>bpf is ~72x faster</strong>). On a linux system with around 10,000 Procs it took the procfs implemention ~296ms ms vs 3ms us for bpf (<strong>bpf is ~100x faster</strong>).</p>
+<h3 id="more-info-more-iterators">More Info, More Iterators</h3>
+<p>There is more information we can get from bpf iterator that we can&rsquo;t from procfs as well. For example:</p>
+<ul>
+<li>Scheduling stats, vruntime, load weight, schedule policy</li>
+<li>Memory management internals</li>
+<li>Security credentials (cred, seccomp, lsm labels)</li>
+<li>Namespace pointers</li>
+<li>Cgroup details</li>
+<li>Signal handling internals</li>
+<li>&hellip;</li>
+</ul>
+<p>These above ideas are only from the task iterator, there&rsquo;s also already upstream iteartors for:</p>
+<ul>
+<li>Open Files</li>
+<li>Virtual memory areas</li>
+<li>Sockets</li>
+<li>Bpf maps/programs</li>
+<li>Kernel symbols</li>
+</ul>
+<p>Any kernel object can have an iterator implemented for it as well!</p>
+<p>The future of system monitoring is increasingly moving toward bpf, and task iterators are just one example of how it can solve real performance problems in production systems.</p>
+
+
+        
+    </div>
+
+    <span class="copyright">copyright 2018 - 2025</span>
+
+</body>
+
+</html>

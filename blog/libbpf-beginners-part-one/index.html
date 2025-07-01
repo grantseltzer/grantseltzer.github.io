@@ -3,7 +3,7 @@
 <head>
 
     <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.147.3">
+    <meta name="generator" content="Hugo 0.134.3">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 
@@ -200,7 +200,7 @@ int kprobe__sys_execve(struct pt_regs *ctx)
     bpf_ringbuf_submit(process, ringbuffer_flags);
     return 0;
 </code></pre><p>We&rsquo;re reserving space for a <code>struct process_info</code> on the ringbuffer, reading in the process ID, and the process name for it, and submitting it on the ringbuffer, that&rsquo;s it!</p>
-<h3 id="userspace-side-libbpfgo">Userspace side (<a href="https://github.com/aquasecurity/tracee/blob/main/libbpfgo">libbpfgo</a>)</h3>
+<h3 id="userspace-side-libbpfgohttpsgithubcomaquasecuritytraceeblobmainlibbpfgo">Userspace side (<a href="https://github.com/aquasecurity/tracee/blob/main/libbpfgo">libbpfgo</a>)</h3>
 <p>Our goal for the userspace program is to load the compiled bpf program, attach it to the appropriate kprobe, listen for the output from the ringbuffer, and clean things up when we&rsquo;re done.</p>
 <p>Since libbpf is a C library it&rsquo;s simple to create bindings for it in higher level languages, like Go. <em>If you&rsquo;d like to write your userspace code in pure C, you can follow <a href="https://nakryiko.com/posts/bpf-portability-and-co-re/">this post</a>.</em></p>
 <p>The first step is to compile the bpf code into an object file:</p>
