@@ -128,7 +128,8 @@
     <h1 id="title">Replacing procfs with bpf</h1>
     <h4>June 21, 2025</h4>
     <div id="text-content">
-        <p>The <a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc file system</a> provides to users information about the processes on a running linux system via a file system interface. The directory structure is organized such that every process has its own directory. The files in the directory are useful for finding out permissions, state, open files, and more. I wrote a <a href="https://www.grant.pizza/blog/procfs/">small post</a> about it in 2019.</p>
+        <p><em>You can find all the code displayed in this post in my repo <a href="https://github.com/grantseltzer/bpf-iter-test">here</a>.</em></p>
+<p>The <a href="https://man7.org/linux/man-pages/man5/proc.5.html">proc file system</a> provides to users information about the processes on a running linux system via a file system interface. The directory structure is organized such that every process has its own directory. The files in the directory are useful for finding out permissions, state, open files, and more. I wrote a <a href="https://www.grant.pizza/blog/procfs/">small post</a> about it in 2019.</p>
 <p>Commonly used utilities like <code>ps</code> and <code>top</code> work by iterating over every directory in the procfs and reading the files like <code>stat</code> and <code>status</code>. The files themselves <a href="https://docs.kernel.org/filesystems/vfs.html">aren&rsquo;t real files</a>, so reading each of these files doesn&rsquo;t involve reading from disk at all. However, performance wise, reading of each file <em>does</em> pay the cost of the system calls used as if they were disk backed. A simple strace on my system shows that for each process ps calls 7 system calls (newfstatat x3, openat, read, close).</p>
 <p>I bring up performance because there&rsquo;s another convenient way of gathering this information which is far more performant. It&rsquo;s called the task bpf iterator.</p>
 <h3 id="bpf-iterators">bpf iterators</h3>
@@ -279,6 +280,7 @@ PID: 85, PPID: 2, UID: 0, GID: 0, Comm: kworker/R-charg
 </ul>
 <p>Any kernel object can have an iterator implemented for it as well!</p>
 <p>The future of system monitoring is increasingly moving toward bpf, and task iterators are just one example of how it can solve real performance problems in production systems.</p>
+<p><em>You can find all the code displayed in this post in my repo <a href="https://github.com/grantseltzer/bpf-iter-test">here</a>.</em></p>
 
 
         
