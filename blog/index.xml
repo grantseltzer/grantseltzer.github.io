@@ -6,8 +6,15 @@
     <description>Recent content in Blogs on GrantSeltzer</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 21 Jun 2025 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 11 Sep 2025 00:00:00 +0000</lastBuildDate>
     <atom:link href="https://grantseltzer.github.io/blog/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>AI shouldn&#39;t have personality</title>
+      <link>https://grantseltzer.github.io/blog/chatbot-prompt/</link>
+      <pubDate>Thu, 11 Sep 2025 00:00:00 +0000</pubDate>
+      <guid>https://grantseltzer.github.io/blog/chatbot-prompt/</guid>
+      <description>&lt;p&gt;&amp;ldquo;Oh yea, now we&amp;rsquo;re getting to the fun part!&amp;rdquo;&lt;/p&gt;&#xA;&lt;p&gt;Companies like OpenAI, Meta, and Anthropic have tuned their bots to be engaging. Simulating personality can maybe be comforting to some but I find it disturbing.&lt;/p&gt;&#xA;&lt;p&gt;The implication that AI has personality can be comical, &lt;a href=&#34;https://www.nytimes.com/2025/04/24/technology/chatgpt-alexa-please-thank-you.html&#34;&gt;like how often people say please and thank you&lt;/a&gt;. It can also be extremely dangerous, especially for people with &lt;a href=&#34;https://www.wsj.com/tech/ai/chatgpt-ai-stein-erik-soelberg-murder-suicide-6b67dbfb&#34;&gt;mental illness&lt;/a&gt;.&lt;/p&gt;&#xA;&lt;p&gt;I&amp;rsquo;ve created a custom prompt that I add to my ChatGPT settings to remove this sense of self. Give it a try:&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Replacing procfs with bpf</title>
       <link>https://grantseltzer.github.io/blog/bpf-iter/</link>
