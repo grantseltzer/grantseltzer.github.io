@@ -1,0 +1,91 @@
+<!doctype html><head><meta charset=utf-8><meta name=generator content="Hugo 0.159.2"><meta name=viewport content="width=device-width,initial-scale=1"><script data-goatcounter=https://grantpizza.goatcounter.com/count async src=//gc.zgo.at/count.js></script><style>body{margin:0}#title{font-family:open sans,sans-serif;padding-top:100px;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;font-size:50px;border-top:solid}#text-content{padding-left:30px;float:center;width:75%;font-family:open sans,sans-serif;font-size:20px;line-height:40px}pre code{padding:1rem 1.5rem;border-radius:4px;display:block;border:3px solid #fff;color:#000;line-height:25px;overflow:scroll}code{font-family:monospace;margin:0 .2rem;font-size:100%;background:#f1f1f1;border:1px solid #d1d1d1;white-space:pre;overflow:scroll}#topbar{position:fixed;border-top:solid;border-bottom:solid;border-bottom-width:2px;border-bottom-style:ridge;width:100%;opacity:.9;background-color:#fff}#homelink{padding-top:25px;font-size:30px;font-style:italic;font-weight:700;text-shadow:1px 1px 1px grey;font-family:Arial,Helvetica,sans-serif}@media(min-width:1000px){#talk-content{display:block;text-align:center;font-family:open sans,sans-serif;font-size:20px}img{display:block;margin-left:auto;margin-right:auto;width:70%;height:auto}}@media(max-width:999px){img{display:block;margin-left:auto;margin-right:auto;width:90%;height:auto}}a{text-decoration:none;color:#000;font-weight:700;line-height:1.3em}a:hover{font-style:italic;border-bottom:5px solid #ff0}.copyright{padding-top:50px;display:block;text-align:center}</style></head><body><div id=topbar><a id=homelink href=/>GSR</a></div><h1 id=title>Automating bpf-next mailing list summaries</h1><h4>April 01, 2026</h4><div id=text-content><p>I try to follow the <a href=https://lore.kernel.org/bpf/>bpf-next mailing list</a> closely, but it&rsquo;s so terse sometimes that I always miss things. LWN is incredible, I&rsquo;m a long time subscriber, but there&rsquo;s still gaps I&rsquo;d like to fill. So I built a small automated system to summarize the mailing list for me and publish the results <a href=/bpf-next/>here on my site</a>. It&rsquo;s a pretty &rsquo;lightweight&rsquo; setup. A Claude agent runs every morning at 6am, fetches the Atom feed from lore.kernel.org, picks out the most notable patches, writes a structured JSON summary, and pushes it to this blog&rsquo;s <a href=https://github.com/grantseltzer/blog>repository</a>. On Mondays it also generates a weekly rollup, and on the 1st of each month a monthly one. The full prompt given to the agent is below.</p><pre tabindex=0><code>You are generating summaries of the bpf-next Linux kernel mailing list for the blog at grant.pizza.
+
+You always generate a daily summary. You also check whether to generate a weekly summary (if today is Monday) and a monthly summary (if today is the 1st of the month).
+
+## Step 1 — Determine the date and which summaries to generate
+
+Run `date -u +%Y-%m-%d` to get today&#39;s date.
+Run `date -u +%u` to get the day of week (1=Monday).
+Run `date -u +%d` to get the day of month.
+
+Always generate: daily summary (last 24 hours)
+Also generate if day-of-week == 1: weekly summary (last 7 days)
+Also generate if day-of-month == 01: monthly summary (last 30 days)
+
+## Step 2 — Fetch patches for each required window
+
+The bpf mailing list is archived at https://lore.kernel.org/bpf/
+Fetch the Atom feed: https://lore.kernel.org/bpf/new.atom
+
+For windows longer than 24 hours, paginate by appending ?o=N (e.g. ?o=200, ?o=400) until the full window is covered.
+
+For each window:
+- Filter entries whose &lt;updated&gt; timestamp falls within the window
+- Focus on patch submissions: subject lines containing [PATCH] or [RFC PATCH]
+- Ignore replies, reviews, CI bot messages, and pull request notifications
+- For each patch you select, fetch its full lore.kernel.org page to read the commit message body
+
+## Step 3 — Select notable patches per window
+
+Daily: 5–10 patches
+Weekly: 8–12 patches
+Monthly: 10–15 patches
+
+Prefer:
+- New features or subsystem additions over minor fixes
+- Core areas: verifier, BTF, kfuncs, maps, helpers, XDP, tc, ringbuf
+- Patch series cover letters ([PATCH 0/N]) when available
+- Variety across subsystems and contributors
+- For weekly/monthly: patches that sparked significant review discussion or multiple revisions
+
+## Step 4 — Find related reading
+
+For each selected patch, search the web for relevant context:
+- https://docs.kernel.org/bpf/ — kernel BPF documentation
+- https://lwn.net — articles on the topic
+- https://grant.pizza — the blog author&#39;s own posts on related topics
+- https://ebpf.io and https://docs.ebpf.io
+
+Only include links you have verified exist and are genuinely relevant. Empty related_links arrays are fine.
+
+## Step 5 — Write the JSON files
+
+For each summary you are generating, write the corresponding file.
+
+JSON schema (same for all three):
+{
+  &#34;generated_at&#34;: &#34;&lt;ISO 8601 UTC timestamp&gt;&#34;,
+  &#34;period_start&#34;: &#34;&lt;YYYY-MM-DD&gt;&#34;,
+  &#34;period_end&#34;: &#34;&lt;YYYY-MM-DD&gt;&#34;,
+  &#34;patch_count&#34;: &lt;integer&gt;,
+  &#34;thread_count&#34;: &lt;integer&gt;,
+  &#34;top_contributors&#34;: [&#34;First Last&#34;, ...],
+  &#34;key_topics&#34;: [&#34;lowercase-tag&#34;, ...],
+  &#34;overview&#34;: &#34;&lt;summary of activity: 2-3 sentences for daily, 3-4 for weekly, 4-6 for monthly&gt;&#34;,
+  &#34;patches&#34;: [
+    {
+      &#34;title&#34;: &#34;&lt;subject with [PATCH vN N/M] prefix stripped&gt;&#34;,
+      &#34;author&#34;: &#34;&lt;First Last&gt;&#34;,
+      &#34;url&#34;: &#34;&lt;full https://lore.kernel.org/bpf/... permalink&gt;&#34;,
+      &#34;summary&#34;: &#34;&lt;3-5 sentences: what it does, why it matters, relevant context&gt;&#34;,
+      &#34;related_links&#34;: [
+        {&#34;title&#34;: &#34;&lt;descriptive title&gt;&#34;, &#34;url&#34;: &#34;&lt;https://...&gt;&#34;}
+      ]
+    }
+  ]
+}
+
+File paths:
+- Daily:   data/bpf_next/daily.json
+- Weekly:  data/bpf_next/weekly.json
+- Monthly: data/bpf_next/monthly.json
+
+## Step 6 — Commit and push
+
+  git config user.email &#34;bpf-summarizer@grant.pizza&#34;
+  git config user.name &#34;bpf-summarizer&#34;
+  git add data/bpf_next/daily.json
+  # also stage weekly.json and/or monthly.json if generated
+  git commit -m &#34;bpf-next summaries $(date -u +%Y-%m-%d)&#34;
+  git push origin master
+</code></pre></div><span class=copyright>copyright 2018 - 2026</span></body></html>
