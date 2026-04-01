@@ -58,4 +58,4 @@ inline int get_arguments(struct pt_regs *ctx) {
 		bpf_probe_read(&amp;argument3, sizeof(argument3), stackAddr+17); 
 		events.perf_submit(ctx, &amp;argument3, sizeof(argument3));			
 }
-</code></pre><p><i>Full code for this example <a href=https://gist.github.com/grantseltzer/76468d7e9ab4644170d15d1a4ae39d99>here</a></i></p><p>For an example of how this process can be generalized checkout my project, <a href=https://github.com/grantseltzer/weaver>weaver</a>, which calculates offsets in Go code and generates eBPF code using a text template.</p></div><span class=copyright>copyright 2018 - 2025</span></body></html>
+</code></pre><p><i>Full code for this example <a href=https://gist.github.com/grantseltzer/76468d7e9ab4644170d15d1a4ae39d99>here</a></i></p><p>For an example of how this process can be generalized checkout my project, <a href=https://github.com/grantseltzer/weaver>weaver</a>, which calculates offsets in Go code and generates eBPF code using a text template.</p></div><span class=copyright>copyright 2018 - 2026</span></body></html>
