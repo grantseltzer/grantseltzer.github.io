@@ -1,155 +1,14 @@
-<!DOCTYPE html>
-
-<head>
-
-    <meta charset="utf-8">
-    <meta name="generator" content="Hugo 0.134.3">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script data-goatcounter="https://grantpizza.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
-
-    <style>
-        body {
-            margin: 0;
-        }
-
-        #title {
-            font-family: "Open Sans", sans-serif;
-            padding-top: 100px;
-            margin-left: auto;
-            margin-right: auto;
-            margin-top: 0;
-            margin-bottom: 0;
-            font-size: 50px;
-            border-top: solid;
-        }
-
-        #text-content {
-            padding-left: 30px;
-            float: center;
-            width: 75%;
-            font-family: "Open Sans", sans-serif;
-            font-size: 20px;
-            line-height: 40px;
-        }
-
-        pre code {
-            padding: 1rem 1.5rem;
-            border-radius: 4px;
-            display: block;
-            border: 3px solid white;
-            color: black;
-            line-height: 25px;
-            overflow: scroll;
-        }
-
-        code {
-            font-family: monospace;
-            margin: 0 .2rem;
-            font-size: 100%;
-            background: #F1F1F1;
-            border: 1px solid #d1d1d1;
-            white-space: pre;
-            overflow: scroll;
-        }
-
-        #topbar {
-            position: fixed;
-            border-top: solid;
-            border-bottom: solid;
-            border-bottom-width: 2px;
-            border-bottom-style: ridge;
-            width: 100%;
-            opacity: 0.9;
-            background-color: rgb(255, 255, 255);
-        }
-
-        #homelink {
-            padding-top: 25px;
-            font-size: 30px;
-            font-style: italic;
-            font-weight: bold;
-            text-shadow: 1px 1px 1px grey;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        @media (min-width: 1000px) {
-            #talk-content {
-                display: block;
-                text-align: center;
-                font-family: "Open Sans", sans-serif;
-                font-size: 20px;
-            }
-
-            img {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 70%;
-                height: auto;
-            }
-        }
-
-        @media (max-width: 999px) {
-            img {
-                display: block;
-                margin-left: auto;
-                margin-right: auto;
-                width: 90%;
-                height: auto;
-            }
-        }
-
-        a {
-            text-decoration: none;
-            color: black;
-            font-weight: bold;
-            line-height: 1.3em;
-        }
-
-        a:hover {
-            font-style: italic;
-            border-bottom: 5px solid yellow
-        }
-
-        .copyright {
-            padding-top: 50px;
-            display: block;
-            text-align: center;
-        }
-    </style>
-
-</head>
-
-<body>
-    <div id="topbar">
-        <a id="homelink" href="/">GSR</a>
-    </div>
-
-    <h1 id="title">BPF Attach Cookies</h1>
-    <h4>August 09, 2023</h4>
-    <div id="text-content">
-        <p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&rsquo;ll be exploring how to use it, and going over a few examples from real code i&rsquo;ve written.</p>
-<p>A cookie is just an unsigned 64-bit integer. That&rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&rsquo;s code using the go <code>cilium/ebpf</code> library to assign a cookie to a uprobe:</p>
-<pre tabindex="0"><code>l, err := executable.Uprobe(symbolName, bpfobject.UprobeProgram, &amp;link.UprobeOptions{
+<!doctype html><head><meta charset=utf-8><meta name=generator content="Hugo 0.159.2"><meta name=viewport content="width=device-width,initial-scale=1"><script data-goatcounter=https://grantpizza.goatcounter.com/count async src=//gc.zgo.at/count.js></script><style>body{margin:0}#title{font-family:open sans,sans-serif;padding-top:100px;margin-left:auto;margin-right:auto;margin-top:0;margin-bottom:0;font-size:50px;border-top:solid}#text-content{padding-left:30px;float:center;width:75%;font-family:open sans,sans-serif;font-size:20px;line-height:40px}pre code{padding:1rem 1.5rem;border-radius:4px;display:block;border:3px solid #fff;color:#000;line-height:25px;overflow:scroll}code{font-family:monospace;margin:0 .2rem;font-size:100%;background:#f1f1f1;border:1px solid #d1d1d1;white-space:pre;overflow:scroll}#topbar{position:fixed;border-top:solid;border-bottom:solid;border-bottom-width:2px;border-bottom-style:ridge;width:100%;opacity:.9;background-color:#fff}#homelink{padding-top:25px;font-size:30px;font-style:italic;font-weight:700;text-shadow:1px 1px 1px grey;font-family:Arial,Helvetica,sans-serif}@media(min-width:1000px){#talk-content{display:block;text-align:center;font-family:open sans,sans-serif;font-size:20px}img{display:block;margin-left:auto;margin-right:auto;width:70%;height:auto}}@media(max-width:999px){img{display:block;margin-left:auto;margin-right:auto;width:90%;height:auto}}a{text-decoration:none;color:#000;font-weight:700;line-height:1.3em}a:hover{font-style:italic;border-bottom:5px solid #ff0}.copyright{padding-top:50px;display:block;text-align:center}</style></head><body><div id=topbar><a id=homelink href=/>GSR</a></div><h1 id=title>BPF Attach Cookies</h1><h4>August 09, 2023</h4><div id=text-content><p>BPF has a helper function called <code>bpf_get_attach_cookie</code>. It&rsquo;s available in bpf programs like kprobes, uprobes, and tracepoints. It can be very useful for many applications so i&rsquo;ll be exploring how to use it, and going over a few examples from real code i&rsquo;ve written.</p><p>A cookie is just an unsigned 64-bit integer. That&rsquo;s it. You can assign a cookie to a bpf program when you attach it. For example, here&rsquo;s code using the go <code>cilium/ebpf</code> library to assign a cookie to a uprobe:</p><pre tabindex=0><code>l, err := executable.Uprobe(symbolName, bpfobject.UprobeProgram, &amp;link.UprobeOptions{
 	Cookie: uint64(3),
 })
-</code></pre><p>In this case, for no real reason, I&rsquo;m assigning the value 3 as the cookie.</p>
-<p>Then, in the bpf program, I can get that value using the <code>bpf_get_attach_cookie</code> helper:</p>
-<pre tabindex="0"><code>SEC(&#34;uprobe/instrument&#34;)
+</code></pre><p>In this case, for no real reason, I&rsquo;m assigning the value 3 as the cookie.</p><p>Then, in the bpf program, I can get that value using the <code>bpf_get_attach_cookie</code> helper:</p><pre tabindex=0><code>SEC(&#34;uprobe/instrument&#34;)
 int uprobe_instrument(struct pt_regs *ctx)
 {
     __u64 cookie_value = bpf_get_attach_cookie(ctx);
     bpf_printk(&#34;%d\n&#34;, cookie_value);  // prints &#34;3&#34;  
     return 0;
 }
-</code></pre><p>Cookies are useful because they allow you to provide context to your bpf program as to what it&rsquo;s attached to, or what logic it should follow. Without cookies, if you&rsquo;re sharing a single ringbuffer between multiple instances of the same bpf program, it&rsquo;s difficult to know which program the ringbuffer events came from in user space.</p>
-<h1 id="example-usage">Example usage</h1>
-<p>All code from this post can be found <a href="https://github.com/grantseltzer/bpf-cookie-examples/tree/main/cmd">here</a></p>
-<h2 id="event-context">Event Context</h2>
-<p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use different a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a unique u64 ID to each symbol&rsquo;s name.</p>
-<p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p>
-<h4 id="assigning-the-symbol-id-cookie-in-userspace">Assigning the symbol ID cookie in userspace:</h4>
-<pre tabindex="0"><code>symbolNamesToID := map[string]uint64{
+</code></pre><p>Cookies are useful because they allow you to provide context to your bpf program as to what it&rsquo;s attached to, or what logic it should follow. Without cookies, if you&rsquo;re sharing a single ringbuffer between multiple instances of the same bpf program, it&rsquo;s difficult to know which program the ringbuffer events came from in user space.</p><h1 id=example-usage>Example usage</h1><p>All code from this post can be found <a href=https://github.com/grantseltzer/bpf-cookie-examples/tree/main/cmd>here</a></p><h2 id=event-context>Event Context</h2><p>Let&rsquo;s say you&rsquo;re writing a program that attaches a single generic bpf program to multiple symbols via uprobes. The bpf program simply reads the first 50 bytes off the top of the stack on entry and sends them up to user space for analysis. In user space, we want to analyze those bytes for debugging/analysis. We can use different a cookie when we attach the bpf program to each symbol, as to tell the bpf program what symbol it&rsquo;s attached to. We&rsquo;ll assign a unique u64 ID to each symbol&rsquo;s name.</p><p>In the example code, we&rsquo;ll just communicate the symbol context back up to user space over the ringbuffer.</p><h4 id=assigning-the-symbol-id-cookie-in-userspace>Assigning the symbol ID cookie in userspace:</h4><pre tabindex=0><code>symbolNamesToID := map[string]uint64{
 	&#34;main.foobar&#34;: 1,
 	&#34;main.bazbuz&#34;: 2,
 }
@@ -163,8 +22,7 @@ for symName, symID := range symbolNamesToID {
 		log.Fatal(err)
 	}
 }
-</code></pre><h4 id="retrieving-the-symbol-id-cookie-in-bpf-and-writing-it-back-to-user-space">Retrieving the symbol ID cookie in bpf and writing it back to user space:</h4>
-<pre tabindex="0"><code>struct event {
+</code></pre><h4 id=retrieving-the-symbol-id-cookie-in-bpf-and-writing-it-back-to-user-space>Retrieving the symbol ID cookie in bpf and writing it back to user space:</h4><pre tabindex=0><code>struct event {
     __u64 event_id;
     char stack_content[50];
 };
@@ -189,8 +47,7 @@ int uprobe_instrument(struct pt_regs *ctx)
 
     return 0;
 }
-</code></pre><h4 id="reading-events-off-the-ringbuffer-in-user-space">Reading events off the ringbuffer in user space:</h4>
-<pre tabindex="0"><code>for {
+</code></pre><h4 id=reading-events-off-the-ringbuffer-in-user-space>Reading events off the ringbuffer in user space:</h4><pre tabindex=0><code>for {
 	// Blocking wait for events off ringbuffer
 	record, err := reader.Read()
 	if err != nil {
@@ -215,9 +72,7 @@ int uprobe_instrument(struct pt_regs *ctx)
 
 	fmt.Printf(&#34;The symbol %s had the first 50 stack bytes: %w\n&#34;, symbolIDToName[event.event_id], event.stack_content))
 }
-</code></pre><h2 id="filtering">Filtering</h2>
-<p>Many bpf-based projects filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p>
-<pre tabindex="0"><code>SEC(&#34;kprobe/do_unlinkat&#34;)
+</code></pre><h2 id=filtering>Filtering</h2><p>Many bpf-based projects filter events in user space based on various parameters such as PID, UID, or GID. We can use cookies to pass these filter parameters, and therefore cut down on time spent handling it in user space.</p><pre tabindex=0><code>SEC(&#34;kprobe/do_unlinkat&#34;)
 int kprobe__do_unlinkat(struct pt_regs *ctx)
 {
     __u64 target_uid_cookie = bpf_get_attach_cookie(ctx);
@@ -237,11 +92,7 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
     bpf_ringbuf_submit(e, 0);
     return 0;
 }
-</code></pre><h2 id="map-index-for-arbitrary-context-more-complex-filtering">Map index for arbitrary context (more complex filtering)</h2>
-<p>While the two examples above are interesting, there&rsquo;s really no limit to what you can do with cookies (except, of course, for the limitations of bpf itself).</p>
-<p>We can place arbitrary data structures in bpf maps from user space, then set the index of those structures as the bpf cookie, giving us way more context than a single u64 can provide. Here&rsquo;s an example similar to above, except with multiple specified filters:</p>
-<h4 id="passing-a-struct-via-cookie">&lsquo;Passing&rsquo; a struct via cookie:</h4>
-<pre tabindex="0"><code>	var indexInFilterMap uint64 = 1
+</code></pre><h2 id=map-index-for-arbitrary-context-more-complex-filtering>Map index for arbitrary context (more complex filtering)</h2><p>While the two examples above are interesting, there&rsquo;s really no limit to what you can do with cookies (except, of course, for the limitations of bpf itself).</p><p>We can place arbitrary data structures in bpf maps from user space, then set the index of those structures as the bpf cookie, giving us way more context than a single u64 can provide. Here&rsquo;s an example similar to above, except with multiple specified filters:</p><h4 id=passing-a-struct-via-cookie>&lsquo;Passing&rsquo; a struct via cookie:</h4><pre tabindex=0><code>	var indexInFilterMap uint64 = 1
 	filters := bpfFilters{
 		Uid: 0,
 		Gid: 0,
@@ -257,8 +108,7 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 	if err != nil {
 		log.Fatal(err)
 	}
-</code></pre><p>And retrieving:</p>
-<pre tabindex="0"><code>struct filters {
+</code></pre><p>And retrieving:</p><pre tabindex=0><code>struct filters {
     int uid;
     int gid;
 };
@@ -298,15 +148,4 @@ int kprobe__do_unlinkat(struct pt_regs *ctx)
 	// etc...
 ...
 }
-</code></pre><h3 id="conclusion">Conclusion</h3>
-<p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful for maintaining context across tail calls.</p>
-
-
-        
-    </div>
-
-    <span class="copyright">copyright 2018 - 2025</span>
-
-</body>
-
-</html>
+</code></pre><h3 id=conclusion>Conclusion</h3><p>There is quite a bit that you can do with bpf cookies, far more complex than the examples in this post. In an upcoming blog post I&rsquo;ll be exploring how cookies can be useful for maintaining context across tail calls.</p></div><span class=copyright>copyright 2018 - 2025</span></body></html>

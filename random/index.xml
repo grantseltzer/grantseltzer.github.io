@@ -1,18 +1,2 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
-  <channel>
-    <title>Randoms on GrantSeltzer</title>
-    <link>https://grantseltzer.github.io/random/</link>
-    <description>Recent content in Randoms on GrantSeltzer</description>
-    <generator>Hugo</generator>
-    <language>en-us</language>
-    <atom:link href="https://grantseltzer.github.io/random/index.xml" rel="self" type="application/rss+xml" />
-    <item>
-      <title>Bird Search</title>
-      <link>https://grantseltzer.github.io/random/bird-search/</link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      <guid>https://grantseltzer.github.io/random/bird-search/</guid>
-      <description>&lt;p&gt;A quick tool I use for birding. If I&amp;rsquo;m searching for a specific species I use this to see where other birders have reported sightings on &lt;a href=&#34;https://ebird.org/home&#34;&gt;eBird&lt;/a&gt;. It gives all checklists within the specified parameters.&lt;/p&gt;&#xA;&lt;p&gt;Try it yourself! Get an eBird &lt;a href=&#34;https://ebird.org/api/keygen&#34;&gt;API Token&lt;/a&gt;. Enter your region, look for the bird of your dreams! Birding is fun!&lt;/p&gt;</description>
-    </item>
-  </channel>
-</rss>
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Randoms on GrantSeltzer</title><link>https://grantseltzer.github.io/random/</link><description>Recent content in Randoms on GrantSeltzer</description><generator>Hugo</generator><language>en-us</language><atom:link href="https://grantseltzer.github.io/random/index.xml" rel="self" type="application/rss+xml"/><item><title>Bird Search</title><link>https://grantseltzer.github.io/random/bird-search/</link><pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate><guid>https://grantseltzer.github.io/random/bird-search/</guid><description>&lt;p&gt;A quick tool I use for birding. If I&amp;rsquo;m searching for a specific species I use this to see where other birders have reported sightings on &lt;a href="https://ebird.org/home"&gt;eBird&lt;/a&gt;. It gives all checklists within the specified parameters.&lt;/p&gt;
+&lt;p&gt;Try it yourself! Get an eBird &lt;a href="https://ebird.org/api/keygen"&gt;API Token&lt;/a&gt;. Enter your region, look for the bird of your dreams! Birding is fun!&lt;/p&gt;</description></item></channel></rss>
